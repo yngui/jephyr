@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2015 Igor Konev
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jvnet.zephyr.thread</groupId>
+        <artifactId>thread-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>thread-continuation</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.zephyr.maven</groupId>
+                <artifactId>javaflow-maven-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jvnet.zephyr.javaflow</groupId>
+                        <artifactId>javaflow-runtime</artifactId>
+                        <version>${project.version}</version>
+                    </dependency>
+                </dependencies>
+                <configuration>
+                    <excludes>
+                        <exclude>org/jvnet/zephyr/thread/continuation/AdaptingExecutor.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$Node.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$UnparkTask.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolExecutor.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolExecutor$*.class</exclude>
+                    </excludes>
+                    <excludedMethods>
+                        <excludedMethod>
+                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/util/concurrent/Executor;Ljava/util/concurrent/ScheduledExecutorService;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/util/concurrent/Executor;Ljava/util/concurrent/ScheduledExecutorService;Ljava/lang/String;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.getState()Lorg/jvnet/zephyr/jcl/java/lang/Thread$State;
+                        </excludedMethod>
+                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.isAlive()Z
+                        </excludedMethod>
+                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.start()V
+                        </excludedMethod>
+                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.unpark()V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.toString()Ljava/lang/String;
+                        </excludedMethod>
+                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.run()V
+                        </excludedMethod>
+                    </excludedMethods>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>javaflow</goal>
+                            <goal>testJavaflow</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>javaflow</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>javaflow</classifier>
+                            <classesDirectory>${project.build.directory}/javaflow-classes</classesDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jvnet.zephyr.thread</groupId>
+            <artifactId>thread-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.zephyr.jcl</groupId>
+            <artifactId>jcl-jdk7</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+</project>
