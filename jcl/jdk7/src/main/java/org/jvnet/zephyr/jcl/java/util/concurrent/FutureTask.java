@@ -391,14 +391,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
             }
         }
 
-        boolean managed = ThreadUtils.managed();
-        try {
-            done();
-        } finally {
-            if (managed) {
-                ThreadUtils.manage();
-            }
-        }
+        done();
 
         callable = null;        // to reduce footprint
     }

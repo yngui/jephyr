@@ -474,14 +474,6 @@
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.&lt;init&gt;(Ljava/lang/Runnable;Ljava/lang/Object;)V
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.cancel(Z)Z</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.set(Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.setException(Ljava/lang/Throwable;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.finishCompletion()V
-                        </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.removeWaiter(Lorg/jvnet/zephyr/jcl/java/util/concurrent/FutureTask$WaitNode;)V
                         </excludedMethod>
