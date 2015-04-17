@@ -16,6 +16,8 @@
 */
 package org.jvnet.zephyr.javaflow.instrument;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jvnet.zephyr.javaflow.runtime.Continuable;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -23,6 +25,8 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 
 public final class ContinuationClassAdapter extends ClassVisitor {
+
+    private static final Log log = LogFactory.getLog(ContinuationClassAdapter.class);
 
     private final Predicate<MethodRef> predicate;
     private String className;
@@ -54,8 +58,13 @@ public final class ContinuationClassAdapter extends ClassVisitor {
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         // TODO skip native and abstract methods?
-        if (predicate.apply(new MethodRef(className, name, desc)) && name.charAt(0) != '<') {
-            return new ContinuationMethodAnalyzer(className, this.cv, mv, access, name, desc, signature, exceptions);
+        if (predicate.apply(new MethodRef(className, name, desc))) {
+            if (log.isDebugEnabled()) {
+                log.debug("Instrumenting " + className + '.' + name + desc);
+            }
+            if (name.charAt(0) != '<') {
+                return new ContinuationMethodAnalyzer(className, this.cv, mv, access, name, desc, signature, exceptions);
+            }
         }
         return mv;
     }
