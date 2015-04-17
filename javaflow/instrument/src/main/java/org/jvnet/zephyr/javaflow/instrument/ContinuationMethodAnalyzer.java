@@ -168,10 +168,7 @@ public class ContinuationMethodAnalyzer extends MethodNode implements Opcodes {
             */
 
         } catch (AnalyzerException ex) {
-            // TODO log the error or fail?
-            ex.printStackTrace();
-            accept(mv);
-
+            throw new RuntimeException(ex);
         }
     }
 
