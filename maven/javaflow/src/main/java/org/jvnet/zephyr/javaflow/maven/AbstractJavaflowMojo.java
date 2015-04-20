@@ -30,7 +30,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.jvnet.zephyr.javaflow.instrument.AnalazingMethodRefPredicate;
+import org.jvnet.zephyr.javaflow.instrument.AnalyzingMethodRefPredicate;
 import org.jvnet.zephyr.javaflow.instrument.AsmClassTransformer;
 import org.jvnet.zephyr.javaflow.instrument.MethodRef;
 import org.jvnet.zephyr.javaflow.instrument.Predicate;
@@ -95,7 +95,7 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
         Path outputPath = outputDirectory.toPath();
         Path classesPath = classesDirectory.toPath();
         AsmClassTransformer transformer = new AsmClassTransformer(
-                new AnalazingMethodRefPredicate(new Predicate<MethodRef>() {
+                new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
                     @Override
                     public boolean apply(MethodRef input) {
                         return !excludedMethods.contains(input.getOwner() + '.' + input.getName() + input.getDesc());

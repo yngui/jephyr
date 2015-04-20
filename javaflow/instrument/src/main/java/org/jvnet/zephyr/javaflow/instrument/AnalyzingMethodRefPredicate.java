@@ -49,7 +49,7 @@ import static org.objectweb.asm.Opcodes.ASM5;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
-public final class AnalazingMethodRefPredicate implements Predicate<MethodRef> {
+public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
     private static final Predicate<AbstractInsnNode> IS_METHOD_INSN_NODE = new Predicate<AbstractInsnNode>() {
         @Override
@@ -62,7 +62,7 @@ public final class AnalazingMethodRefPredicate implements Predicate<MethodRef> {
     private final Predicate<MethodRef> parent;
     private final ClassLoader loader;
 
-    public AnalazingMethodRefPredicate(Predicate<MethodRef> parent, ClassLoader loader) {
+    public AnalyzingMethodRefPredicate(Predicate<MethodRef> parent, ClassLoader loader) {
         this.parent = requireNonNull(parent);
         this.loader = requireNonNull(loader);
     }

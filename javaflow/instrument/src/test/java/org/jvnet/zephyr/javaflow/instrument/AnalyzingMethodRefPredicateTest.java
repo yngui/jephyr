@@ -33,13 +33,13 @@ import java.lang.reflect.Method;
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
-public final class AnalazingMethodRefPredicateTest {
+public final class AnalyzingMethodRefPredicateTest {
 
-    private AnalazingMethodRefPredicate predicate;
+    private AnalyzingMethodRefPredicate predicate;
 
     @BeforeMethod
     public void setUp() throws Exception {
-        predicate = new AnalazingMethodRefPredicate(new Predicate<MethodRef>() {
+        predicate = new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
             @Override
             public boolean apply(MethodRef input) {
                 return true;
@@ -58,7 +58,7 @@ public final class AnalazingMethodRefPredicateTest {
             void m2() {
             }
         }
-        Predicate<MethodRef> predicate = new AnalazingMethodRefPredicate(new Predicate<MethodRef>() {
+        Predicate<MethodRef> predicate = new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
             @Override
             public boolean apply(MethodRef input) {
                 return !input.getName().equals("m");
