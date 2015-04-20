@@ -35,7 +35,7 @@
 
 package org.jvnet.zephyr.jcl.java.util.concurrent;
 
-import org.jvnet.zephyr.jcl.impl.UnsafeHolder;
+import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 

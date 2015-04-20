@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.impl;
+package org.jvnet.zephyr.impl;
 
 import sun.misc.Unsafe;
 

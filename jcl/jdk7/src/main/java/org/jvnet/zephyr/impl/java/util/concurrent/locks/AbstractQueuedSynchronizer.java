@@ -33,12 +33,13 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
+package org.jvnet.zephyr.impl.java.util.concurrent.locks;
 
-import org.jvnet.zephyr.jcl.impl.UnsafeHolder;
+import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 import org.jvnet.zephyr.jcl.java.util.concurrent.CountDownLatch;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 import sun.misc.Unsafe;
 
 import java.util.ArrayList;
@@ -1467,7 +1468,7 @@ public abstract class AbstractQueuedSynchronizer
      * is not the first queued thread.  Used only as a heuristic in
      * ReentrantReadWriteLock.
      */
-    final boolean apparentlyFirstQueuedIsExclusive() {
+    protected final boolean apparentlyFirstQueuedIsExclusive() {
         Node h, s;
         return (h = head) != null &&
             (s = h.next)  != null &&

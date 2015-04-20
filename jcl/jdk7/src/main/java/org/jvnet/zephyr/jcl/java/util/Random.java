@@ -25,7 +25,7 @@
 
 package org.jvnet.zephyr.jcl.java.util;
 
-import org.jvnet.zephyr.jcl.impl.UnsafeHolder;
+import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
 import sun.misc.Unsafe;

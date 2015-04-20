@@ -35,8 +35,8 @@
 
 package org.jvnet.zephyr.jcl.java.util.concurrent;
 
+import org.jvnet.zephyr.impl.java.util.concurrent.locks.AbstractQueuedSynchronizer;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
 import java.util.concurrent.TimeUnit;
 
