@@ -32,6 +32,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Objects.requireNonNull;
 
@@ -40,7 +41,8 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
     private static final String EXECUTOR = ContinuationThreadImplProvider.class.getName() + ".executor";
 
     private final Executor executor = loadExecutor();
-    private final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1, new DaemonThreadFactory());
+    private final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1,
+            new DaemonThreadFactory(ContinuationThreadImplProvider.class.getSimpleName() + "-scheduler-"));
 
     public ContinuationThreadImplProvider() {
         scheduler.prestartCoreThread();
@@ -72,12 +74,17 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
 
     private static final class DaemonThreadFactory implements ThreadFactory {
 
-        DaemonThreadFactory() {
+        private final AtomicInteger threadNum = new AtomicInteger(1);
+        private final String namePrefix;
+
+        DaemonThreadFactory(String namePrefix) {
+            this.namePrefix = namePrefix;
         }
 
         @Override
         public java.lang.Thread newThread(Runnable r) {
             java.lang.Thread thread = new java.lang.Thread(r);
+            thread.setName(namePrefix + threadNum.getAndIncrement());
             thread.setDaemon(true);
             return thread;
         }
