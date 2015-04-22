@@ -37,7 +37,7 @@ package org.jvnet.zephyr.jcl.java.util.concurrent;
 
 import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
@@ -379,7 +379,7 @@ public class FutureTask<V> implements RunnableFuture<V> {
                     Thread t = q.thread;
                     if (t != null) {
                         q.thread = null;
-                        ThreadUtils.unpark(t);
+                        LockSupport.unpark(t);
                     }
                     WaitNode next = q.next;
                     if (next == null)
@@ -433,10 +433,10 @@ public class FutureTask<V> implements RunnableFuture<V> {
                     removeWaiter(q);
                     return state;
                 }
-                ThreadUtils.parkNanos(this, nanos);
+                LockSupport.parkNanos(this, nanos);
             }
             else
-                ThreadUtils.park(this);
+                LockSupport.park(this);
         }
     }
 

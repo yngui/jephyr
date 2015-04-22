@@ -38,8 +38,8 @@ package org.jvnet.zephyr.jcl.java.util.concurrent;
 
 import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
 
 import java.util.Collection;
@@ -269,7 +269,7 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
                     Thread w = waiter;
                     if (w != null) {    // waiters need at most one unpark
                         waiter = null;
-                        ThreadUtils.unpark(w);
+                        LockSupport.unpark(w);
                     }
                     return true;
                 }
@@ -464,9 +464,9 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
                 else if (s.waiter == null)
                     s.waiter = w; // establish waiter so can park next iter
                 else if (!timed)
-                    ThreadUtils.park(this);
+                    LockSupport.park(this);
                 else if (nanos > spinForTimeoutThreshold)
-                    ThreadUtils.parkNanos(this, nanos);
+                    LockSupport.parkNanos(this, nanos);
             }
         }
 
@@ -728,7 +728,7 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
                     }
 
                     advanceHead(h, m);              // successfully fulfilled
-                    ThreadUtils.unpark(m.waiter);
+                    LockSupport.unpark(m.waiter);
                     return (x != null) ? x : e;
                 }
             }
@@ -769,9 +769,9 @@ public class SynchronousQueue<E> extends AbstractQueue<E>
                 else if (s.waiter == null)
                     s.waiter = w;
                 else if (!timed)
-                    ThreadUtils.park(this);
+                    LockSupport.park(this);
                 else if (nanos > spinForTimeoutThreshold)
-                    ThreadUtils.parkNanos(this, nanos);
+                    LockSupport.parkNanos(this, nanos);
             }
         }
 

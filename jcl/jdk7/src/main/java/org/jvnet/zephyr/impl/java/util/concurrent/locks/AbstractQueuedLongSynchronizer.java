@@ -37,7 +37,7 @@ package org.jvnet.zephyr.impl.java.util.concurrent.locks;
 
 import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 import sun.misc.Unsafe;
 
 import java.util.ArrayList;
@@ -444,7 +444,7 @@ public abstract class AbstractQueuedLongSynchronizer
                     s = t;
         }
         if (s != null)
-            ThreadUtils.unpark(s.thread);
+            LockSupport.unpark(s.thread);
     }
 
     /**
@@ -616,7 +616,7 @@ public abstract class AbstractQueuedLongSynchronizer
      * @return {@code true} if interrupted
      */
     private final boolean parkAndCheckInterrupt() {
-        ThreadUtils.park(this);
+        LockSupport.park(this);
         return Thread.interrupted();
     }
 
@@ -711,7 +711,7 @@ public abstract class AbstractQueuedLongSynchronizer
                     return false;
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     nanosTimeout > spinForTimeoutThreshold)
-                    ThreadUtils.parkNanos(this, nanosTimeout);
+                    LockSupport.parkNanos(this, nanosTimeout);
                 long now = System.nanoTime();
                 nanosTimeout -= now - lastTime;
                 lastTime = now;
@@ -815,7 +815,7 @@ public abstract class AbstractQueuedLongSynchronizer
                     return false;
                 if (shouldParkAfterFailedAcquire(p, node) &&
                     nanosTimeout > spinForTimeoutThreshold)
-                    ThreadUtils.parkNanos(this, nanosTimeout);
+                    LockSupport.parkNanos(this, nanosTimeout);
                 long now = System.nanoTime();
                 nanosTimeout -= now - lastTime;
                 lastTime = now;
@@ -1467,7 +1467,7 @@ public abstract class AbstractQueuedLongSynchronizer
         Node p = enq(node);
         int ws = p.waitStatus;
         if (ws > 0 || !compareAndSetWaitStatus(p, ws, Node.SIGNAL))
-            ThreadUtils.unpark(node.thread);
+            LockSupport.unpark(node.thread);
         return true;
     }
 
@@ -1763,7 +1763,7 @@ public abstract class AbstractQueuedLongSynchronizer
             long savedState = fullyRelease(node);
             boolean interrupted = false;
             while (!isOnSyncQueue(node)) {
-                ThreadUtils.park(this);
+                LockSupport.park(this);
                 if (Thread.interrupted())
                     interrupted = true;
             }
@@ -1827,7 +1827,7 @@ public abstract class AbstractQueuedLongSynchronizer
             long savedState = fullyRelease(node);
             int interruptMode = 0;
             while (!isOnSyncQueue(node)) {
-                ThreadUtils.park(this);
+                LockSupport.park(this);
                 if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
                     break;
             }
@@ -1866,7 +1866,7 @@ public abstract class AbstractQueuedLongSynchronizer
                     transferAfterCancelledWait(node);
                     break;
                 }
-                ThreadUtils.parkNanos(this, nanosTimeout);
+                LockSupport.parkNanos(this, nanosTimeout);
                 if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
                     break;
 
@@ -1914,7 +1914,7 @@ public abstract class AbstractQueuedLongSynchronizer
                     timedout = transferAfterCancelledWait(node);
                     break;
                 }
-                ThreadUtils.parkUntil(this, abstime);
+                LockSupport.parkUntil(this, abstime);
                 if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
                     break;
             }
@@ -1960,7 +1960,7 @@ public abstract class AbstractQueuedLongSynchronizer
                     break;
                 }
                 if (nanosTimeout >= spinForTimeoutThreshold)
-                    ThreadUtils.parkNanos(this, nanosTimeout);
+                    LockSupport.parkNanos(this, nanosTimeout);
                 if ((interruptMode = checkInterruptWhileWaiting(node)) != 0)
                     break;
                 long now = System.nanoTime();

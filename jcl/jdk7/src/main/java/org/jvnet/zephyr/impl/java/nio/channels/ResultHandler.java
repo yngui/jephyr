@@ -25,7 +25,7 @@
 package org.jvnet.zephyr.impl.java.nio.channels;
 
 import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 
 import java.io.IOException;
 import java.nio.channels.CompletionHandler;
@@ -37,12 +37,9 @@ final class ResultHandler<V> implements CompletionHandler<V, Object> {
     private V result;
     private Throwable exception;
 
-    ResultHandler() {
-    }
-
     V get() throws IOException {
         while (!done) {
-            ThreadUtils.park(this);
+            LockSupport.park(this);
         }
         if (exception != null) {
             if (exception instanceof IOException) {
@@ -62,13 +59,13 @@ final class ResultHandler<V> implements CompletionHandler<V, Object> {
     public void completed(V result, Object attachment) {
         this.result = result;
         done = true;
-        ThreadUtils.unpark(thread);
+        LockSupport.unpark(thread);
     }
 
     @Override
     public void failed(Throwable exc, Object attachment) {
         exception = exc;
         done = true;
-        ThreadUtils.unpark(thread);
+        LockSupport.unpark(thread);
     }
 }

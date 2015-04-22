@@ -39,6 +39,7 @@ import org.jvnet.zephyr.impl.UnsafeHolder;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -531,7 +532,7 @@ public class LinkedTransferQueue<E> extends AbstractQueue<E>
             // assert isData;
             Object x = item;
             if (x != null && x != this && casItem(x, null)) {
-                ThreadUtils.unpark(waiter);
+                LockSupport.unpark(waiter);
                 return true;
             }
             return false;
@@ -631,7 +632,7 @@ public class LinkedTransferQueue<E> extends AbstractQueue<E>
                                 (q = h.next) == null || !q.isMatched())
                                 break;        // unless slack < 2
                         }
-                        ThreadUtils.unpark(p.waiter);
+                        LockSupport.unpark(p.waiter);
                         return this.<E>cast(item);
                     }
                 }
@@ -733,11 +734,11 @@ public class LinkedTransferQueue<E> extends AbstractQueue<E>
             else if (timed) {
                 long now = System.nanoTime();
                 if ((nanos -= now - lastTime) > 0)
-                    ThreadUtils.parkNanos(this, nanos);
+                    LockSupport.parkNanos(this, nanos);
                 lastTime = now;
             }
             else {
-                ThreadUtils.park(this);
+                LockSupport.park(this);
             }
         }
     }

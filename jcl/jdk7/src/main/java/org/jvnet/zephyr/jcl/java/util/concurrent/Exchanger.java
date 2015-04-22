@@ -38,6 +38,7 @@ package org.jvnet.zephyr.jcl.java.util.concurrent;
 
 import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
@@ -354,7 +355,7 @@ public class Exchanger<V> {
                      slot.compareAndSet(y, null)) {
                 Node you = (Node)y;               // Transfer item
                 if (you.compareAndSet(null, item)) {
-                    ThreadUtils.unpark(you.waiter);
+                    LockSupport.unpark(you.waiter);
                     return you.item;
                 }                                 // Else cancelled; continue
             }
@@ -508,7 +509,7 @@ public class Exchanger<V> {
             else if (w.isInterrupted())         // Abort on interrupt
                 tryCancel(node, slot);
             else                                // Block
-                ThreadUtils.park(node);
+                LockSupport.park(node);
         }
     }
 
@@ -543,7 +544,7 @@ public class Exchanger<V> {
                 else if (w.isInterrupted())
                     tryCancel(node, slot);
                 else
-                    ThreadUtils.parkNanos(node, nanos);
+                    LockSupport.parkNanos(node, nanos);
             }
             else if (tryCancel(node, slot) && !w.isInterrupted())
                 return scanOnTimeout(node);
@@ -573,7 +574,7 @@ public class Exchanger<V> {
                     if (slot.compareAndSet(y, null)) {
                         Node you = (Node)y;
                         if (you.compareAndSet(null, node.item)) {
-                            ThreadUtils.unpark(you.waiter);
+                            LockSupport.unpark(you.waiter);
                             return you.item;
                         }
                     }
