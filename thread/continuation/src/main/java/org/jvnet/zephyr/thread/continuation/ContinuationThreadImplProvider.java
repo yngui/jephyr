@@ -67,7 +67,7 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
                 return (Executor) ClassLoader.getSystemClassLoader().loadClass(name).getConstructor().newInstance();
             } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException
                     | InvocationTargetException e) {
-                throw new Error(e);
+                throw new RuntimeException(e);
             }
         }
     }
