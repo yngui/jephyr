@@ -54,21 +54,13 @@ public abstract class ContinuationProvider {
                 if (iterator.hasNext()) {
                     return iterator.next();
                 } else {
-                    throw new ServiceConfigurationError(ContinuationProvider.class.getSimpleName() + " not found");
+                    return new ThreadContinuationProvider();
                 }
             }
-
-            Class<?> cls;
             try {
-                cls = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new ServiceConfigurationError(null, e);
-            }
-
-            try {
-                return (ContinuationProvider) cls.getConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                    NoSuchMethodException e) {
+                return (ContinuationProvider) Class.forName(className).getConstructor().newInstance();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                    InvocationTargetException | NoSuchMethodException e) {
                 throw new ServiceConfigurationError(null, e);
             }
         }
