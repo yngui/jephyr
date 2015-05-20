@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.impl.java.nio.channels;
+package org.jvnet.zephyr.jcl.impl.nio.channels;
 
 import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;

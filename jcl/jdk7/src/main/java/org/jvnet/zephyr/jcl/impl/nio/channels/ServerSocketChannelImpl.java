@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.impl.java.nio.channels;
+package org.jvnet.zephyr.jcl.impl.nio.channels;
 
 import java.io.IOException;
 import java.net.ServerSocket;
