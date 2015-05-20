@@ -24,14 +24,15 @@
 
 package org.jvnet.zephyr.jcl.impl.nio.channels;
 
+import org.jvnet.zephyr.jcl.java.nio.channels.SocketChannel;
+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.SocketOption;
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.channels.spi.SelectorProvider;
 import java.util.Set;
 
 final class SocketChannelImpl extends SocketChannel {
@@ -43,8 +44,8 @@ final class SocketChannelImpl extends SocketChannel {
         this.channel = channel;
     }
 
-    SocketChannelImpl(SelectorProvider selectorProvider) throws IOException {
-        super(selectorProvider);
+    SocketChannelImpl(SelectorProvider provider) throws IOException {
+        super(provider);
         channel = AsynchronousSocketChannel.open();
     }
 
@@ -104,9 +105,9 @@ final class SocketChannelImpl extends SocketChannel {
 
     @Override
     public boolean connect(SocketAddress remote) throws IOException {
-        ResultHandler<Void> handler = new ResultHandler<>();
+        ResultHandler<Void> handler = new ResultHandler<>(channel);
         channel.connect(remote, null, handler);
-        handler.get();
+        handler.result();
         return true;
     }
 
@@ -122,30 +123,30 @@ final class SocketChannelImpl extends SocketChannel {
 
     @Override
     public int read(ByteBuffer dst) throws IOException {
-        ResultHandler<Integer> handler = new ResultHandler<>();
+        ResultHandler<Integer> handler = new ResultHandler<>(channel);
         channel.read(dst, null, handler);
-        return handler.get();
+        return handler.result();
     }
 
     @Override
     public long read(ByteBuffer[] dsts, int offset, int length) throws IOException {
-        ResultHandler<Long> handler = new ResultHandler<>();
+        ResultHandler<Long> handler = new ResultHandler<>(channel);
         channel.read(dsts, offset, length, 0, null, null, handler);
-        return handler.get();
+        return handler.result();
     }
 
     @Override
     public int write(ByteBuffer src) throws IOException {
-        ResultHandler<Integer> handler = new ResultHandler<>();
+        ResultHandler<Integer> handler = new ResultHandler<>(channel);
         channel.write(src, null, handler);
-        return handler.get();
+        return handler.result();
     }
 
     @Override
     public long write(ByteBuffer[] srcs, int offset, int length) throws IOException {
-        ResultHandler<Long> handler = new ResultHandler<>();
+        ResultHandler<Long> handler = new ResultHandler<>(channel);
         channel.write(srcs, offset, length, 0, null, null, handler);
-        return handler.get();
+        return handler.result();
     }
 
     @Override

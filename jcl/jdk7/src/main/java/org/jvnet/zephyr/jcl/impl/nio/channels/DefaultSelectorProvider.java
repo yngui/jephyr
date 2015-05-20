@@ -24,16 +24,17 @@
 
 package org.jvnet.zephyr.jcl.impl.nio.channels;
 
+import org.jvnet.zephyr.jcl.java.nio.channels.DatagramChannel;
+import org.jvnet.zephyr.jcl.java.nio.channels.Pipe;
+import org.jvnet.zephyr.jcl.java.nio.channels.ServerSocketChannel;
+import org.jvnet.zephyr.jcl.java.nio.channels.SocketChannel;
+import org.jvnet.zephyr.jcl.java.nio.channels.spi.AbstractSelector;
+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
+
 import java.io.IOException;
 import java.net.ProtocolFamily;
-import java.nio.channels.DatagramChannel;
-import java.nio.channels.Pipe;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.channels.spi.AbstractSelector;
-import java.nio.channels.spi.SelectorProvider;
 
-public final class SelectorProviderImpl extends SelectorProvider {
+public final class DefaultSelectorProvider extends SelectorProvider {
 
     @Override
     public DatagramChannel openDatagramChannel() {

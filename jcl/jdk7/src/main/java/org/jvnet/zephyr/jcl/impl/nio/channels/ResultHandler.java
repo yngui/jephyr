@@ -28,31 +28,52 @@ import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
 
 import java.io.IOException;
+import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.CompletionHandler;
 
 final class ResultHandler<V> implements CompletionHandler<V, Object> {
 
     private final Thread thread = Thread.currentThread();
+    private final AutoCloseable closeable;
     private volatile boolean done;
     private V result;
     private Throwable exception;
 
-    V get() throws IOException {
+    ResultHandler(AutoCloseable closeable) {
+        this.closeable = closeable;
+    }
+
+    V result() throws IOException {
+        checkInterrupted();
         while (!done) {
             LockSupport.park(this);
+            checkInterrupted();
         }
-        if (exception != null) {
-            if (exception instanceof IOException) {
-                throw (IOException) exception;
-            } else if (exception instanceof Error) {
-                throw (Error) exception;
-            } else if (exception instanceof RuntimeException) {
-                throw (RuntimeException) exception;
-            } else {
-                throw new RuntimeException(exception);
+        if (exception == null) {
+            return result;
+        }
+        if (exception instanceof IOException) {
+            throw (IOException) exception;
+        }
+        if (exception instanceof Error) {
+            throw (Error) exception;
+        }
+        if (exception instanceof RuntimeException) {
+            throw (RuntimeException) exception;
+        }
+        throw new RuntimeException(exception);
+    }
+
+    private void checkInterrupted() throws ClosedByInterruptException {
+        if (Thread.interrupted()) {
+            ClosedByInterruptException exception = new ClosedByInterruptException();
+            try {
+                closeable.close();
+            } catch (Throwable e) {
+                exception.addSuppressed(e);
             }
+            throw exception;
         }
-        return result;
     }
 
     @Override

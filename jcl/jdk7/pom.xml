@@ -43,10 +43,28 @@
                 <configuration>
                     <excludes>
                         <exclude>org/jvnet/zephyr/jcl/impl/UnsafeHolder.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/impl/nio/channels/SelectorProviderImpl.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/impl/nio/channels/DefaultSelectorProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/DatagramChannel.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/Pipe.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/Pipe$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/SelectableChannel.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/SelectionKey.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/Selector.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractInterruptibleChannel.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractInterruptibleChannel$*.class
+                        </exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelectableChannel.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelectionKey.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelector.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelector$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider$*.class</exclude>
                     </excludes>
                     <excludedMethods>
-                        <excludedMethod>org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.&lt;init&gt;()V
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.&lt;init&gt;(Ljava/lang/AutoCloseable;)V
+                        </excludedMethod>
+                        <excludedMethod>org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.checkInterrupted()V
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.completed(Ljava/lang/Object;Ljava/lang/Object;)V
@@ -55,16 +73,16 @@
                             org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.failed(Ljava/lang/Throwable;Ljava/lang/Object;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.implCloseSelectableChannel()V
+                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.bind(Ljava/net/SocketAddress;I)Ljava/nio/channels/ServerSocketChannel;
+                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.bind(Ljava/net/SocketAddress;I)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/ServerSocketChannel;
+                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
@@ -73,13 +91,22 @@
                             org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.supportedOptions()Ljava/util/Set;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.bind(Ljava/net/SocketAddress;)Ljava/nio/channels/SocketChannel;
+                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.implCloseSelectableChannel()V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;Ljava/nio/channels/AsynchronousSocketChannel;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.bind(Ljava/net/SocketAddress;)Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/SocketChannel;
+                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
@@ -88,10 +115,10 @@
                             org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.supportedOptions()Ljava/util/Set;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.shutdownInput()Ljava/nio/channels/SocketChannel;
+                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.shutdownInput()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.shutdownOutput()Ljava/nio/channels/SocketChannel;
+                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.shutdownOutput()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.getRemoteAddress()Ljava/net/SocketAddress;
@@ -395,6 +422,33 @@
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/java/lang/ThreadLocal.createInheritedMap(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap;)Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.open()Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.bind(Ljava/net/SocketAddress;)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/NetworkChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.open()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/NetworkChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.bind(Ljava/net/SocketAddress;)Ljava/nio/channels/NetworkChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.&lt;clinit&gt;()V
                         </excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/util/AbstractQueue.&lt;init&gt;()V</excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.seedUniquifier()J</excludedMethod>

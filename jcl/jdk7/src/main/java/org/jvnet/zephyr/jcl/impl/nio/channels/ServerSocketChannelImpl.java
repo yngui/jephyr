@@ -24,34 +24,25 @@
 
 package org.jvnet.zephyr.jcl.impl.nio.channels;
 
+import org.jvnet.zephyr.jcl.java.nio.channels.ServerSocketChannel;
+import org.jvnet.zephyr.jcl.java.nio.channels.SocketChannel;
+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.SocketAddress;
 import java.net.SocketOption;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.channels.spi.SelectorProvider;
 import java.util.Set;
 
 final class ServerSocketChannelImpl extends ServerSocketChannel {
 
     private final AsynchronousServerSocketChannel channel;
 
-    ServerSocketChannelImpl(SelectorProvider selectorProvider) throws IOException {
-        super(selectorProvider);
+    ServerSocketChannelImpl(SelectorProvider provider) throws IOException {
+        super(provider);
         channel = AsynchronousServerSocketChannel.open();
-    }
-
-    @Override
-    protected void implCloseSelectableChannel() throws IOException {
-        channel.close();
-    }
-
-    @Override
-    protected void implConfigureBlocking(boolean block) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -88,8 +79,18 @@ final class ServerSocketChannelImpl extends ServerSocketChannel {
 
     @Override
     public SocketChannel accept() throws IOException {
-        ResultHandler<AsynchronousSocketChannel> handler = new ResultHandler<>();
+        ResultHandler<AsynchronousSocketChannel> handler = new ResultHandler<>(channel);
         channel.accept(null, handler);
-        return new SocketChannelImpl(provider(), handler.get());
+        return new SocketChannelImpl(provider(), handler.result());
+    }
+
+    @Override
+    protected void implCloseSelectableChannel() throws IOException {
+        channel.close();
+    }
+
+    @Override
+    protected void implConfigureBlocking(boolean block) {
+        throw new UnsupportedOperationException();
     }
 }
