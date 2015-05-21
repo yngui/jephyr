@@ -415,18 +415,7 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
         try {
             suspended = continuation.resume();
         } catch (Throwable e) {
-            boolean managed = managed();
-            try {
-                dispatchUncaughtException(e);
-            } catch (Throwable e2) {
-                System.err.println(
-                        "Exception: " + e2.getClass() + " thrown from the UncaughtExceptionHandler in thread \"" +
-                                getThread().getName() + '"');
-            } finally {
-                if (managed) {
-                    manage();
-                }
-            }
+            dispatchUncaughtException(getThread(), e);
             suspended = false;
         }
 

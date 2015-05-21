@@ -46,9 +46,14 @@
                         <exclude>org/jvnet/zephyr/jcl/java/lang/Thread$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImpl$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/ThreadImpl.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/ThreadImpl$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/ThreadImpl$CurrentThread.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/ThreadImpl$CurrentThread$*.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>
@@ -59,22 +64,6 @@
                         </excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadUtils.managed()Z</excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadUtils.manage()V</excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/ThreadImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/ThreadImpl.create(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Lorg/jvnet/zephyr/thread/ThreadImpl;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/ThreadImpl.create(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/lang/String;)Lorg/jvnet/zephyr/thread/ThreadImpl;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/ThreadImpl.getCurrentThread()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/ThreadImpl.setCurrentThread(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/thread/ThreadImpl.&lt;clinit&gt;()V</excludedMethod>
                     </excludedMethods>
                 </configuration>
                 <executions>

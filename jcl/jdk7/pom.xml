@@ -342,13 +342,34 @@
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;()V</excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/Runnable;)V
                         </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;)V
+                        </excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/String;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/String;)V
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/Runnable;Ljava/lang/String;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/Thread$Dummy;)V
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;Ljava/lang/Runnable;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;Ljava/lang/Runnable;Ljava/lang/String;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;Ljava/lang/String;)V
                         </excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.start()V</excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.interrupt()V</excludedMethod>

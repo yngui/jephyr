@@ -22,51 +22,36 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.java.lang;
+package org.jvnet.zephyr.thread;
 
-import org.jvnet.zephyr.thread.ThreadImpl;
-import org.jvnet.zephyr.thread.ThreadImplProvider;
+import org.jvnet.zephyr.jcl.java.lang.Thread;
 
-public class Thread implements Runnable {
+import java.lang.Thread.UncaughtExceptionHandler;
 
-    final ThreadImpl impl;
+import static org.jvnet.zephyr.thread.ThreadImpl.dispatchUncaughtException;
 
-    public Thread(ThreadImplProvider provider, Runnable target) {
-        throw new UnsupportedOperationException();
-    }
+final class JavaThreadImplProvider extends ThreadImplProvider {
 
-    public Thread(ThreadImplProvider provider, Runnable target, String name) {
-        throw new UnsupportedOperationException();
-    }
-
-    public static Thread currentThread() {
-        throw new UnsupportedOperationException();
+    @Override
+    public ThreadImpl createThreadImpl(Thread thread) {
+        java.lang.Thread javaThread = new java.lang.Thread(thread);
+        return createThreadImpl(thread, javaThread);
     }
 
     @Override
-    public void run() {
-        throw new UnsupportedOperationException();
+    public ThreadImpl createThreadImpl(Thread thread, String name) {
+        java.lang.Thread javaThread = new java.lang.Thread(thread, name);
+        return createThreadImpl(thread, javaThread);
     }
 
-    public static boolean interrupted() {
-        throw new UnsupportedOperationException();
-    }
+    private static ThreadImpl createThreadImpl(final Thread thread, java.lang.Thread javaThread) {
+        javaThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
 
-    public final String getName() {
-        throw new UnsupportedOperationException();
-    }
-
-    public UncaughtExceptionHandler getUncaughtExceptionHandler() {
-        throw new UnsupportedOperationException();
-    }
-
-    public enum State {
-
-        NEW, RUNNABLE, BLOCKED, WAITING, TIMED_WAITING, TERMINATED
-    }
-
-    public interface UncaughtExceptionHandler {
-
-        void uncaughtException(Thread t, Throwable e);
+            @Override
+            public void uncaughtException(java.lang.Thread t, Throwable e) {
+                dispatchUncaughtException(thread, e);
+            }
+        });
+        return new JavaThreadImpl(thread, javaThread);
     }
 }

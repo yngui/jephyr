@@ -29,11 +29,11 @@ import org.jvnet.zephyr.jcl.java.lang.Thread.State;
 
 import java.util.concurrent.locks.LockSupport;
 
-public final class JavaThreadImpl extends ThreadImpl {
+final class JavaThreadImpl extends ThreadImpl {
 
     private final java.lang.Thread javaThread;
 
-    public JavaThreadImpl(Thread thread, java.lang.Thread javaThread) {
+    JavaThreadImpl(Thread thread, java.lang.Thread javaThread) {
         super(thread);
         this.javaThread = javaThread;
     }

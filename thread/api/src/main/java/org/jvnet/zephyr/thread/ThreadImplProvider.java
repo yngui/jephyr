@@ -56,21 +56,13 @@ public abstract class ThreadImplProvider {
                 if (iterator.hasNext()) {
                     return iterator.next();
                 } else {
-                    throw new ServiceConfigurationError(ThreadImplProvider.class.getSimpleName() + " not found");
+                    return new JavaThreadImplProvider();
                 }
             }
-
-            Class<?> cls;
             try {
-                cls = Class.forName(className);
-            } catch (ClassNotFoundException e) {
-                throw new ServiceConfigurationError(null, e);
-            }
-
-            try {
-                return (ThreadImplProvider) cls.getConstructor().newInstance();
-            } catch (InstantiationException | IllegalAccessException | InvocationTargetException |
-                    NoSuchMethodException e) {
+                return (ThreadImplProvider) Class.forName(className).getConstructor().newInstance();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException |
+                    InvocationTargetException | NoSuchMethodException e) {
                 throw new ServiceConfigurationError(null, e);
             }
         }

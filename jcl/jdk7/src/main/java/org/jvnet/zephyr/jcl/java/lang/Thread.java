@@ -27,8 +27,8 @@ package org.jvnet.zephyr.jcl.java.lang;
 
 import org.jvnet.zephyr.jcl.java.lang.ThreadLocal.ThreadLocalMap;
 import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
-import org.jvnet.zephyr.thread.JavaThreadImpl;
 import org.jvnet.zephyr.thread.ThreadImpl;
+import org.jvnet.zephyr.thread.ThreadImplProvider;
 
 import java.util.Collections;
 import java.util.Map;
@@ -250,7 +250,7 @@ class Thread implements Runnable {
      * {@code "Thread-"+}<i>n</i>, where <i>n</i> is an integer.
      */
     public Thread() {
-        this((Runnable) null);
+        this(ThreadImplProvider.provider());
     }
 
     /**
@@ -266,8 +266,7 @@ class Thread implements Runnable {
      *         nothing.
      */
     public Thread(Runnable target) {
-        impl = ThreadImpl.create(this);
-        this.target = target;
+        this(ThreadImplProvider.provider(), target);
     }
 
     /**
@@ -306,7 +305,7 @@ class Thread implements Runnable {
      *          the name of the new thread
      */
     public Thread(String name) {
-        this((Runnable) null, name);
+        this(ThreadImplProvider.provider(), name);
     }
 
     /**
@@ -346,8 +345,7 @@ class Thread implements Runnable {
      *         the name of the new thread
      */
     public Thread(Runnable target, String name) {
-        impl = ThreadImpl.create(this, name);
-        this.target = target;
+        this(ThreadImplProvider.provider(), target, name);
     }
 
     /**
@@ -477,8 +475,23 @@ class Thread implements Runnable {
         throw new UnsupportedOperationException();
     }
 
-    public Thread(Dummy dummy) {
-        impl = new JavaThreadImpl(this, java.lang.Thread.currentThread());
+    public Thread(ThreadImplProvider provider) {
+        impl = provider.createThreadImpl(this);
+        target = null;
+    }
+
+    public Thread(ThreadImplProvider provider, Runnable target) {
+        impl = provider.createThreadImpl(this);
+        this.target = target;
+    }
+
+    public Thread(ThreadImplProvider provider, Runnable target, String name) {
+        impl = provider.createThreadImpl(this, name);
+        this.target = target;
+    }
+
+    public Thread(ThreadImplProvider provider, String name) {
+        impl = provider.createThreadImpl(this, name);
         target = null;
     }
 
@@ -1494,9 +1507,5 @@ class Thread implements Runnable {
      */
     public void setUncaughtExceptionHandler(UncaughtExceptionHandler eh) {
         impl.setUncaughtExceptionHandler(eh);
-    }
-
-    private static final class Dummy {
-
     }
 }

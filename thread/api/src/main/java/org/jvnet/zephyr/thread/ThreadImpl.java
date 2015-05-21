@@ -27,6 +27,7 @@ package org.jvnet.zephyr.thread;
 import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.lang.Thread.State;
 import org.jvnet.zephyr.jcl.java.lang.Thread.UncaughtExceptionHandler;
+import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -45,14 +46,6 @@ public abstract class ThreadImpl {
     protected ThreadImpl(Thread thread) {
         this.thread = requireNonNull(thread);
         id = nextId.getAndIncrement();
-    }
-
-    public static ThreadImpl create(Thread thread) {
-        return ThreadImplProvider.provider().createThreadImpl(thread);
-    }
-
-    public static ThreadImpl create(Thread thread, String name) {
-        return ThreadImplProvider.provider().createThreadImpl(thread, name);
     }
 
     public final long getId() {
@@ -87,13 +80,24 @@ public abstract class ThreadImpl {
         this.uncaughtExceptionHandler = uncaughtExceptionHandler;
     }
 
-    protected final void dispatchUncaughtException(Throwable e) {
-        UncaughtExceptionHandler handler = thread.getUncaughtExceptionHandler();
-        if (handler != null) {
-            handler.uncaughtException(thread, e);
-        } else {
-            System.err.print("Exception in thread \"" + thread.getName() + "\" ");
-            e.printStackTrace();
+    protected static void dispatchUncaughtException(Thread thread, Throwable e) {
+        boolean managed = ThreadUtils.managed();
+        try {
+            UncaughtExceptionHandler handler = thread.getUncaughtExceptionHandler();
+            if (handler != null) {
+                handler.uncaughtException(thread, e);
+            } else {
+                System.err.print("Exception in thread \"" + thread.getName() + "\" ");
+                e.printStackTrace();
+            }
+        } catch (Throwable e2) {
+            System.err
+                    .println("Exception: " + e2.getClass() + " thrown from the UncaughtExceptionHandler in thread \"" +
+                            thread.getName() + '"');
+        } finally {
+            if (managed) {
+                ThreadUtils.manage();
+            }
         }
     }
 
@@ -155,12 +159,25 @@ public abstract class ThreadImpl {
 
     private static final class CurrentThread extends ThreadLocal<Thread> {
 
+        private static final ThreadImplProvider provider = new ThreadImplProvider() {
+
+            @Override
+            public ThreadImpl createThreadImpl(Thread thread) {
+                return new JavaThreadImpl(thread, java.lang.Thread.currentThread());
+            }
+
+            @Override
+            public ThreadImpl createThreadImpl(Thread thread, String name) {
+                throw new UnsupportedOperationException();
+            }
+        };
+
         CurrentThread() {
         }
 
         @Override
         protected Thread initialValue() {
-            return new Thread(null);
+            return new Thread(provider, null);
         }
     }
 }
