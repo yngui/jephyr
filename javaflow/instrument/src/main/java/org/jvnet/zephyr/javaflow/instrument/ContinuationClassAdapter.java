@@ -39,6 +39,11 @@ public final class ContinuationClassAdapter extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         className = name;
 
+        if ((access & Opcodes.ACC_ANNOTATION) != 0) {
+            cv.visit(version, access, name, signature, superName, interfaces);
+            return;
+        }
+
         // Check that it doesn't implement Continuable (already been instrumented)
         String[] newInterfaces = new String[interfaces.length + 1];
         for (int i = 0; i < interfaces.length; i++) {
