@@ -26,6 +26,7 @@
 package org.jvnet.zephyr.jcl.java.nio.channels.spi;
 
 import org.jvnet.zephyr.jcl.impl.nio.channels.Interruptible;
+import org.jvnet.zephyr.jcl.java.lang.Thread;
 import org.jvnet.zephyr.jcl.java.nio.channels.SelectionKey;
 import org.jvnet.zephyr.jcl.java.nio.channels.Selector;
 

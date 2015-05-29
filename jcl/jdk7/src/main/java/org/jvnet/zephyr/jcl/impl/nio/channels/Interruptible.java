@@ -24,6 +24,8 @@
 
 package org.jvnet.zephyr.jcl.impl.nio.channels;
 
+import org.jvnet.zephyr.jcl.java.lang.Thread;
+
 public interface Interruptible {
 
     void interrupt(Thread thread);

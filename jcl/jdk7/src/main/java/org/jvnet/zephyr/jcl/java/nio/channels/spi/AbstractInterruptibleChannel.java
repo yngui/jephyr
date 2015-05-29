@@ -29,6 +29,7 @@
 package org.jvnet.zephyr.jcl.java.nio.channels.spi;
 
 import org.jvnet.zephyr.jcl.impl.nio.channels.Interruptible;
+import org.jvnet.zephyr.jcl.java.lang.Thread;
 
 import java.io.IOException;
 import java.nio.channels.AsynchronousCloseException;
