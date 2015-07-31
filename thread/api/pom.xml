@@ -42,29 +42,13 @@
                 <artifactId>javaflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/jcl/java/lang/Thread.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/lang/Thread$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImpl$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImpl.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImpl$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImpl$CurrentThread.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImpl$CurrentThread$*.class</exclude>
                     </excludes>
-                    <excludedMethods>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadUtils.unpark(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadUtils.getBlocker(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadUtils.managed()Z</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadUtils.manage()V</excludedMethod>
-                    </excludedMethods>
                 </configuration>
                 <executions>
                     <execution>
@@ -77,12 +61,6 @@
             </plugin>
             <plugin>
                 <artifactId>maven-jar-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>org/jvnet/zephyr/jcl/java/lang/Thread.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/lang/Thread$*.class</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <id>javaflow</id>

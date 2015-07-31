@@ -22,25 +22,34 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.thread;
+package org.jvnet.zephyr.jcl.java.lang;
 
-import java.lang.Thread.UncaughtExceptionHandler;
+import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
 
-import static java.util.Objects.requireNonNull;
+import java.util.concurrent.TimeUnit;
 
-final class JavaThreadImplProvider extends ThreadImplProvider {
+public final class ThreadUtils {
 
-    @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T> threadAccess) {
-        requireNonNull(thread);
-        requireNonNull(threadAccess);
-        Thread javaThread = new Thread(thread);
-        javaThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                threadAccess.dispatchUncaughtException(thread, e);
-            }
-        });
-        return new JavaThreadImpl(javaThread);
+    private ThreadUtils() {
+    }
+
+    public static void unpark(Thread thread) {
+        thread.impl.unpark();
+    }
+
+    public static void park() {
+        Thread.currentThread().impl.park();
+    }
+
+    public static void park(long timeout, TimeUnit unit) {
+        Thread.currentThread().impl.park(timeout, unit);
+    }
+
+    public static void parkUntil(long deadline) {
+        Thread.currentThread().impl.parkUntil(deadline);
+    }
+
+    public static void blockedOn(Interruptible interruptible) {
+        Thread.currentThread().blockedOn(interruptible);
     }
 }

@@ -56,9 +56,9 @@ public abstract class AbstractRemappingMojo extends AbstractMojo {
     @Parameter(defaultValue = "${project}", readonly = true)
     private MavenProject project;
     @Parameter
-    private Set<String> includes;
+    private Set<String> includes = Collections.singleton("**/**");
     @Parameter
-    private Set<String> excludes;
+    private Set<String> excludes = Collections.emptySet();
     @Parameter
     private Collection<MappingEntry> mappingEntries;
 
@@ -69,8 +69,6 @@ public abstract class AbstractRemappingMojo extends AbstractMojo {
                             " are the same");
         }
 
-        Iterable<String> includes = getIncludes();
-        Iterable<String> excludes = getExcludes();
         Path outputPath = outputDirectory.toPath();
         Path classesPath = classesDirectory.toPath();
         SimpleRemapper remapper = new SimpleRemapper(createMapping());
@@ -81,7 +79,7 @@ public abstract class AbstractRemappingMojo extends AbstractMojo {
                 File destination = outputPath.resolve(relativePath).toFile();
                 if (file.lastModified() > destination.lastModified()) {
                     String name = relativePath.toString();
-                    if (isExtension(name, "class") && isIncluded(name, includes, excludes)) {
+                    if (isExtension(name, "class") && isIncluded(name)) {
                         transform(remapper, file, destination);
                     } else {
                         copy(file, destination);
@@ -91,7 +89,7 @@ public abstract class AbstractRemappingMojo extends AbstractMojo {
         }
     }
 
-    private static boolean isIncluded(String name, Iterable<String> includes, Iterable<String> excludes) {
+    private boolean isIncluded(String name) {
         boolean include = false;
         for (String pattern : includes) {
             include |= matchPath(pattern, name);
@@ -138,19 +136,5 @@ public abstract class AbstractRemappingMojo extends AbstractMojo {
             mapping.put(mappingEntry.getOldName(), mappingEntry.getNewName());
         }
         return mapping;
-    }
-
-    private Iterable<String> getIncludes() {
-        if (includes == null) {
-            return Collections.singleton("**/**");
-        }
-        return includes;
-    }
-
-    private Iterable<String> getExcludes() {
-        if (excludes == null) {
-            return Collections.emptySet();
-        }
-        return excludes;
     }
 }

@@ -24,10 +24,6 @@
 
 package org.jvnet.zephyr.continuation;
 
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
-
 final class ThreadContinuation extends Continuation {
 
     private static final long serialVersionUID = 1L;
@@ -41,91 +37,8 @@ final class ThreadContinuation extends Continuation {
         thread.start();
     }
 
-    public static void suspend() {
-        ContinuationThread thread = ContinuationThread.currentContinuation.get();
-        if (thread == null) {
-            throw new IllegalStateException();
-        }
-        thread.suspendContinuation();
-    }
-
     @Override
     public boolean resume() {
         return thread.resumeContinuation();
-    }
-
-    private static final class ContinuationThread extends Thread {
-
-        private static final int SUSPENDED = 0;
-        private static final int RESUMED = 1;
-        private static final int COMPLETE = 2;
-        private static final int DONE = 3;
-
-        static final ThreadLocal<ContinuationThread> currentContinuation = new ThreadLocal<>();
-
-        private final Lock lock = new ReentrantLock();
-        private final Condition resume = lock.newCondition();
-        private final Condition suspend = lock.newCondition();
-        private int state;
-        private Throwable exception;
-
-        ContinuationThread(Runnable target) {
-            super(target);
-        }
-
-        @Override
-        public void run() {
-            currentContinuation.set(this);
-            lock.lock();
-            try {
-                while (state == SUSPENDED) {
-                    resume.awaitUninterruptibly();
-                }
-                super.run();
-            } catch (Throwable e) {
-                exception = e;
-            } finally {
-                state = COMPLETE;
-                suspend.signal();
-                lock.unlock();
-            }
-        }
-
-        boolean resumeContinuation() {
-            lock.lock();
-            try {
-                if (state == DONE) {
-                    throw new IllegalStateException();
-                }
-                state = RESUMED;
-                resume.signal();
-                while (state == RESUMED) {
-                    suspend.awaitUninterruptibly();
-                }
-                if (state == COMPLETE) {
-                    state = DONE;
-                    if (exception == null) {
-                        return true;
-                    }
-                    throw ContinuationThread.<RuntimeException>throwException(exception);
-                }
-                return false;
-            } finally {
-                lock.unlock();
-            }
-        }
-
-        @SuppressWarnings("unchecked")
-        private static <E extends Throwable> E throwException(Throwable exception) throws E {
-            throw (E) exception;
-        }
-
-        void suspendContinuation() {
-            state = SUSPENDED;
-            suspend.signal();
-            while (state == SUSPENDED) {
-                resume.awaitUninterruptibly();
-            }
-        }
     }
 }

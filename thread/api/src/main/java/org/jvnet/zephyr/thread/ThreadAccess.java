@@ -24,23 +24,13 @@
 
 package org.jvnet.zephyr.thread;
 
-import java.lang.Thread.UncaughtExceptionHandler;
+public interface ThreadAccess<T extends Runnable> {
 
-import static java.util.Objects.requireNonNull;
+    T currentThread();
 
-final class JavaThreadImplProvider extends ThreadImplProvider {
+    void setCurrentThread(T thread);
 
-    @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T> threadAccess) {
-        requireNonNull(thread);
-        requireNonNull(threadAccess);
-        Thread javaThread = new Thread(thread);
-        javaThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                threadAccess.dispatchUncaughtException(thread, e);
-            }
-        });
-        return new JavaThreadImpl(javaThread);
-    }
+    ThreadImpl<T> getImpl(T thread);
+
+    void dispatchUncaughtException(T thread, Throwable e);
 }

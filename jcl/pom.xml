@@ -39,5 +39,6 @@
 
     <modules>
         <module>jdk7</module>
+        <module>jdk8</module>
     </modules>
 </project>

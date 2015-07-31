@@ -24,65 +24,34 @@
 
 package org.jvnet.zephyr.thread;
 
-import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.lang.Thread.State;
-
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.LockSupport;
 
-final class JavaThreadImpl extends ThreadImpl {
+import static java.util.Objects.requireNonNull;
 
-    private final java.lang.Thread javaThread;
+public final class JavaThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
-    JavaThreadImpl(Thread thread, java.lang.Thread javaThread) {
-        super(thread);
+    private final Thread javaThread;
+
+    public JavaThreadImpl(Thread javaThread) {
+        requireNonNull(javaThread);
         this.javaThread = javaThread;
     }
 
     @Override
-    public String getName() {
-        return javaThread.getName();
-    }
-
-    @Override
-    public void setName(String name) {
-        javaThread.setName(name);
-    }
-
-    @Override
-    public int getPriority() {
-        return javaThread.getPriority();
-    }
-
-    @Override
-    public void setPriority(int priority) {
-        javaThread.setPriority(priority);
-    }
-
-    @Override
-    public boolean isDaemon() {
-        return javaThread.isDaemon();
-    }
-
-    @Override
-    public void setDaemon(boolean daemon) {
-        javaThread.setDaemon(daemon);
-    }
-
-    @Override
-    public State getState() {
+    public int getState() {
         switch (javaThread.getState()) {
             case NEW:
-                return State.NEW;
+                return NEW;
             case RUNNABLE:
-                return State.RUNNABLE;
+                return RUNNABLE;
             case BLOCKED:
-                return State.BLOCKED;
             case WAITING:
-                return State.WAITING;
+                return WAITING;
             case TIMED_WAITING:
-                return State.TIMED_WAITING;
+                return TIMED_WAITING;
             case TERMINATED:
-                return State.TERMINATED;
+                return TERMINATED;
             default:
                 throw new AssertionError();
         }
@@ -91,16 +60,6 @@ final class JavaThreadImpl extends ThreadImpl {
     @Override
     public boolean isAlive() {
         return javaThread.isAlive();
-    }
-
-    @Override
-    public Object getBlocker() {
-        return LockSupport.getBlocker(javaThread);
-    }
-
-    @Override
-    public boolean isInterrupted() {
-        return javaThread.isInterrupted();
     }
 
     @Override
@@ -114,18 +73,17 @@ final class JavaThreadImpl extends ThreadImpl {
     }
 
     @Override
-    public void park(Object blocker) {
-        LockSupport.park(blocker);
-    }
-
-    @Override
-    public void parkNanos(long nanos) {
-        LockSupport.parkNanos(nanos);
-    }
-
-    @Override
-    public void parkNanos(Object blocker, long nanos) {
-        LockSupport.parkNanos(blocker, nanos);
+    public void park(long timeout, TimeUnit unit) {
+        long ms = unit.toMillis(timeout);
+        if (ms == 0) {
+            LockSupport.parkNanos(unit.toNanos(timeout));
+        } else {
+            int ns = excessNanos(timeout, ms, unit);
+            if (ns >= 500000) {
+                ms++;
+            }
+            LockSupport.park(ms);
+        }
     }
 
     @Override
@@ -134,23 +92,15 @@ final class JavaThreadImpl extends ThreadImpl {
     }
 
     @Override
-    public void parkUntil(Object blocker, long deadline) {
-        LockSupport.parkUntil(blocker, deadline);
-    }
-
-    @Override
     public void unpark() {
         LockSupport.unpark(javaThread);
     }
 
     @Override
-    public void sleep(long millis) throws InterruptedException {
-        java.lang.Thread.sleep(millis);
-    }
-
-    @Override
-    public void sleep(long millis, int nanos) throws InterruptedException {
-        java.lang.Thread.sleep(millis, nanos);
+    public void sleep(long timeout, TimeUnit unit) throws InterruptedException {
+        long ms = unit.toMillis(timeout);
+        int ns = excessNanos(timeout, ms, unit);
+        Thread.sleep(ms, ns);
     }
 
     @Override
@@ -159,13 +109,19 @@ final class JavaThreadImpl extends ThreadImpl {
     }
 
     @Override
-    public void join(long millis) throws InterruptedException {
-        javaThread.join(millis);
+    public void join(long timeout, TimeUnit unit) throws InterruptedException {
+        long ms = unit.toMillis(timeout);
+        javaThread.join(ms, excessNanos(timeout, ms, unit));
     }
 
     @Override
-    public void join(long millis, int nanos) throws InterruptedException {
-        javaThread.join(millis, nanos);
+    public boolean isInterrupted() {
+        return javaThread.isInterrupted();
+    }
+
+    @Override
+    public boolean interrupted() {
+        return Thread.interrupted();
     }
 
     @Override
@@ -174,27 +130,18 @@ final class JavaThreadImpl extends ThreadImpl {
     }
 
     @Override
-    public boolean interrupted() {
-        return java.lang.Thread.interrupted();
-    }
-
-    @Override
     public void yield() {
-        java.lang.Thread.yield();
+        Thread.yield();
     }
 
-    @Override
-    public boolean managed() {
-        return false;
-    }
-
-    @Override
-    public void manage() {
-        throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public String toString() {
-        return javaThread.toString();
+    private int excessNanos(long d, long m, TimeUnit unit) {
+        switch (unit) {
+            case NANOSECONDS:
+                return (int) (d - m * 1000000L);
+            case MICROSECONDS:
+                return (int) (d * 1000L - m * 1000000L);
+            default:
+                return 0;
+        }
     }
 }

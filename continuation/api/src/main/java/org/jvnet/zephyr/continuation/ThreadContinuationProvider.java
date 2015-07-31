@@ -24,15 +24,18 @@
 
 package org.jvnet.zephyr.continuation;
 
+import static java.util.Objects.requireNonNull;
+
 final class ThreadContinuationProvider extends ContinuationProvider {
 
     @Override
     public Continuation createContinuation(Runnable target) {
+        requireNonNull(target);
         return new ThreadContinuation(target);
     }
 
     @Override
     public void suspendContinuation() {
-        ThreadContinuation.suspend();
+        ContinuationThread.suspendContinuation();
     }
 }

@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+<?xml version="1.0" encoding="UTF-8"?><!--
   ~ The MIT License (MIT)
   ~
   ~ Copyright (c) 2015 Igor Konev
@@ -38,1051 +37,380 @@
     <build>
         <plugins>
             <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.7</source>
+                    <target>1.7</target>
+                    <compilerArgs>
+                        <arg>-XDignore.symbol.file</arg>
+                    </compilerArgs>
+                    <fork>true</fork>
+                    <executable>${jdk7.compilerExecutable}</executable>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${jdk7.sourceDirectory}/java/lang/Iterable.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/lang"/>
+                                <copy file="${jdk7.sourceDirectory}/java/lang/SecurityManager.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/lang"/>
+                                <copy file="${jdk7.sourceDirectory}/java/lang/System.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/lang"/>
+                                <copy file="${jdk7.sourceDirectory}/java/lang/Thread.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/lang"/>
+                                <copy file="${jdk7.sourceDirectory}/java/lang/ThreadGroup.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/lang"/>
+                                <copy file="${jdk7.sourceDirectory}/java/lang/ThreadLocal.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/lang"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/DatagramChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/Pipe.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/SelectableChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/SelectionKey.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/Selector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/ServerSocketChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/SocketChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/spi/AbstractInterruptibleChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels/spi"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/spi/AbstractSelectableChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels/spi"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/spi/AbstractSelectionKey.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels/spi"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/spi/AbstractSelector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels/spi"/>
+                                <copy file="${jdk7.sourceDirectory}/java/nio/channels/spi/SelectorProvider.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/nio/channels/spi"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/AbstractCollection.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/AbstractList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/AbstractMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/AbstractQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/AbstractSequentialList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/AbstractSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/ArrayDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/ArrayList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Arrays.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Collection.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Collections.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/ComparableTimSort.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Comparator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Deque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/DualPivotQuicksort.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/EnumMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/EnumSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/HashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/HashSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Hashtable.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/IdentityHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Iterator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/JumboEnumSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/LinkedHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/LinkedHashSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/LinkedList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/List.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/ListIterator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Map.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/NavigableMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/NavigableSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Objects.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/PriorityQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Properties.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Queue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Random.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/RegularEnumSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/ServiceLoader.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Set.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/SortedMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/SortedSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Stack.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/TimSort.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/TreeMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/TreeSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/Vector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/WeakHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/XMLUtils.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ArrayBlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/BlockingDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/BlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentLinkedDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentLinkedQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentNavigableMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentSkipListMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ConcurrentSkipListSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/CopyOnWriteArrayList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/CopyOnWriteArraySet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/CountDownLatch.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/CyclicBarrier.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/Delayed.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/DelayQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/Exchanger.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/Future.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/FutureTask.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/LinkedBlockingDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/LinkedBlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/LinkedTransferQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/PriorityBlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/RunnableFuture.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/Semaphore.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/SynchronousQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/ThreadLocalRandom.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/TimeUnit.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/TransferQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicInteger.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicIntegerArray.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicIntegerFieldUpdater.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicLong.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicLongArray.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicLongFieldUpdater.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicReference.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicReferenceArray.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/atomic/AtomicReferenceFieldUpdater.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/atomic"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/AbstractOwnableSynchronizer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/AbstractQueuedLongSynchronizer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/AbstractQueuedSynchronizer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/Condition.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/Lock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/LockSupport.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/ReadWriteLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/ReentrantLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                                <copy file="${jdk7.sourceDirectory}/java/util/concurrent/locks/ReentrantReadWriteLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl/java/util/concurrent/locks"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-patch-plugin</artifactId>
+                <configuration>
+                    <patches>
+                        <patch>jdk.patch</patch>
+                    </patches>
+                    <targetDirectory>${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/jcl
+                    </targetDirectory>
+                    <strip>4</strip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>patch</id>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/jdk</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jvnet.zephyr.maven</groupId>
                 <artifactId>javaflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/jcl/impl/UnsafeHolder.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/impl/nio/channels/DefaultSelectorProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/DatagramChannel.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/Pipe.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/Pipe$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/SelectableChannel.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/SelectionKey.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/Selector.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractInterruptibleChannel.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractInterruptibleChannel$*.class
-                        </exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelectableChannel.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelectionKey.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelector.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/AbstractSelector$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/impl/misc/UnsafeHolder.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/impl/nio/ch/DefaultSelectorProvider.class</exclude>
                     </excludes>
                     <excludedMethods>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.&lt;init&gt;(Ljava/lang/AutoCloseable;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.checkInterrupted()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.completed(Ljava/lang/Object;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ResultHandler.failed(Ljava/lang/Throwable;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.bind(Ljava/net/SocketAddress;I)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.supportedOptions()Ljava/util/Set;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/ServerSocketChannelImpl.implCloseSelectableChannel()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;Ljava/nio/channels/AsynchronousSocketChannel;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.bind(Ljava/net/SocketAddress;)Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.supportedOptions()Ljava/util/Set;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.shutdownInput()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.shutdownOutput()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.getRemoteAddress()Ljava/net/SocketAddress;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/nio/channels/SocketChannelImpl.implCloseSelectableChannel()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.addConditionWaiter()Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.doSignal(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.doSignalAll(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.signal()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.signalAll()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.checkInterruptWhileWaiting(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.reportInterruptAfterWait(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.hasWaiters()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.getWaitQueueLength()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject.getWaitingThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.compareAndSetState(JJ)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.enq(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.addWaiter(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.unparkSuccessor(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.setHeadAndPropagate(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;J)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.selfInterrupt()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.release(J)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.releaseShared(J)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.apparentlyFirstQueuedIsExclusive()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.hasQueuedPredecessors()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.getQueuedThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.getExclusiveQueuedThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.getSharedQueuedThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.transferForSignal(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.owns(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.hasWaiters(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.getWaitQueueLength(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject;)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.getWaitingThreads(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$ConditionObject;)Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.compareAndSetHead(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.compareAndSetTail(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.compareAndSetWaitStatus(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;II)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.compareAndSetNext(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedLongSynchronizer.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.addConditionWaiter()Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.doSignal(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.doSignalAll(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.signal()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.signalAll()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.checkInterruptWhileWaiting(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.reportInterruptAfterWait(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.hasWaiters()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.getWaitQueueLength()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject.getWaitingThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.compareAndSetState(II)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.enq(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.addWaiter(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.unparkSuccessor(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.setHeadAndPropagate(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.selfInterrupt()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.release(I)Z
+                        <excludedMethod>org/jvnet/zephyr/jcl/impl/nio/ch/ResultHandler.checkInterrupted()V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.releaseShared(I)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ResultHandler.completed(Ljava/lang/Object;Ljava/lang/Object;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.apparentlyFirstQueuedIsExclusive()Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ResultHandler.failed(Ljava/lang/Throwable;Ljava/lang/Object;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.hasQueuedPredecessors()Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ServerSocketChannelImpl.bind(Ljava/net/SocketAddress;I)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.getQueuedThreads()Ljava/util/Collection;
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ServerSocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.getExclusiveQueuedThreads()Ljava/util/Collection;
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ServerSocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.getSharedQueuedThreads()Ljava/util/Collection;
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ServerSocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.toString()Ljava/lang/String;
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ServerSocketChannelImpl.supportedOptions()Ljava/util/Set;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.transferForSignal(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/ServerSocketChannelImpl.implCloseSelectableChannel()V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.owns(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject;)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.bind(Ljava/net/SocketAddress;)Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.hasWaiters(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject;)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.getWaitQueueLength(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject;)I
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.getWaitingThreads(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject;)Ljava/util/Collection;
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.compareAndSetHead(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.supportedOptions()Ljava/util/Set;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.compareAndSetTail(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.shutdownInput()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.compareAndSetWaitStatus(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;II)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.shutdownOutput()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.compareAndSetNext(Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$Node;)Z
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.getRemoteAddress()Ljava/net/SocketAddress;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer.&lt;clinit&gt;()V
+                            org/jvnet/zephyr/jcl/impl/nio/ch/SocketChannelImpl.implCloseSelectableChannel()V
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/java/lang/Thread.currentThread()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;()V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/Runnable;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/Runnable;Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Ljava/lang/ThreadGroup;Ljava/lang/Runnable;Ljava/lang/String;J)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;Ljava/lang/Runnable;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;Ljava/lang/Runnable;Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.&lt;init&gt;(Lorg/jvnet/zephyr/thread/ThreadImplProvider;Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.start()V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.interrupt()V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.interrupted()Z</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.isInterrupted()Z</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.isAlive()Z</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.setPriority(I)V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.getPriority()I</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.setName(Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.getName()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.dumpStack()V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.setDaemon(Z)V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.isDaemon()Z</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/Thread.getId()J</excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.getState()Lorg/jvnet/zephyr/jcl/java/lang/Thread$State;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.setDefaultUncaughtExceptionHandler(Lorg/jvnet/zephyr/jcl/java/lang/Thread$UncaughtExceptionHandler;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.getDefaultUncaughtExceptionHandler()Lorg/jvnet/zephyr/jcl/java/lang/Thread$UncaughtExceptionHandler;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.getUncaughtExceptionHandler()Lorg/jvnet/zephyr/jcl/java/lang/Thread$UncaughtExceptionHandler;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread.setUncaughtExceptionHandler(Lorg/jvnet/zephyr/jcl/java/lang/Thread$UncaughtExceptionHandler;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.getEntry(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal;)Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap$Entry;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.getEntryAfterMiss(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal;ILorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap$Entry;)Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap$Entry;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.set(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.remove(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.replaceStaleEntry(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal;Ljava/lang/Object;I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.expungeStaleEntry(I)I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.cleanSomeSlots(II)Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.resize()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap.expungeStaleEntries()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadLocal.nextHashCode()I</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadLocal.set(Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/lang/ThreadLocal.remove()V</excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal.createMap(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadLocal.createInheritedMap(Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap;)Lorg/jvnet/zephyr/jcl/java/lang/ThreadLocal$ThreadLocalMap;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.open()Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.bind(Ljava/net/SocketAddress;)Lorg/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/ServerSocketChannel.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/NetworkChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/nio/channels/spi/SelectorProvider;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.open()Lorg/jvnet/zephyr/jcl/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljava/nio/channels/NetworkChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.bind(Ljava/net/SocketAddress;)Ljava/nio/channels/NetworkChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/nio/channels/SocketChannel.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/AbstractQueue.&lt;init&gt;()V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.seedUniquifier()J</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.&lt;init&gt;(J)V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.next(I)I</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/Random.writeObject(Ljava/io/ObjectOutputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.resetSeed(J)V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/Random.&lt;clinit&gt;()V</excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue.insert(Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue.extract()Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue.removeAt(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue.&lt;init&gt;(IZ)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue.&lt;init&gt;(IZLjava/util/Collection;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch$Sync.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch$Sync.getCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch$Sync.tryAcquireShared(I)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch$Sync.tryReleaseShared(I)Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch.countDown()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch.getCount()J
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/CountDownLatch.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CyclicBarrier.nextGeneration()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/CyclicBarrier.breakBarrier()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/CyclicBarrier.&lt;init&gt;(ILjava/lang/Runnable;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/DelayQueue.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/DelayQueue.&lt;init&gt;(Ljava/util/Collection;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.hashIndex()I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.createSlot(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.tryCancel(Lorg/jvnet/zephyr/jcl/java/util/concurrent/Exchanger$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/Exchanger$Slot;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.spinWait(Lorg/jvnet/zephyr/jcl/java/util/concurrent/Exchanger$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/Exchanger$Slot;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.scanOnTimeout(Lorg/jvnet/zephyr/jcl/java/util/concurrent/Exchanger$Node;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.getId(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)J
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Exchanger.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask$WaitNode.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.&lt;init&gt;(Ljava/lang/Runnable;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.removeWaiter(Lorg/jvnet/zephyr/jcl/java/util/concurrent/FutureTask$WaitNode;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/FutureTask.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$AbstractItr.succ(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;)Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$DescendingItr.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Itr.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.&lt;init&gt;(Ljava/util/Collection;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.linkFirst(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.linkLast(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.unlinkFirst()Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.unlinkLast()Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.unlink(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.writeObject(Ljava/io/ObjectOutputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingDeque.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue$Itr.nextNode(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue$Node;)Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue$Node;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.fullyUnlock()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.&lt;init&gt;(Ljava/util/Collection;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.size()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.remainingCapacity()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.unlink(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.writeObject(Ljava/io/ObjectOutputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Itr.advance(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Itr.remove()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.casNext(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.casItem(Ljava/lang/Object;Ljava/lang/Object;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.&lt;init&gt;(Ljava/lang/Object;Z)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.forgetNext()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.forgetContents()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.tryMatchData()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.casTail(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.casHead(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.casSweepVotes(II)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.tryAppend(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;Z)Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.spinsFor(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;Z)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.firstOfMode(Z)Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.countOfMode(Z)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.unsplice(Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;Lorg/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue$Node;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.sweep()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.&lt;init&gt;(Ljava/util/Collection;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.iterator()Ljava/util/Iterator;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.isEmpty()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.writeObject(Ljava/io/ObjectOutputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedTransferQueue.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.park(Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.parkNanos(Ljava/lang/Object;J)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.parkUntil(Ljava/lang/Object;J)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.park()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.parkNanos(J)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.parkUntil(J)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/PriorityBlockingQueue.&lt;init&gt;(ILjava/util/Comparator;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/PriorityBlockingQueue.&lt;init&gt;(Ljava/util/Collection;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/PriorityBlockingQueue.writeObject(Ljava/io/ObjectOutputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/PriorityBlockingQueue.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/PriorityBlockingQueue.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$FairSync.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$FairSync.tryAcquireShared(I)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$NonfairSync.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$NonfairSync.tryAcquireShared(I)I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$Sync.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$Sync.getPermits()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$Sync.nonfairTryAcquireShared(I)I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$Sync.tryReleaseShared(I)Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$Sync.reducePermits(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore$Sync.drainPermits()I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.&lt;init&gt;(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.&lt;init&gt;(IZ)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.tryAcquire()Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.release()V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.tryAcquire(I)Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.release(I)V</excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.availablePermits()I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.drainPermits()I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.reducePermits(I)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.hasQueuedThreads()Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.getQueueLength()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.getQueuedThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/Semaphore.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$FifoWaitQueue.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$LifoWaitQueue.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode.casNext(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode.casItem(Ljava/lang/Object;Ljava/lang/Object;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode.tryCancel(Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue.advanceHead(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue.advanceTail(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue.casCleanMe(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue.clean(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue$QNode;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferQueue.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode.casNext(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode.tryMatch(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode.tryCancel()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack.casHead(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack.snode(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;Ljava/lang/Object;Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;I)Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack.clean(Lorg/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack$SNode;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue$TransferStack.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue.&lt;init&gt;(Z)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue.writeObject(Ljava/io/ObjectOutputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue.objectFieldOffset(Lsun/misc/Unsafe;Ljava/lang/String;Ljava/lang/Class;)J
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/SynchronousQueue.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom$1.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom$1.initialValue()Lorg/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom.current()Lorg/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/ThreadLocalRandom.&lt;clinit&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$FairSync.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$FairSync.tryAcquire(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$NonfairSync.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$NonfairSync.tryAcquire(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.nonfairTryAcquire(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.tryRelease(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.isHeldExclusively()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.newCondition()Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.getOwner()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.getHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.isLocked()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock$Sync.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.&lt;init&gt;(Z)V
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.tryLock()Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.unlock()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.newCondition()Ljava/util/concurrent/locks/Condition;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.getHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.isHeldByCurrentThread()Z
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.isLocked()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.getOwner()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.hasQueuedThreads()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.hasQueuedThread(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.getQueueLength()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.getQueuedThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.hasWaiters(Ljava/util/concurrent/locks/Condition;)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.getWaitQueueLength(Ljava/util/concurrent/locks/Condition;)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.getWaitingThreads(Ljava/util/concurrent/locks/Condition;)Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantLock.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$FairSync.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$FairSync.writerShouldBlock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$FairSync.readerShouldBlock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$NonfairSync.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$NonfairSync.readerShouldBlock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.tryLock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.unlock()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$ReadLock.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync$HoldCounter.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync$ThreadLocalHoldCounter.initialValue()Lorg/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync$HoldCounter;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.&lt;init&gt;()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.tryRelease(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.tryAcquire(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.tryReleaseShared(I)Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.tryAcquireShared(I)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.fullTryAcquireShared(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.tryWriteLock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.tryReadLock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.isHeldExclusively()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.newCondition()Lorg/jvnet/zephyr/jcl/impl/util/concurrent/locks/AbstractQueuedSynchronizer$ConditionObject;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.getOwner()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.getReadLockCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.isWriteLocked()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.getWriteHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.getReadHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.readObject(Ljava/io/ObjectInputStream;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$Sync.getCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.tryLock()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.unlock()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.newCondition()Ljava/util/concurrent/locks/Condition;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.isHeldByCurrentThread()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock$WriteLock.getHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.&lt;init&gt;(Z)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getOwner()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getReadLockCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.isWriteLocked()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.isWriteLockedByCurrentThread()Z
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getWriteHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getReadHoldCount()I
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getQueuedWriterThreads()Ljava/util/Collection;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getQueuedReaderThreads()Ljava/util/Collection;
-                        </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.hasQueuedThreads()Z
+                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadThreadAccess.currentThread()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.hasQueuedThread(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Z
+                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadThreadAccess.setCurrentThread(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.hasWaiters(Ljava/util/concurrent/locks/Condition;)Z
+                            org/jvnet/zephyr/jcl/java/lang/ThreadUtils.getImpl(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Lorg/jvnet/zephyr/thread/ThreadImpl;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getWaitQueueLength(Ljava/util/concurrent/locks/Condition;)I
+                            org/jvnet/zephyr/jcl/java/lang/ThreadUtils.blockedOn(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Lorg/jvnet/zephyr/jcl/impl/nio/ch/Interruptible;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getWaitingThreads(Ljava/util/concurrent/locks/Condition;)Ljava/util/Collection;
+                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.setBlocker(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/lang/Object;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.toString()Ljava/lang/String;
+                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.unpark(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/ReentrantReadWriteLock.getId(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)J
+                            org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.getBlocker(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Ljava/lang/Object;
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>
@@ -1118,6 +446,13 @@
             <groupId>org.jvnet.zephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
             <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.util</groupId>
+            <artifactId>util-logging</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/lib/rt.jar</systemPath>
         </dependency>
     </dependencies>
 </project>

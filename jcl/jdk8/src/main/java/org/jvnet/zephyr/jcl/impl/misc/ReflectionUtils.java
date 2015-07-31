@@ -22,25 +22,27 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.thread;
+package org.jvnet.zephyr.jcl.impl.misc;
 
-import java.lang.Thread.UncaughtExceptionHandler;
+public final class ReflectionUtils {
 
-import static java.util.Objects.requireNonNull;
+    private static final InternalSecurityManager SECURITY_MANAGER = new InternalSecurityManager();
 
-final class JavaThreadImplProvider extends ThreadImplProvider {
+    private ReflectionUtils() {
+    }
 
-    @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T> threadAccess) {
-        requireNonNull(thread);
-        requireNonNull(threadAccess);
-        Thread javaThread = new Thread(thread);
-        javaThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                threadAccess.dispatchUncaughtException(thread, e);
-            }
-        });
-        return new JavaThreadImpl(javaThread);
+    public static Class<?>[] getClassContext() {
+        return SECURITY_MANAGER.getClassContext();
+    }
+
+    private static final class InternalSecurityManager extends SecurityManager {
+
+        InternalSecurityManager() {
+        }
+
+        @Override
+        protected Class[] getClassContext() {
+            return super.getClassContext();
+        }
     }
 }

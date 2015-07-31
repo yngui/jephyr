@@ -24,7 +24,7 @@
 
 package org.jvnet.zephyr.thread.continuation;
 
-import org.jvnet.zephyr.jcl.java.lang.Thread;
+import org.jvnet.zephyr.thread.ThreadAccess;
 import org.jvnet.zephyr.thread.ThreadImpl;
 import org.jvnet.zephyr.thread.ThreadImplProvider;
 
@@ -49,13 +49,10 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
     }
 
     @Override
-    public ThreadImpl createThreadImpl(Thread thread) {
-        return new ContinuationThreadImpl(thread, executor, scheduler);
-    }
-
-    @Override
-    public ThreadImpl createThreadImpl(Thread thread, String name) {
-        return new ContinuationThreadImpl(thread, executor, scheduler, requireNonNull(name));
+    public <T extends Runnable> ThreadImpl<T> createThreadImpl(T thread, ThreadAccess<T> threadAccess) {
+        requireNonNull(thread);
+        requireNonNull(threadAccess);
+        return new ContinuationThreadImpl<T>(thread, threadAccess, executor, scheduler);
     }
 
     private static Executor loadExecutor() {
@@ -82,8 +79,8 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
         }
 
         @Override
-        public java.lang.Thread newThread(Runnable r) {
-            java.lang.Thread thread = new java.lang.Thread(r);
+        public Thread newThread(Runnable r) {
+            Thread thread = new Thread(r);
             thread.setName(namePrefix + threadNum.getAndIncrement());
             thread.setDaemon(true);
             return thread;

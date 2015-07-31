@@ -24,8 +24,6 @@
 
 package org.jvnet.zephyr.thread;
 
-import org.jvnet.zephyr.jcl.java.lang.Thread;
-
 import java.lang.reflect.InvocationTargetException;
 import java.util.Iterator;
 import java.util.ServiceConfigurationError;
@@ -40,9 +38,7 @@ public abstract class ThreadImplProvider {
         return Holder.provider;
     }
 
-    public abstract ThreadImpl createThreadImpl(Thread thread);
-
-    public abstract ThreadImpl createThreadImpl(Thread thread, String name);
+    public abstract <T extends Runnable> ThreadImpl<T> createThreadImpl(T thread, ThreadAccess<T> threadAccess);
 
     private static final class Holder {
 

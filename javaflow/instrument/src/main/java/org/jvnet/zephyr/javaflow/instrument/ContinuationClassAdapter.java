@@ -64,10 +64,10 @@ public final class ContinuationClassAdapter extends ClassVisitor {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         // TODO skip native and abstract methods?
         if (predicate.apply(new MethodRef(className, name, desc))) {
-            if (log.isDebugEnabled()) {
-                log.debug("Instrumenting " + className + '.' + name + desc);
-            }
             if (name.charAt(0) != '<') {
+                if (log.isDebugEnabled()) {
+                    log.debug("Instrumenting " + className + '.' + name + desc);
+                }
                 return new ContinuationMethodAnalyzer(className, this.cv, mv, access, name, desc, signature, exceptions);
             }
         }

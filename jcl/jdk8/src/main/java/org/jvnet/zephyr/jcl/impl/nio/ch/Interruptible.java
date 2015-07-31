@@ -22,25 +22,11 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.thread;
+package org.jvnet.zephyr.jcl.impl.nio.ch;
 
-import java.lang.Thread.UncaughtExceptionHandler;
+import org.jvnet.zephyr.jcl.java.lang.Thread;
 
-import static java.util.Objects.requireNonNull;
+public interface Interruptible {
 
-final class JavaThreadImplProvider extends ThreadImplProvider {
-
-    @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T> threadAccess) {
-        requireNonNull(thread);
-        requireNonNull(threadAccess);
-        Thread javaThread = new Thread(thread);
-        javaThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                threadAccess.dispatchUncaughtException(thread, e);
-            }
-        });
-        return new JavaThreadImpl(javaThread);
-    }
+    void interrupt(Thread thread);
 }

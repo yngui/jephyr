@@ -22,25 +22,30 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.thread;
+package org.jvnet.zephyr.jcl.impl.misc;
 
-import java.lang.Thread.UncaughtExceptionHandler;
+import sun.misc.Unsafe;
 
-import static java.util.Objects.requireNonNull;
+import java.lang.reflect.Field;
 
-final class JavaThreadImplProvider extends ThreadImplProvider {
+public final class UnsafeHolder {
 
-    @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T> threadAccess) {
-        requireNonNull(thread);
-        requireNonNull(threadAccess);
-        Thread javaThread = new Thread(thread);
-        javaThread.setUncaughtExceptionHandler(new UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread t, Throwable e) {
-                threadAccess.dispatchUncaughtException(thread, e);
-            }
-        });
-        return new JavaThreadImpl(javaThread);
+    private static final Unsafe unsafe;
+
+    static {
+        try {
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            unsafe = (Unsafe) field.get(null);
+        } catch (Exception e) {
+            throw new Error(e);
+        }
+    }
+
+    private UnsafeHolder() {
+    }
+
+    public static Unsafe getUnsafe() {
+        return unsafe;
     }
 }

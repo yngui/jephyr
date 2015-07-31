@@ -34,7 +34,8 @@ public final class JavaflowContinuationProvider extends ContinuationProvider {
 
     @Override
     public Continuation createContinuation(Runnable target) {
-        return new JavaflowContinuation(requireNonNull(target));
+        requireNonNull(target);
+        return new JavaflowContinuation(target);
     }
 
     @Override

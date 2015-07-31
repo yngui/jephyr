@@ -50,6 +50,7 @@
                 <configuration>
                     <excludes>
                         <exclude>org/jvnet/zephyr/thread/continuation/AdaptingExecutor.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ExecuteTask.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$Node.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$UnparkTask.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider.class</exclude>
@@ -58,14 +59,7 @@
                         <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolExecutor$*.class</exclude>
                     </excludes>
                     <excludedMethods>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/util/concurrent/Executor;Ljava/util/concurrent/ScheduledExecutorService;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.&lt;init&gt;(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/util/concurrent/Executor;Ljava/util/concurrent/ScheduledExecutorService;Ljava/lang/String;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.getState()Lorg/jvnet/zephyr/jcl/java/lang/Thread$State;
+                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.getState()I
                         </excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.isAlive()Z
                         </excludedMethod>
@@ -73,10 +67,7 @@
                         </excludedMethod>
                         <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.unpark()V
                         </excludedMethod>
-                        <excludedMethod>
-                            org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.toString()Ljava/lang/String;
-                        </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.run()V
+                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.execute()V
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>
@@ -112,11 +103,6 @@
             <groupId>org.jvnet.zephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.zephyr.jcl</groupId>
-            <artifactId>jcl-jdk7</artifactId>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 </project>

@@ -25,9 +25,7 @@
 package org.jvnet.zephyr.thread.continuation;
 
 import org.jvnet.zephyr.continuation.Continuation;
-import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.lang.Thread.State;
-import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
+import org.jvnet.zephyr.thread.ThreadAccess;
 import org.jvnet.zephyr.thread.ThreadImpl;
 
 import java.util.concurrent.Executor;
@@ -38,96 +36,40 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 
-final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
-
-    private static final int NEW = 0;
-    private static final int RUNNABLE = 1;
-    private static final int WAITING = 2;
-    private static final int TIMED_WAITING = 3;
-    private static final int TERMINATED = 4;
+final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
     private static final AtomicInteger nextNum = new AtomicInteger();
 
+    private final AtomicInteger state = new AtomicInteger(NEW);
+    private final Runnable unparkTask = new UnparkTask();
+    private final AtomicReference<Node<T>> joiner = new AtomicReference<>();
+    private final T thread;
+    private final ThreadAccess<T> threadAccess;
     private final Executor executor;
     private final ScheduledExecutorService scheduler;
     private final Continuation continuation;
-    private final Runnable task;
-    private final AtomicInteger state = new AtomicInteger(NEW);
-    private final Runnable unparkTask = new UnparkTask();
-    private final AtomicReference<Node> joiner = new AtomicReference<>();
-    private volatile String name;
-    private volatile int priority;
-    private volatile boolean daemon;
-    private volatile Object blocker;
+    private final Runnable executeTask;
     private volatile boolean interrupted;
     private volatile boolean unparked;
     private ScheduledFuture<?> cancelable;
     private boolean yielded;
-    private volatile boolean managed = true;
-    private java.lang.Thread javaThread;
+    private volatile boolean unsuspendable;
+    private Thread javaThread;
 
-    ContinuationThreadImpl(Thread thread, Executor executor, ScheduledExecutorService scheduler) {
-        this(thread, executor, scheduler, "Thread-" + nextNum.getAndIncrement());
-    }
-
-    ContinuationThreadImpl(Thread thread, Executor executor, ScheduledExecutorService scheduler, String name) {
-        super(thread);
+    ContinuationThreadImpl(T thread, ThreadAccess<T> threadAccess, Executor executor,
+            ScheduledExecutorService scheduler) {
+        this.thread = thread;
+        this.threadAccess = threadAccess;
         this.executor = executor;
         this.scheduler = scheduler;
-        this.name = name;
         continuation = Continuation.create(thread);
-        task = executor instanceof AdaptingExecutor ? ((AdaptingExecutor) executor).adapt(this) : this;
+        executeTask = executor instanceof AdaptingExecutor ? ((AdaptingExecutor) executor).adapt(new ExecuteTask()) :
+                new ExecuteTask();
     }
 
     @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    @Override
-    public int getPriority() {
-        return priority;
-    }
-
-    @Override
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-    @Override
-    public boolean isDaemon() {
-        return daemon;
-    }
-
-    @Override
-    public void setDaemon(boolean daemon) {
-        if (isAlive()) {
-            throw new IllegalThreadStateException();
-        }
-        this.daemon = daemon;
-    }
-
-    @Override
-    public State getState() {
-        switch (state.get()) {
-            case NEW:
-                return State.NEW;
-            case RUNNABLE:
-                return State.RUNNABLE;
-            case WAITING:
-                return State.WAITING;
-            case TIMED_WAITING:
-                return State.TIMED_WAITING;
-            case TERMINATED:
-                return State.TERMINATED;
-            default:
-                throw new AssertionError();
-        }
+    public int getState() {
+        return state.get();
     }
 
     @Override
@@ -137,21 +79,11 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
     }
 
     @Override
-    public Object getBlocker() {
-        return blocker;
-    }
-
-    @Override
-    public boolean isInterrupted() {
-        return interrupted;
-    }
-
-    @Override
     public void start() {
         if (!state.compareAndSet(NEW, RUNNABLE)) {
             throw new IllegalStateException();
         }
-        executor.execute(task);
+        executor.execute(executeTask);
     }
 
     @Override
@@ -160,46 +92,32 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
             unparked = false;
         } else {
             cancelable = null;
-            if (managed) {
-                Continuation.suspend();
-            } else {
+            if (unsuspendable) {
                 state.set(WAITING);
                 while (state.get() != RUNNABLE) {
                     LockSupport.park();
                 }
+            } else {
+                Continuation.suspend();
             }
         }
     }
 
     @Override
-    public void park(Object blocker) {
-        this.blocker = blocker;
-        park();
-        this.blocker = null;
-    }
-
-    @Override
-    public void parkNanos(long nanos) {
+    public void park(long timeout, TimeUnit unit) {
         if (unparked) {
             unparked = false;
         } else {
-            cancelable = scheduler.schedule(unparkTask, nanos, TimeUnit.NANOSECONDS);
-            if (managed) {
-                Continuation.suspend();
-            } else {
+            cancelable = scheduler.schedule(unparkTask, timeout, unit);
+            if (unsuspendable) {
                 state.set(TIMED_WAITING);
                 while (state.get() != RUNNABLE) {
                     LockSupport.park();
                 }
+            } else {
+                Continuation.suspend();
             }
         }
-    }
-
-    @Override
-    public void parkNanos(Object blocker, long nanos) {
-        this.blocker = blocker;
-        parkNanos(nanos);
-        this.blocker = null;
     }
 
     @Override
@@ -210,23 +128,16 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
             long delay = deadline - System.currentTimeMillis();
             if (delay > 0) {
                 cancelable = scheduler.schedule(unparkTask, delay, TimeUnit.MILLISECONDS);
-                if (managed) {
-                    Continuation.suspend();
-                } else {
+                if (unsuspendable) {
                     state.set(TIMED_WAITING);
                     while (state.get() != RUNNABLE) {
                         LockSupport.park();
                     }
+                } else {
+                    Continuation.suspend();
                 }
             }
         }
-    }
-
-    @Override
-    public void parkUntil(Object blocker, long deadline) {
-        this.blocker = blocker;
-        parkUntil(deadline);
-        this.blocker = null;
     }
 
     @Override
@@ -237,10 +148,10 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
             if (state == WAITING) {
                 if (this.state.compareAndSet(WAITING, RUNNABLE)) {
                     unparked = false;
-                    if (managed) {
-                        executor.execute(task);
-                    } else {
+                    if (unsuspendable) {
                         LockSupport.unpark(javaThread);
+                    } else {
+                        executor.execute(executeTask);
                     }
                     return;
                 }
@@ -249,10 +160,10 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
                     unparked = false;
                     cancelable.cancel(false);
                     cancelable = null;
-                    if (managed) {
-                        executor.execute(task);
-                    } else {
+                    if (unsuspendable) {
                         LockSupport.unpark(javaThread);
+                    } else {
+                        executor.execute(executeTask);
                     }
                     return;
                 }
@@ -263,85 +174,50 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
     }
 
     @Override
-    public void sleep(long millis) throws InterruptedException {
-        if (millis < 0) {
+    public void sleep(long timeout, TimeUnit unit) throws InterruptedException {
+        if (timeout < 0) {
             throw new IllegalArgumentException();
         }
-        if (millis == 0) {
+        if (timeout == 0) {
             return;
         }
         long start = System.currentTimeMillis();
-        long delay = millis;
+        long remaining = timeout;
         do {
-            cancelable = scheduler.schedule(unparkTask, delay, TimeUnit.MILLISECONDS);
-            if (managed) {
-                Continuation.suspend();
-            } else {
+            cancelable = scheduler.schedule(unparkTask, remaining, unit);
+            if (unsuspendable) {
                 state.set(TIMED_WAITING);
                 while (state.get() != RUNNABLE) {
                     LockSupport.park();
                 }
+            } else {
+                Continuation.suspend();
             }
             if (interrupted()) {
                 throw new InterruptedException();
             }
-            delay = start - System.currentTimeMillis() + millis;
-        } while (delay > 0);
-    }
-
-    @Override
-    public void sleep(long millis, int nanos) throws InterruptedException {
-        if (millis < 0) {
-            throw new IllegalArgumentException("timeout value is negative");
-        }
-        if (nanos < 0 || nanos > 999999) {
-            throw new IllegalArgumentException("nanosecond timeout value out of range");
-        }
-        if (nanos >= 500000 || nanos != 0 && millis == 0) {
-            millis++;
-        }
-        sleep(millis);
+            remaining = start - System.currentTimeMillis() + timeout;
+        } while (remaining > 0);
     }
 
     @Override
     public void join() throws InterruptedException {
-        join(0);
-    }
-
-    @Override
-    public void join(long millis) throws InterruptedException {
         long base = System.currentTimeMillis();
 
-        if (millis < 0) {
-            throw new IllegalArgumentException("timeout value is negative");
-        }
+        T thread = threadAccess.currentThread();
+        ThreadImpl<T> impl = threadAccess.getImpl(thread);
 
-        Node node;
-        Node next;
+        Node<T> node;
+        Node<T> next;
         do {
             next = joiner.get();
-            node = new Node(Thread.currentThread(), next);
+            node = new Node<>(thread, next);
         } while (!joiner.compareAndSet(next, node));
 
-        if (millis == 0) {
-            while (isAlive()) {
-                ThreadUtils.park();
-                if (Thread.interrupted()) {
-                    throw new InterruptedException();
-                }
-            }
-        } else {
-            long now = 0;
-            while (isAlive()) {
-                long delay = millis - now;
-                if (delay <= 0) {
-                    break;
-                }
-                ThreadUtils.parkNanos(delay > Long.MAX_VALUE / 1000000 ? Long.MAX_VALUE : delay * 1000000);
-                if (Thread.interrupted()) {
-                    throw new InterruptedException();
-                }
-                now = System.currentTimeMillis() - base;
+        while (isAlive()) {
+            impl.park();
+            if (impl.interrupted()) {
+                throw new InterruptedException();
             }
         }
 
@@ -349,23 +225,42 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
     }
 
     @Override
-    public void join(long millis, int nanos) throws InterruptedException {
-        if (millis < 0) {
+    public void join(long timeout, TimeUnit unit) throws InterruptedException {
+        long base = System.currentTimeMillis();
+
+        if (timeout < 0) {
             throw new IllegalArgumentException("timeout value is negative");
         }
-        if (nanos < 0 || nanos > 999999) {
-            throw new IllegalArgumentException("nanosecond timeout value out of range");
+
+        T thread = threadAccess.currentThread();
+        ThreadImpl<T> impl = threadAccess.getImpl(thread);
+
+        Node<T> node;
+        Node<T> next;
+        do {
+            next = joiner.get();
+            node = new Node<>(thread, next);
+        } while (!joiner.compareAndSet(next, node));
+
+        long now = 0;
+        while (isAlive()) {
+            long remaining = timeout - now;
+            if (remaining <= 0) {
+                break;
+            }
+            impl.park(remaining, unit);
+            if (impl.interrupted()) {
+                throw new InterruptedException();
+            }
+            now = System.currentTimeMillis() - base;
         }
-        if (nanos >= 500000 || nanos != 0 && millis == 0) {
-            millis++;
-        }
-        join(millis);
+
+        node.thread.set(null);
     }
 
     @Override
-    public void interrupt() {
-        interrupted = true;
-        unpark();
+    public boolean isInterrupted() {
+        return interrupted;
     }
 
     @Override
@@ -379,53 +274,45 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
     }
 
     @Override
+    public void interrupt() {
+        interrupted = true;
+        unpark();
+    }
+
+    @Override
     public void yield() {
-        if (managed) {
+        if (unsuspendable) {
+            Thread.yield();
+        } else {
             yielded = true;
             Continuation.suspend();
-        } else {
-            java.lang.Thread.yield();
         }
     }
 
-    @Override
-    public boolean managed() {
-        boolean managed = this.managed;
-        javaThread = java.lang.Thread.currentThread();
-        this.managed = false;
-        return managed;
-    }
-
-    @Override
-    public void manage() {
-        javaThread = null;
-        managed = true;
-    }
-
-    @Override
-    public String toString() {
-        return "Thread[" + getThread().getName() + ',' + priority + ']';
-    }
-
-    @Override
-    public void run() {
-        setCurrentThread(getThread());
+    private void execute() {
+        threadAccess.setCurrentThread(thread);
 
         boolean suspended;
         try {
             suspended = continuation.resume();
         } catch (Throwable e) {
-            dispatchUncaughtException(getThread(), e);
+            boolean unsuspendable = this.unsuspendable;
+            this.unsuspendable = true;
+            try {
+                threadAccess.dispatchUncaughtException(thread, e);
+            } finally {
+                this.unsuspendable = unsuspendable;
+            }
             suspended = false;
         }
 
         if (!suspended) {
             state.set(TERMINATED);
-            Node node = joiner.getAndSet(null);
+            Node<T> node = joiner.getAndSet(null);
             while (node != null) {
-                Thread thread = node.thread.getAndSet(null);
+                T thread = node.thread.getAndSet(null);
                 if (thread != null) {
-                    ThreadUtils.unpark(thread);
+                    threadAccess.getImpl(thread).unpark();
                 }
                 node = node.next;
             }
@@ -434,7 +321,7 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
 
         if (yielded) {
             yielded = false;
-            executor.execute(task);
+            executor.execute(executeTask);
             return;
         }
 
@@ -450,7 +337,7 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
                 if (state == WAITING) {
                     if (this.state.compareAndSet(WAITING, RUNNABLE)) {
                         unparked = false;
-                        executor.execute(task);
+                        executor.execute(executeTask);
                         return;
                     }
                 } else if (state == TIMED_WAITING) {
@@ -458,7 +345,7 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
                         unparked = false;
                         cancelable.cancel(false);
                         cancelable = null;
-                        executor.execute(task);
+                        executor.execute(executeTask);
                         return;
                     }
                 } else {
@@ -468,22 +355,36 @@ final class ContinuationThreadImpl extends ThreadImpl implements Runnable {
         }
     }
 
-    private static final class Node {
+    private final class ExecuteTask implements Runnable {
 
-        final AtomicReference<Thread> thread = new AtomicReference<>();
-        final Node next;
+        ExecuteTask() {
+        }
 
-        Node(Thread thread, Node next) {
-            this.thread.set(thread);
-            this.next = next;
+        @Override
+        public void run() {
+            execute();
         }
     }
 
     private final class UnparkTask implements Runnable {
 
+        UnparkTask() {
+        }
+
         @Override
         public void run() {
             unpark();
+        }
+    }
+
+    private static final class Node<T> {
+
+        final AtomicReference<T> thread = new AtomicReference<>();
+        final Node<T> next;
+
+        Node(T thread, Node<T> next) {
+            this.thread.set(thread);
+            this.next = next;
         }
     }
 }
