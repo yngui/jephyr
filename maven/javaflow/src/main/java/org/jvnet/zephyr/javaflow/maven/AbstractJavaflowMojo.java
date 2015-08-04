@@ -31,9 +31,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.zephyr.javaflow.instrument.AnalyzingMethodRefPredicate;
-import org.jvnet.zephyr.javaflow.instrument.AsmClassTransformer;
+import org.jvnet.zephyr.javaflow.instrument.ContinuationClassAdapter;
 import org.jvnet.zephyr.javaflow.instrument.MethodRef;
 import org.jvnet.zephyr.javaflow.instrument.Predicate;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
+import org.objectweb.asm.util.CheckClassAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -94,13 +97,12 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
 
         Path outputPath = outputDirectory.toPath();
         Path classesPath = classesDirectory.toPath();
-        AsmClassTransformer transformer = new AsmClassTransformer(
-                new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
-                    @Override
-                    public boolean apply(MethodRef input) {
-                        return !excludedMethods.contains(input.getOwner() + '.' + input.getName() + input.getDesc());
-                    }
-                }, Thread.currentThread().getContextClassLoader()));
+        Predicate<MethodRef> predicate = new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
+            @Override
+            public boolean apply(MethodRef input) {
+                return !excludedMethods.contains(input.getOwner() + '.' + input.getName() + input.getDesc());
+            }
+        }, Thread.currentThread().getContextClassLoader());
 
         if (classesDirectory.isDirectory()) {
             for (File file : listFiles(classesDirectory, null, true)) {
@@ -109,7 +111,7 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
                 if (file.lastModified() > destination.lastModified()) {
                     String name = relativePath.toString();
                     if (isExtension(name, "class") && isIncluded(name)) {
-                        transform(transformer, file, destination);
+                        transform(predicate, file, destination);
                     } else {
                         copy(file, destination);
                     }
@@ -142,7 +144,7 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
         return include;
     }
 
-    private static void transform(AsmClassTransformer transformer, File file, File destination)
+    private static void transform(Predicate<MethodRef> predicate, File file, File destination)
             throws MojoExecutionException {
         byte[] original;
         try {
@@ -150,7 +152,38 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
         } catch (IOException e) {
             throw new MojoExecutionException("An error occurred while reading " + file, e);
         }
-        byte[] transformed = transformer.transform(original);
+
+        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
+            @Override
+            protected String getCommonSuperClass(String type1, String type2) {
+                Class<?> c, d;
+                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+                try {
+                    c = Class.forName(type1.replace('/', '.'), false, classLoader);
+                    d = Class.forName(type2.replace('/', '.'), false, classLoader);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+                if (c.isAssignableFrom(d)) {
+                    return type1;
+                }
+                if (d.isAssignableFrom(c)) {
+                    return type2;
+                }
+                if (c.isInterface() || d.isInterface()) {
+                    return "java/lang/Object";
+                } else {
+                    do {
+                        c = c.getSuperclass();
+                    } while (!c.isAssignableFrom(d));
+                    return c.getName().replace('.', '/');
+                }
+            }
+        };
+        ClassReader reader = new ClassReader(original);
+        reader.accept(new ContinuationClassAdapter(new CheckClassAdapter(writer, false), predicate), 0);
+        byte[] transformed = writer.toByteArray();
+
         try {
             writeByteArrayToFile(destination, transformed);
         } catch (IOException e) {

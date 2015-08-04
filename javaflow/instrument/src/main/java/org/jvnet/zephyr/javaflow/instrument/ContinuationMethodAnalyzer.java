@@ -16,10 +16,8 @@
  */
 package org.jvnet.zephyr.javaflow.instrument;
 
-import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
@@ -30,6 +28,7 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.tree.analysis.Analyzer;
 import org.objectweb.asm.tree.analysis.AnalyzerException;
+import org.objectweb.asm.tree.analysis.BasicValue;
 import org.objectweb.asm.tree.analysis.Frame;
 import org.objectweb.asm.tree.analysis.SimpleVerifier;
 import org.objectweb.asm.tree.analysis.SourceInterpreter;
@@ -39,40 +38,56 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
-public class ContinuationMethodAnalyzer extends MethodNode implements Opcodes {
+import static org.objectweb.asm.Opcodes.ACONST_NULL;
+import static org.objectweb.asm.Opcodes.ASM5;
+import static org.objectweb.asm.Opcodes.DUP;
+import static org.objectweb.asm.Opcodes.DUP2_X1;
+import static org.objectweb.asm.Opcodes.DUP2_X2;
+import static org.objectweb.asm.Opcodes.DUP_X1;
+import static org.objectweb.asm.Opcodes.DUP_X2;
+import static org.objectweb.asm.Opcodes.ILOAD;
+import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
+import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
+import static org.objectweb.asm.Opcodes.INVOKESTATIC;
+import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
+import static org.objectweb.asm.Opcodes.ISTORE;
+import static org.objectweb.asm.Opcodes.NEW;
+import static org.objectweb.asm.Opcodes.POP;
+import static org.objectweb.asm.Opcodes.POP2;
+import static org.objectweb.asm.Opcodes.SWAP;
 
-    protected final String className;
-    protected final ClassVisitor cv;
-    protected final MethodVisitor mv;
+final class ContinuationMethodAnalyzer extends MethodNode {
 
-    protected final List<Label> labels = new ArrayList<Label>();
-    protected final List<MethodInsnNode> nodes = new ArrayList<MethodInsnNode>();
-    protected final List<MethodInsnNode> methods = new ArrayList<MethodInsnNode>();
+    private final String className;
+    final MethodVisitor mv;
+    final List<Label> labels = new ArrayList<>();
+    final List<MethodInsnNode> nodes = new ArrayList<>();
+    private final List<MethodInsnNode> methods = new ArrayList<>();
+    Analyzer<BasicValue> analyzer;
+    int stackRecorderVar;
 
-    protected Analyzer analyzer;
-    public int stackRecorderVar;
-
-    public ContinuationMethodAnalyzer(String className, ClassVisitor cv, MethodVisitor mv, int access, String name, String desc, String signature, String[] exceptions) {
-        super(Opcodes.ASM5, access, name, desc, signature, exceptions);
+    ContinuationMethodAnalyzer(String className, MethodVisitor mv, int access, String name, String desc,
+            String signature, String[] exceptions) {
+        super(ASM5, access, name, desc, signature, exceptions);
         this.className = className;
-        this.cv = cv;
         this.mv = mv;
     }
 
-    public int getIndex(AbstractInsnNode node) {
+    int getIndex(AbstractInsnNode node) {
         return instructions.indexOf(node);
     }
 
+    @Override
     public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
         MethodInsnNode mnode = new MethodInsnNode(opcode, owner, name, desc, itf);
         if (opcode == INVOKESPECIAL || name.charAt(0) == '<') {
             methods.add(mnode);
         }
-        if (needsFrameGuard(opcode, owner, name, desc) /* && transformer.inScope(owner, name)*/) {
+        if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && !name.equals("<init>") || opcode == INVOKESTATIC ||
+                opcode == INVOKEVIRTUAL) {
             Label label = new Label();
-            super.visitLabel(label);
+            visitLabel(label);
             labels.add(label);
             nodes.add(mnode);
         }
@@ -93,249 +108,192 @@ public class ContinuationMethodAnalyzer extends MethodNode implements Opcodes {
 
     @Override
     public void visitEnd() {
-        if (instructions.size() == 0 || labels.size() == 0) {
+        if (instructions.size() == 0 || labels.isEmpty()) {
             accept(mv);
             return;
         }
 
-        /*
-        {
-                  TraceMethodVisitor mv = new TraceMethodVisitor();
-                  System.err.println(name + desc);
-                  for (int j = 0; j < instructions.size(); ++j) {
-                      ((AbstractInsnNode) instructions.get(j)).accept(mv);
-                      System.err.print("   " + mv.text.get(j)); // mv.text.get(j));
-                  }
-                  System.err.println();
-        }
-        */
-
-        this.stackRecorderVar = maxLocals;
+        stackRecorderVar = maxLocals;
         try {
             moveNew();
 
-            // analyzer = new Analyzer(new BasicVerifier());
-            analyzer = new Analyzer(new SimpleVerifier() {
-
+            analyzer = new Analyzer<>(new SimpleVerifier() {
+                @Override
                 protected Class<?> getClass(Type t) {
                     try {
                         if (t.getSort() == Type.ARRAY) {
-                            return Class.forName(t.getDescriptor().replace('/', '.'), true, Thread.currentThread().getContextClassLoader());
+                            return Class.forName(t.getDescriptor().replace('/', '.'), true,
+                                    Thread.currentThread().getContextClassLoader());
                         }
                         return Class.forName(t.getClassName(), true, Thread.currentThread().getContextClassLoader());
                     } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e.toString());
+                        throw new RuntimeException(e);
                     }
                 }
-            }) {
-
-                protected Frame newFrame(final int nLocals, final int nStack) {
-                    return new MonitoringFrame(nLocals, nStack);
-                }
-
-                protected Frame newFrame(final Frame src) {
-                    return new MonitoringFrame(src);
-                }
-
-                public Frame[] analyze(final String owner, final MethodNode m) throws AnalyzerException {
-                    // System.out.println("Analyze: "+owner+"|"+m.name+"|"+m.signature+"|"+m.tryCatchBlocks);
-                    final Frame[] frames = super.analyze(owner, m);
-                    for (int i = 0; i < m.instructions.size(); i++) {
-                        int opcode = m.instructions.get(i).getOpcode();
-                        if (opcode == MONITORENTER || opcode == MONITOREXIT) {
-                            // System.out.println(i);
-                        }
-                    }
-                    return frames;
-                }
-            };
+            });
 
             analyzer.analyze(className, this);
             accept(new ContinuationMethodAdapter(this));
-
-            /*
-            {
-                      TraceMethodVisitor mv = new TraceMethodVisitor();
-                      System.err.println("=================");
-
-                      System.err.println(name + desc);
-                      for (int j = 0; j < instructions.size(); ++j) {
-                          ((AbstractInsnNode) instructions.get(j)).accept(mv);
-                          System.err.print("   " + mv.text.get(j)); // mv.text.get(j));
-                      }
-                      System.err.println();
-            }
-            */
-
         } catch (AnalyzerException ex) {
             throw new RuntimeException(ex);
         }
     }
 
-    @SuppressWarnings("unchecked")
-    void moveNew() throws AnalyzerException {
-        SourceInterpreter i = new SourceInterpreter();
-        Analyzer a = new Analyzer(i);
-        a.analyze(className, this);
+    private void moveNew() throws AnalyzerException {
+        Analyzer<SourceValue> analyzer = new Analyzer<>(new SourceInterpreter());
+        analyzer.analyze(className, this);
+        Frame<SourceValue>[] frames = analyzer.getFrames();
 
-        final HashMap<AbstractInsnNode, MethodInsnNode> movable = new HashMap<AbstractInsnNode, MethodInsnNode>();
+        Map<AbstractInsnNode, MethodInsnNode> nodes = new HashMap<>();
 
-        Frame[] frames = a.getFrames();
-        for (int j = 0; j < methods.size(); j++) {
-            MethodInsnNode mnode = methods.get(j);
+        for (MethodInsnNode node : methods) {
             // require to move NEW instruction
-            int n = instructions.indexOf(mnode);
-            Frame f = frames[n];
-            Type[] args = Type.getArgumentTypes(mnode.desc);
+            int n = instructions.indexOf(node);
+            Frame<SourceValue> frame = frames[n];
+            Type[] types = Type.getArgumentTypes(node.desc);
+            SourceValue value = frame.getStack(frame.getStackSize() - types.length - 1);
 
-            SourceValue v = (SourceValue) f.getStack(f.getStackSize() - args.length - 1);
-            Set<AbstractInsnNode> insns = v.insns;
-            for (final AbstractInsnNode ins : insns) {
-                if (ins.getOpcode() == NEW) {
-                    movable.put(ins, mnode);
+            for (AbstractInsnNode node1 : value.insns) {
+                if (node1.getOpcode() == NEW) {
+                    nodes.put(node1, node);
                 } else {
                     // other known patterns
-                    int n1 = instructions.indexOf(ins);
-                    if (ins.getOpcode() == DUP) { // <init> with params
-                        AbstractInsnNode ins1 = instructions.get(n1 - 1);
-                        if (ins1.getOpcode() == NEW) {
-                            movable.put(ins1, mnode);
+                    int n1 = instructions.indexOf(node1);
+
+                    if (node1.getOpcode() == DUP) { // <init> with params
+                        AbstractInsnNode node2 = instructions.get(n1 - 1);
+                        if (node2.getOpcode() == NEW) {
+                            nodes.put(node2, node);
                         }
-                    } else if (ins.getOpcode() == SWAP) { // in exception handler
-                        AbstractInsnNode ins1 = instructions.get(n1 - 1);
-                        AbstractInsnNode ins2 = instructions.get(n1 - 2);
-                        if (ins1.getOpcode() == DUP_X1 && ins2.getOpcode() == NEW) {
-                            movable.put(ins2, mnode);
+                    } else if (node1.getOpcode() == SWAP) { // in exception handler
+                        AbstractInsnNode node2 = instructions.get(n1 - 1);
+                        AbstractInsnNode node3 = instructions.get(n1 - 2);
+                        if (node2.getOpcode() == DUP_X1 && node3.getOpcode() == NEW) {
+                            nodes.put(node3, node);
                         }
                     }
                 }
             }
         }
 
-        int updateMaxStack = 0;
-        for (final Map.Entry<AbstractInsnNode, MethodInsnNode> e : movable.entrySet()) {
-            AbstractInsnNode node1 = e.getKey();
-            int n1 = instructions.indexOf(node1);
-            AbstractInsnNode node2 = instructions.get(n1 + 1);
-            AbstractInsnNode node3 = instructions.get(n1 + 2);
-            int producer = node2.getOpcode();
+        int maxStackDelta = 0;
 
+        for (Map.Entry<AbstractInsnNode, MethodInsnNode> entry : nodes.entrySet()) {
+            AbstractInsnNode node1 = entry.getKey();
+            int n = instructions.indexOf(node1);
+            AbstractInsnNode node2 = instructions.get(n + 1);
+            AbstractInsnNode node3 = instructions.get(n + 2);
             instructions.remove(node1); // NEW
             boolean requireDup = false;
-            if (producer == DUP) {
+
+            int opcode = node2.getOpcode();
+            if (opcode == DUP) {
                 instructions.remove(node2); // DUP
                 requireDup = true;
-            } else if (producer == DUP_X1) {
+            } else if (opcode == DUP_X1) {
                 instructions.remove(node2); // DUP_X1
                 instructions.remove(node3); // SWAP
                 requireDup = true;
             }
 
-            MethodInsnNode mnode = (MethodInsnNode) e.getValue();
-            AbstractInsnNode nm = mnode;
-
-            int varOffset = stackRecorderVar + 1;
-            Type[] args = Type.getArgumentTypes(mnode.desc);
+            MethodInsnNode node = entry.getValue();
+            int var = stackRecorderVar + 1;
+            Type[] types = Type.getArgumentTypes(node.desc);
+            int len = types.length;
 
             // optimizations for some common cases
-            if (args.length == 0) {
-                final InsnList doNew = new InsnList();
-                doNew.add(node1); // NEW
-                if (requireDup)
-                    doNew.add(new InsnNode(DUP));
-                instructions.insertBefore(nm, doNew);
-                nm = doNew.getLast();
-                continue;
-            }
+            if (len == 0) {
+                InsnList list = new InsnList();
+                list.add(node1); // NEW
 
-            if (args.length == 1 && args[0].getSize() == 1) {
-                final InsnList doNew = new InsnList();
-                doNew.add(node1); // NEW
                 if (requireDup) {
-                    doNew.add(new InsnNode(DUP));
-                    doNew.add(new InsnNode(DUP2_X1));
-                    doNew.add(new InsnNode(POP2));
-                    updateMaxStack = updateMaxStack < 2 ? 2 : updateMaxStack; // a two extra slots for temp values
-                } else
-                    doNew.add(new InsnNode(SWAP));
-                instructions.insertBefore(nm, doNew);
-                nm = doNew.getLast();
-                continue;
-            }
+                    list.add(new InsnNode(DUP));
+                }
 
-            // TODO this one untested!
-            if ((args.length == 1 && args[0].getSize() == 2) || (args.length == 2 && args[0].getSize() == 1 && args[1].getSize() == 1)) {
-                final InsnList doNew = new InsnList();
-                doNew.add(node1); // NEW
+                instructions.insertBefore(node, list);
+            } else if (len == 1 && types[0].getSize() == 1) {
+                InsnList list = new InsnList();
+                list.add(node1); // NEW
+
                 if (requireDup) {
-                    doNew.add(new InsnNode(DUP));
-                    doNew.add(new InsnNode(DUP2_X2));
-                    doNew.add(new InsnNode(POP2));
-                    updateMaxStack = updateMaxStack < 2 ? 2 : updateMaxStack; // a two extra slots for temp values
+                    list.add(new InsnNode(DUP));
+                    list.add(new InsnNode(DUP2_X1));
+                    list.add(new InsnNode(POP2));
+
+                    if (maxStackDelta < 2) {
+                        maxStackDelta = 2; // a two extra slots for temp values
+                    }
                 } else {
-                    doNew.add(new InsnNode(DUP_X2));
-                    doNew.add(new InsnNode(POP));
-                    updateMaxStack = updateMaxStack < 1 ? 1 : updateMaxStack; // an extra slot for temp value
+                    list.add(new InsnNode(SWAP));
                 }
-                instructions.insertBefore(nm, doNew);
-                nm = doNew.getLast();
-                continue;
-            }
 
-            final InsnList doNew = new InsnList();
-            // generic code using temporary locals
-            // save stack
-            for (int j = args.length - 1; j >= 0; j--) {
-                Type type = args[j];
+                instructions.insertBefore(node, list);
+            } else if (len == 1 && types[0].getSize() == 2 ||
+                    len == 2 && types[0].getSize() == 1 && types[1].getSize() == 1) {
+                // TODO this one untested!
+                InsnList list = new InsnList();
+                list.add(node1); // NEW
 
-                doNew.add(new VarInsnNode(type.getOpcode(ISTORE), varOffset));
-                varOffset += type.getSize();
-            }
-            if (varOffset > maxLocals) {
-                maxLocals = varOffset;
-            }
+                if (requireDup) {
+                    list.add(new InsnNode(DUP));
+                    list.add(new InsnNode(DUP2_X2));
+                    list.add(new InsnNode(POP2));
 
-            doNew.add(node1); // NEW
+                    if (maxStackDelta < 2) {
+                        maxStackDelta = 2; // a two extra slots for temp values
+                    }
+                } else {
+                    list.add(new InsnNode(DUP_X2));
+                    list.add(new InsnNode(POP));
 
-            if (requireDup)
-                doNew.add(new InsnNode(DUP));
-
-            // restore stack
-            for (int j = 0; j < args.length; j++) {
-                Type type = args[j];
-                varOffset -= type.getSize();
-
-                doNew.add(new VarInsnNode(type.getOpcode(ILOAD), varOffset));
-
-                // clean up store to avoid memory leak?
-                if (type.getSort() == Type.OBJECT || type.getSort() == Type.ARRAY) {
-                    updateMaxStack = updateMaxStack < 1 ? 1 : updateMaxStack; // an extra slot for ACONST_NULL
-
-                    doNew.add(new InsnNode(ACONST_NULL));
-
-                    doNew.add(new VarInsnNode(type.getOpcode(ISTORE), varOffset));
+                    if (maxStackDelta < 1) {
+                        maxStackDelta = 1; // an extra slot for temp value
+                    }
                 }
+
+                instructions.insertBefore(node, list);
+            } else {
+                InsnList list = new InsnList();
+
+                // generic code using temporary locals
+                // save stack
+                for (int i = len - 1; i >= 0; i--) {
+                    Type type = types[i];
+                    list.add(new VarInsnNode(type.getOpcode(ISTORE), var));
+                    var += type.getSize();
+                }
+
+                if (var > maxLocals) {
+                    maxLocals = var;
+                }
+
+                list.add(node1); // NEW
+
+                if (requireDup) {
+                    list.add(new InsnNode(DUP));
+                }
+
+                // restore stack
+                for (Type type : types) {
+                    var -= type.getSize();
+                    list.add(new VarInsnNode(type.getOpcode(ILOAD), var));
+
+                    // clean up store to avoid memory leak?
+                    int sort = type.getSort();
+                    if (sort == Type.OBJECT || sort == Type.ARRAY) {
+                        list.add(new InsnNode(ACONST_NULL));
+                        list.add(new VarInsnNode(type.getOpcode(ISTORE), var));
+
+                        if (maxStackDelta < 1) {
+                            maxStackDelta = 1; // an extra slot for ACONST_NULL
+                        }
+                    }
+                }
+
+                instructions.insertBefore(node, list);
             }
-            instructions.insertBefore(nm, doNew);
-            nm = doNew.getLast();
         }
 
-        maxStack += updateMaxStack;
+        maxStack += maxStackDelta;
     }
-
-    boolean needsFrameGuard(int opcode, String owner, String name, String desc) {
-        /* TODO: need to customize a way enchancer skips classes/methods
-            if (owner.startsWith("java/")) {
-                System.out.println("SKIP:: " + owner + "." + name + desc);
-                return false;
-            }
-        */
-
-        if (opcode == Opcodes.INVOKEINTERFACE || (opcode == Opcodes.INVOKESPECIAL && !"<init>".equals(name)) || opcode == Opcodes.INVOKESTATIC
-                || opcode == Opcodes.INVOKEVIRTUAL) {
-            return true;
-        }
-        return false;
-    }
-
 }

@@ -21,8 +21,10 @@ import org.apache.commons.logging.LogFactory;
 import org.jvnet.zephyr.javaflow.runtime.Continuable;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
+
+import static org.objectweb.asm.Opcodes.ACC_ANNOTATION;
+import static org.objectweb.asm.Opcodes.ASM5;
 
 public final class ContinuationClassAdapter extends ClassVisitor {
 
@@ -32,21 +34,22 @@ public final class ContinuationClassAdapter extends ClassVisitor {
     private String className;
 
     public ContinuationClassAdapter(ClassVisitor cv, Predicate<MethodRef> predicate) {
-        super(Opcodes.ASM5, cv);
+        super(ASM5, cv);
         this.predicate = predicate;
     }
 
+    @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         className = name;
 
-        if ((access & Opcodes.ACC_ANNOTATION) != 0) {
+        if ((access & ACC_ANNOTATION) != 0) {
             cv.visit(version, access, name, signature, superName, interfaces);
             return;
         }
 
         // Check that it doesn't implement Continuable (already been instrumented)
         String[] newInterfaces = new String[interfaces.length + 1];
-        for (int i = 0; i < interfaces.length; i++) {
+        for (int i = interfaces.length - 1; i >= 0; i--) {
             if (interfaces[i].equals(Type.getInternalName(Continuable.class))) {
                 throw new RuntimeException(className + " has already been instrumented");
             }
@@ -60,19 +63,16 @@ public final class ContinuationClassAdapter extends ClassVisitor {
         cv.visit(version, access, name, signature, superName, newInterfaces);
     }
 
+    @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         // TODO skip native and abstract methods?
-        if (predicate.apply(new MethodRef(className, name, desc))) {
-            if (name.charAt(0) != '<') {
-                if (log.isDebugEnabled()) {
-                    log.debug("Instrumenting " + className + '.' + name + desc);
-                }
-                return new ContinuationMethodAnalyzer(className, this.cv, mv, access, name, desc, signature, exceptions);
-            }
+        if (name.charAt(0) == '<' || !predicate.apply(new MethodRef(className, name, desc))) {
+            return mv;
         }
-        return mv;
+        if (log.isDebugEnabled()) {
+            log.debug("Instrumenting " + className + '.' + name + desc);
+        }
+        return new ContinuationMethodAnalyzer(className, mv, access, name, desc, signature, exceptions);
     }
-
 }
-
