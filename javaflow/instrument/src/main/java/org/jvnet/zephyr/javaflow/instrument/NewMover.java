@@ -28,15 +28,13 @@ import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
 import org.objectweb.asm.tree.analysis.Analyzer;
 import org.objectweb.asm.tree.analysis.AnalyzerException;
-import org.objectweb.asm.tree.analysis.BasicValue;
 import org.objectweb.asm.tree.analysis.Frame;
-import org.objectweb.asm.tree.analysis.SimpleVerifier;
 import org.objectweb.asm.tree.analysis.SourceInterpreter;
 import org.objectweb.asm.tree.analysis.SourceValue;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static org.objectweb.asm.Opcodes.ACONST_NULL;
@@ -47,35 +45,24 @@ import static org.objectweb.asm.Opcodes.DUP2_X2;
 import static org.objectweb.asm.Opcodes.DUP_X1;
 import static org.objectweb.asm.Opcodes.DUP_X2;
 import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKEINTERFACE;
 import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
-import static org.objectweb.asm.Opcodes.INVOKESTATIC;
-import static org.objectweb.asm.Opcodes.INVOKEVIRTUAL;
 import static org.objectweb.asm.Opcodes.ISTORE;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.POP2;
 import static org.objectweb.asm.Opcodes.SWAP;
 
-final class ContinuationMethodAnalyzer extends MethodNode {
+final class NewMover extends MethodNode {
 
+    private final Collection<MethodInsnNode> methods = new ArrayList<>();
     private final String className;
-    final MethodVisitor mv;
-    final List<Label> labels = new ArrayList<>();
-    final List<MethodInsnNode> nodes = new ArrayList<>();
-    private final List<MethodInsnNode> methods = new ArrayList<>();
-    Analyzer<BasicValue> analyzer;
-    int stackRecorderVar;
+    private final MethodVisitor mv;
 
-    ContinuationMethodAnalyzer(String className, MethodVisitor mv, int access, String name, String desc,
-            String signature, String[] exceptions) {
+    NewMover(int access, String name, String desc, String signature, String[] exceptions, String className,
+            MethodVisitor mv) {
         super(ASM5, access, name, desc, signature, exceptions);
         this.className = className;
         this.mv = mv;
-    }
-
-    int getIndex(AbstractInsnNode node) {
-        return instructions.indexOf(node);
     }
 
     @Override
@@ -83,13 +70,6 @@ final class ContinuationMethodAnalyzer extends MethodNode {
         MethodInsnNode mnode = new MethodInsnNode(opcode, owner, name, desc, itf);
         if (opcode == INVOKESPECIAL || name.charAt(0) == '<') {
             methods.add(mnode);
-        }
-        if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && !name.equals("<init>") || opcode == INVOKESTATIC ||
-                opcode == INVOKEVIRTUAL) {
-            Label label = new Label();
-            visitLabel(label);
-            labels.add(label);
-            nodes.add(mnode);
         }
         instructions.add(mnode);
     }
@@ -108,40 +88,17 @@ final class ContinuationMethodAnalyzer extends MethodNode {
 
     @Override
     public void visitEnd() {
-        if (instructions.size() == 0 || labels.isEmpty()) {
+        if (methods.isEmpty()) {
             accept(mv);
             return;
         }
 
-        stackRecorderVar = maxLocals;
-        try {
-            moveNew();
-
-            analyzer = new Analyzer<>(new SimpleVerifier() {
-                @Override
-                protected Class<?> getClass(Type t) {
-                    try {
-                        if (t.getSort() == Type.ARRAY) {
-                            return Class.forName(t.getDescriptor().replace('/', '.'), true,
-                                    Thread.currentThread().getContextClassLoader());
-                        }
-                        return Class.forName(t.getClassName(), true, Thread.currentThread().getContextClassLoader());
-                    } catch (ClassNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-            });
-
-            analyzer.analyze(className, this);
-            accept(new ContinuationMethodAdapter(this));
-        } catch (AnalyzerException ex) {
-            throw new RuntimeException(ex);
-        }
-    }
-
-    private void moveNew() throws AnalyzerException {
         Analyzer<SourceValue> analyzer = new Analyzer<>(new SourceInterpreter());
-        analyzer.analyze(className, this);
+        try {
+            analyzer.analyze(className, this);
+        } catch (AnalyzerException e) {
+            throw new RuntimeException(e);
+        }
         Frame<SourceValue>[] frames = analyzer.getFrames();
 
         Map<AbstractInsnNode, MethodInsnNode> nodes = new HashMap<>();
@@ -180,9 +137,9 @@ final class ContinuationMethodAnalyzer extends MethodNode {
 
         for (Map.Entry<AbstractInsnNode, MethodInsnNode> entry : nodes.entrySet()) {
             AbstractInsnNode node1 = entry.getKey();
-            int n = instructions.indexOf(node1);
-            AbstractInsnNode node2 = instructions.get(n + 1);
-            AbstractInsnNode node3 = instructions.get(n + 2);
+            int n1 = instructions.indexOf(node1);
+            AbstractInsnNode node2 = instructions.get(n1 + 1);
+            AbstractInsnNode node3 = instructions.get(n1 + 2);
             instructions.remove(node1); // NEW
             boolean requireDup = false;
 
@@ -197,12 +154,11 @@ final class ContinuationMethodAnalyzer extends MethodNode {
             }
 
             MethodInsnNode node = entry.getValue();
-            int var = stackRecorderVar + 1;
             Type[] types = Type.getArgumentTypes(node.desc);
-            int len = types.length;
+            int n2 = types.length;
 
             // optimizations for some common cases
-            if (len == 0) {
+            if (n2 == 0) {
                 InsnList list = new InsnList();
                 list.add(node1); // NEW
 
@@ -211,7 +167,7 @@ final class ContinuationMethodAnalyzer extends MethodNode {
                 }
 
                 instructions.insertBefore(node, list);
-            } else if (len == 1 && types[0].getSize() == 1) {
+            } else if (n2 == 1 && types[0].getSize() == 1) {
                 InsnList list = new InsnList();
                 list.add(node1); // NEW
 
@@ -228,8 +184,8 @@ final class ContinuationMethodAnalyzer extends MethodNode {
                 }
 
                 instructions.insertBefore(node, list);
-            } else if (len == 1 && types[0].getSize() == 2 ||
-                    len == 2 && types[0].getSize() == 1 && types[1].getSize() == 1) {
+            } else if (n2 == 1 && types[0].getSize() == 2 ||
+                    n2 == 2 && types[0].getSize() == 1 && types[1].getSize() == 1) {
                 // TODO this one untested!
                 InsnList list = new InsnList();
                 list.add(node1); // NEW
@@ -254,18 +210,17 @@ final class ContinuationMethodAnalyzer extends MethodNode {
                 instructions.insertBefore(node, list);
             } else {
                 InsnList list = new InsnList();
+                int var = maxLocals;
 
                 // generic code using temporary locals
                 // save stack
-                for (int i = len - 1; i >= 0; i--) {
+                for (int i = n2 - 1; i >= 0; i--) {
                     Type type = types[i];
                     list.add(new VarInsnNode(type.getOpcode(ISTORE), var));
                     var += type.getSize();
                 }
 
-                if (var > maxLocals) {
-                    maxLocals = var;
-                }
+                maxLocals = var;
 
                 list.add(node1); // NEW
 
@@ -295,5 +250,7 @@ final class ContinuationMethodAnalyzer extends MethodNode {
         }
 
         maxStack += maxStackDelta;
+
+        accept(mv);
     }
 }
