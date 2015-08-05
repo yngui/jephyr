@@ -73,7 +73,7 @@ public final class ContinuationClassAdapter extends ClassVisitor {
         if (log.isDebugEnabled()) {
             log.debug("Instrumenting " + className + '.' + name + desc);
         }
-        return new NewMover(access, name, desc, signature, exceptions, className,
-                new ContinuationMethodAdapter(access, name, desc, signature, exceptions, className, mv));
+        return new NewRelocator(access, name, desc, signature, exceptions, className,
+                new ContinuationMethodAdapter(className, access, name, desc, signature, exceptions, mv));
     }
 }

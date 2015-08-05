@@ -63,6 +63,11 @@
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
             <artifactId>asm-util</artifactId>
             <scope>runtime</scope>
         </dependency>

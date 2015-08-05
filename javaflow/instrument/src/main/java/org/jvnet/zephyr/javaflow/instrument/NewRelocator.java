@@ -50,13 +50,13 @@ import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.POP2;
 import static org.objectweb.asm.Opcodes.SWAP;
 
-final class NewMover extends MethodNode {
+final class NewRelocator extends MethodNode {
 
     private final Collection<MethodInsnNode> methods = new ArrayList<>();
     private final String className;
     private final MethodVisitor mv;
 
-    NewMover(int access, String name, String desc, String signature, String[] exceptions, String className,
+    NewRelocator(int access, String name, String desc, String signature, String[] exceptions, String className,
             MethodVisitor mv) {
         super(ASM5, access, name, desc, signature, exceptions);
         this.className = className;

@@ -36,7 +36,6 @@ import org.jvnet.zephyr.javaflow.instrument.MethodRef;
 import org.jvnet.zephyr.javaflow.instrument.Predicate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.util.CheckClassAdapter;
 
 import java.io.File;
 import java.io.IOException;
@@ -181,7 +180,7 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
             }
         };
         ClassReader reader = new ClassReader(original);
-        reader.accept(new ContinuationClassAdapter(new CheckClassAdapter(writer, false), predicate), 0);
+        reader.accept(new ContinuationClassAdapter(writer, predicate), ClassReader.EXPAND_FRAMES);
         byte[] transformed = writer.toByteArray();
 
         try {
