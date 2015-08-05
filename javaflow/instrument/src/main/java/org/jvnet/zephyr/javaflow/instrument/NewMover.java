@@ -16,13 +16,11 @@
  */
 package org.jvnet.zephyr.javaflow.instrument;
 
-import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
-import org.objectweb.asm.tree.LabelNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
@@ -72,18 +70,6 @@ final class NewMover extends MethodNode {
             methods.add(mnode);
         }
         instructions.add(mnode);
-    }
-
-    @Override
-    protected LabelNode getLabelNode(Label l) {
-        Object info = l.info;
-        if (info instanceof LabelNode) {
-            return (LabelNode) info;
-        } else {
-            LabelNode labelNode = new LabelNode(l);
-            l.info = labelNode;
-            return labelNode;
-        }
     }
 
     @Override

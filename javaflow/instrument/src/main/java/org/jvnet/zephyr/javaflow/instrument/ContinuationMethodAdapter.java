@@ -188,7 +188,7 @@ final class ContinuationMethodAdapter extends MethodNode {
             mv.visitJumpInsn(IFEQ, label);
 
             mv.visitVarInsn(ALOAD, maxLocals);
-            // PC:    stackRecorder.popInt();
+            // PC: stackRecorder.popInt();
             mv.visitMethodInsn(INVOKEVIRTUAL, STACK_RECORDER, POP_METHOD + "Int", "()I", false);
             mv.visitTableSwitchInsn(0, n - 1, label, restoreLabels);
 
@@ -236,7 +236,7 @@ final class ContinuationMethodAdapter extends MethodNode {
 
                 // stack
                 int argSize = Type.getArgumentTypes(node.desc).length;
-                int ownerSize = node.getOpcode() == INVOKESTATIC ? 0 : 1;  // TODO
+                int ownerSize = node.getOpcode() == INVOKESTATIC ? 0 : 1; // TODO
                 int initSize = node.name.charAt(0) == '<' ? 2 : 0;
                 int stackSize = frame.getStackSize();
                 for (int j = 0; j < stackSize - argSize - ownerSize - initSize; j++) {
@@ -319,7 +319,7 @@ final class ContinuationMethodAdapter extends MethodNode {
 
                 Type[] types = Type.getArgumentTypes(desc);
                 int argSize = types.length;
-                int ownerSize = opcode == INVOKESTATIC ? 0 : 1;  // TODO
+                int ownerSize = opcode == INVOKESTATIC ? 0 : 1; // TODO
                 int stackSize = currentFrame.getStackSize() - argSize - ownerSize;
                 for (int i = stackSize - 1; i >= 0; i--) {
                     BasicValue value = currentFrame.getStack(i);
@@ -337,11 +337,11 @@ final class ContinuationMethodAdapter extends MethodNode {
                         if (type.getSize() > 1) {
                             mv.visitInsn(ACONST_NULL); // dummy stack entry
                             mv.visitVarInsn(ALOAD, maxLocals);
-                            mv.visitInsn(DUP2_X2);  // swap2 for long/double
+                            mv.visitInsn(DUP2_X2); // swap2 for long/double
                             mv.visitInsn(POP2);
                             mv.visitMethodInsn(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(type),
                                     '(' + type.getDescriptor() + ")V", false);
-                            mv.visitInsn(POP);  // remove dummy stack entry
+                            mv.visitInsn(POP); // remove dummy stack entry
                         } else {
                             mv.visitVarInsn(ALOAD, maxLocals);
                             mv.visitInsn(SWAP);
