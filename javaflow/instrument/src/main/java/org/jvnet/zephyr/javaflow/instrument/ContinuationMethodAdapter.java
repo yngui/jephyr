@@ -124,8 +124,8 @@ final class ContinuationMethodAdapter extends MethodNode {
         addRestoring(list, nodes);
         instructions.insert(list);
 
-        LabelNode startLabelNode = getLabelNode(new Label());
-        LabelNode endLabelNode = getLabelNode(new Label());
+        LabelNode startLabelNode = newLabelNode();
+        LabelNode endLabelNode = newLabelNode();
 
         instructions.insert(startLabelNode);
         instructions.add(endLabelNode);
@@ -154,8 +154,7 @@ final class ContinuationMethodAdapter extends MethodNode {
             public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                 if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && name.charAt(0) != '<' ||
                         opcode == INVOKESTATIC || opcode == INVOKEVIRTUAL) {
-                    nodes.add(new Node(getLabelNode(new Label()), (MethodInsnNode) insn, locals.toArray(),
-                            stack.toArray()));
+                    nodes.add(new Node(newLabelNode(), (MethodInsnNode) insn, locals.toArray(), stack.toArray()));
                 }
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }
@@ -172,7 +171,7 @@ final class ContinuationMethodAdapter extends MethodNode {
     }
 
     private void addCapturing(InsnList list, Node node, int index) {
-        LabelNode labelNode = getLabelNode(new Label());
+        LabelNode labelNode = newLabelNode();
 
         list.add(new VarInsnNode(ALOAD, maxLocals));
         list.add(new JumpInsnNode(IFNULL, labelNode));
@@ -269,11 +268,11 @@ final class ContinuationMethodAdapter extends MethodNode {
         int n = nodes.size();
         LabelNode[] restoreLabelNodes = new LabelNode[n];
         for (int i = 0; i < n; i++) {
-            restoreLabelNodes[i] = getLabelNode(new Label());
+            restoreLabelNodes[i] = newLabelNode();
         }
 
         // verify if restoring
-        LabelNode labelNode = getLabelNode(new Label());
+        LabelNode labelNode = newLabelNode();
 
         // PC: StackRecorder stackRecorder = StackRecorder.get();
         list.add(new MethodInsnNode(INVOKESTATIC, STACK_RECORDER, "get", "()L" + STACK_RECORDER + ';', false));
@@ -371,6 +370,13 @@ final class ContinuationMethodAdapter extends MethodNode {
         // PC: }
         // end of start block
         list.add(labelNode);
+    }
+
+    private static LabelNode newLabelNode() {
+        Label label = new Label();
+        LabelNode labelNode = new LabelNode(label);
+        label.info = labelNode;
+        return labelNode;
     }
 
     private static Type getType(int opcode) {
