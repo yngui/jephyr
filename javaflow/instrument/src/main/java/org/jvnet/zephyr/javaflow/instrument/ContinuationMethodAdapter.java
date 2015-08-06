@@ -200,20 +200,20 @@ final class ContinuationMethodAdapter extends MethodNode {
                 list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V",
                         false));
             } else if (obj instanceof Integer && obj != TOP && obj != UNINITIALIZED_THIS) {
-                Integer opcode1 = (Integer) obj;
-                Type type = getType(opcode1);
+                Integer opcode = (Integer) obj;
+                Type type = getType(opcode);
                 if (type.getSize() > 1) {
                     list.add(new InsnNode(ACONST_NULL)); // dummy stack entry
                     list.add(new VarInsnNode(ALOAD, maxLocals));
                     list.add(new InsnNode(DUP2_X2)); // swap2 for long/double
                     list.add(new InsnNode(POP2));
-                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
+                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode),
                             '(' + type.getDescriptor() + ")V", false));
                     list.add(new InsnNode(POP)); // remove dummy stack entry
                 } else {
                     list.add(new VarInsnNode(ALOAD, maxLocals));
                     list.add(new InsnNode(SWAP));
-                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
+                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode),
                             '(' + type.getDescriptor() + ")V", false));
                 }
             }
@@ -236,10 +236,10 @@ final class ContinuationMethodAdapter extends MethodNode {
                         false));
             } else if (obj instanceof Integer && obj != TOP && obj != NULL && obj != UNINITIALIZED_THIS) {
                 list.add(new VarInsnNode(ALOAD, maxLocals));
-                int opcode1 = (Integer) obj;
-                Type type = getType(opcode1);
+                int opcode = (Integer) obj;
+                Type type = getType(opcode);
                 list.add(new VarInsnNode(type.getOpcode(ILOAD), j));
-                list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
+                list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode),
                         '(' + type.getDescriptor() + ")V", false));
             }
         }
