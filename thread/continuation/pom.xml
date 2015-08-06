@@ -104,5 +104,9 @@
             <artifactId>thread-api</artifactId>
             <optional>true</optional>
         </dependency>
+        <dependency>
+            <groupId>org.jvnet.zephyr.continuation</groupId>
+            <artifactId>continuation-api</artifactId>
+        </dependency>
     </dependencies>
 </project>

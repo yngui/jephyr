@@ -76,11 +76,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jvnet.zephyr.continuation</groupId>
-            <artifactId>continuation-api</artifactId>
-        </dependency>
-    </dependencies>
 </project>
