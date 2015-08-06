@@ -204,8 +204,10 @@ final class ContinuationMethodAdapter extends MethodNode {
 
             // for each local variable store the value in locals popping it from the stack!
             // locals
-            for (int j = 0, n1 = node.locals.length; j < n1; j++) {
-                Object obj = node.locals[j];
+            Object[] locals = node.locals;
+
+            for (int j = 0, n1 = locals.length; j < n1; j++) {
+                Object obj = locals[j];
                 if (obj == NULL) {
                     list.add(new InsnNode(ACONST_NULL));
                     list.add(new VarInsnNode(ASTORE, j));
@@ -225,15 +227,15 @@ final class ContinuationMethodAdapter extends MethodNode {
                 }
             }
 
-            MethodInsnNode methodNode = node.methodNode;
-
             // stack
+            MethodInsnNode methodNode = node.methodNode;
             int argSize = (Type.getArgumentsAndReturnSizes(methodNode.desc) >> 2) - 1;
             int ownerSize = methodNode.getOpcode() == INVOKESTATIC ? 0 : 1; // TODO
-            int n1 = node.stack.length - argSize - ownerSize;
+            Object[] stack = node.stack;
+            int n1 = stack.length - argSize - ownerSize;
 
             for (int j = 0; j < n1; j++) {
-                Object obj = node.stack[j];
+                Object obj = stack[j];
                 if (obj == NULL) {
                     list.add(new InsnNode(ACONST_NULL));
                 } else if (obj instanceof String) {
@@ -252,7 +254,7 @@ final class ContinuationMethodAdapter extends MethodNode {
 
             if (ownerSize != 0) {
                 // Load the object whose method we are calling
-                Object obj = node.stack[n1];
+                Object obj = stack[n1];
                 if (obj == NULL) {
                     // If user code causes NPE, then we keep this behavior: load null to get NPE at runtime
                     list.add(new InsnNode(ACONST_NULL));
@@ -291,15 +293,17 @@ final class ContinuationMethodAdapter extends MethodNode {
         MethodInsnNode methodNode = node.methodNode;
         String desc = methodNode.desc;
         Type returnType = Type.getReturnType(desc);
+
         if (!returnType.equals(Type.VOID_TYPE)) {
             list.add(new InsnNode(returnType.getSize() == 1 ? POP : POP2));
         }
 
         int argSize = (Type.getArgumentsAndReturnSizes(desc) >> 2) - 1;
         int ownerSize = methodNode.getOpcode() == INVOKESTATIC ? 0 : 1; // TODO
+        Object[] stack = node.stack;
 
-        for (int i = node.stack.length - argSize - ownerSize - 1; i >= 0; i--) {
-            Object obj = node.stack[i];
+        for (int i = stack.length - argSize - ownerSize - 1; i >= 0; i--) {
+            Object obj = stack[i];
             if (obj == NULL) {
                 list.add(new InsnNode(POP));
             } else if (obj instanceof String) {
@@ -335,8 +339,10 @@ final class ContinuationMethodAdapter extends MethodNode {
         }
 
         // save locals
-        for (int i = node.locals.length - 1; i >= 0; i--) {
-            Object obj = node.locals[i];
+        Object[] locals = node.locals;
+
+        for (int i = locals.length - 1; i >= 0; i--) {
+            Object obj = locals[i];
             if (obj instanceof String) {
                 list.add(new VarInsnNode(ALOAD, maxLocals));
                 list.add(new VarInsnNode(ALOAD, i));
