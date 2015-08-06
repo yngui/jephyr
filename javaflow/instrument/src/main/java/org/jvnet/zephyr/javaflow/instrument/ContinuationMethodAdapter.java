@@ -27,6 +27,7 @@ import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.IntInsnNode;
 import org.objectweb.asm.tree.JumpInsnNode;
 import org.objectweb.asm.tree.LabelNode;
+import org.objectweb.asm.tree.LdcInsnNode;
 import org.objectweb.asm.tree.LocalVariableNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
@@ -51,11 +52,6 @@ import static org.objectweb.asm.Opcodes.FCONST_0;
 import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.GOTO;
 import static org.objectweb.asm.Opcodes.ICONST_0;
-import static org.objectweb.asm.Opcodes.ICONST_1;
-import static org.objectweb.asm.Opcodes.ICONST_2;
-import static org.objectweb.asm.Opcodes.ICONST_3;
-import static org.objectweb.asm.Opcodes.ICONST_4;
-import static org.objectweb.asm.Opcodes.ICONST_5;
 import static org.objectweb.asm.Opcodes.IFEQ;
 import static org.objectweb.asm.Opcodes.IFNULL;
 import static org.objectweb.asm.Opcodes.ILOAD;
@@ -114,11 +110,28 @@ final class ContinuationMethodAdapter extends MethodNode {
         }
 
         for (Node node : nodes) {
-            instructions.insertBefore(node.insn, getLabelNode(node.label));
+            instructions.insertBefore(node.insn, node.labelNode);
         }
 
-        capturing(nodes);
-        restoring(nodes);
+        for (int i = 0, n = nodes.size(); i < n; i++) {
+            InsnList list = new InsnList();
+            Node node = nodes.get(i);
+            addCapturing(list, node, i);
+            instructions.insert(node.insn, list);
+        }
+
+        InsnList list = new InsnList();
+        addRestoring(list, nodes);
+        instructions.insert(list);
+
+        LabelNode startLabelNode = getLabelNode(new Label());
+        LabelNode endLabelNode = getLabelNode(new Label());
+
+        instructions.insert(startLabelNode);
+        instructions.add(endLabelNode);
+
+        localVariables.add(new LocalVariableNode("__stackRecorder", 'L' + STACK_RECORDER + ';', null, startLabelNode,
+                endLabelNode, maxLocals));
 
         maxLocals = 0;
         maxStack = 0;
@@ -141,7 +154,8 @@ final class ContinuationMethodAdapter extends MethodNode {
             public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                 if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && name.charAt(0) != '<' ||
                         opcode == INVOKESTATIC || opcode == INVOKEVIRTUAL) {
-                    nodes.add(new Node(new Label(), (MethodInsnNode) insn, locals.toArray(), stack.toArray()));
+                    nodes.add(new Node(getLabelNode(new Label()), (MethodInsnNode) insn, locals.toArray(),
+                            stack.toArray()));
                 }
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }
@@ -157,156 +171,129 @@ final class ContinuationMethodAdapter extends MethodNode {
         return nodes;
     }
 
-    private void capturing(List<Node> nodes) {
-        for (int i = 0, n = nodes.size(); i < n; i++) {
-            Node node = nodes.get(i);
-            InsnList list = new InsnList();
-            Label label = new Label();
+    private void addCapturing(InsnList list, Node node, int index) {
+        LabelNode labelNode = getLabelNode(new Label());
 
-            list.add(new VarInsnNode(ALOAD, maxLocals));
-            list.add(new JumpInsnNode(IFNULL, getLabelNode(label)));
-            list.add(new VarInsnNode(ALOAD, maxLocals));
-            list.add(new FieldInsnNode(GETFIELD, STACK_RECORDER, "isCapturing", "Z"));
-            list.add(new JumpInsnNode(IFEQ, getLabelNode(label)));
+        list.add(new VarInsnNode(ALOAD, maxLocals));
+        list.add(new JumpInsnNode(IFNULL, labelNode));
+        list.add(new VarInsnNode(ALOAD, maxLocals));
+        list.add(new FieldInsnNode(GETFIELD, STACK_RECORDER, "isCapturing", "Z"));
+        list.add(new JumpInsnNode(IFEQ, labelNode));
 
-            // save stack
-            MethodInsnNode insn = node.insn;
-            String desc = insn.desc;
-            Type returnType = Type.getReturnType(desc);
-            boolean hasReturn = returnType != Type.VOID_TYPE;
-            if (hasReturn) {
-                list.add(new InsnNode(returnType.getSize() == 1 ? POP : POP2));
-            }
+        // save stack
+        MethodInsnNode insn = node.insn;
+        String desc = insn.desc;
+        Type returnType = Type.getReturnType(desc);
+        boolean hasReturn = !returnType.equals(Type.VOID_TYPE);
+        if (hasReturn) {
+            list.add(new InsnNode(returnType.getSize() == 1 ? POP : POP2));
+        }
 
-            int argSize = (Type.getArgumentsAndReturnSizes(desc) >> 2) - 1;
-            int ownerSize = insn.getOpcode() == INVOKESTATIC ? 0 : 1; // TODO
-            for (int j = node.stack.length - argSize - ownerSize - 1; j >= 0; j--) {
-                Object obj = node.stack[j];
-                if (obj == NULL) {
-                    list.add(new InsnNode(POP));
-                } else if (obj instanceof String) {
+        int argSize = (Type.getArgumentsAndReturnSizes(desc) >> 2) - 1;
+        int ownerSize = insn.getOpcode() == INVOKESTATIC ? 0 : 1; // TODO
+        for (int j = node.stack.length - argSize - ownerSize - 1; j >= 0; j--) {
+            Object obj = node.stack[j];
+            if (obj == NULL) {
+                list.add(new InsnNode(POP));
+            } else if (obj instanceof String) {
+                list.add(new VarInsnNode(ALOAD, maxLocals));
+                list.add(new InsnNode(SWAP));
+                list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V",
+                        false));
+            } else if (obj instanceof Integer && obj != TOP && obj != UNINITIALIZED_THIS) {
+                Integer opcode1 = (Integer) obj;
+                Type type = getType(opcode1);
+                if (type.getSize() > 1) {
+                    list.add(new InsnNode(ACONST_NULL)); // dummy stack entry
+                    list.add(new VarInsnNode(ALOAD, maxLocals));
+                    list.add(new InsnNode(DUP2_X2)); // swap2 for long/double
+                    list.add(new InsnNode(POP2));
+                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
+                            '(' + type.getDescriptor() + ")V", false));
+                    list.add(new InsnNode(POP)); // remove dummy stack entry
+                } else {
                     list.add(new VarInsnNode(ALOAD, maxLocals));
                     list.add(new InsnNode(SWAP));
-                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V",
-                            false));
-                } else if (obj instanceof Integer && obj != TOP && obj != UNINITIALIZED_THIS) {
-                    Integer opcode1 = (Integer) obj;
-                    Type type = getType(opcode1);
-                    if (type.getSize() > 1) {
-                        list.add(new InsnNode(ACONST_NULL)); // dummy stack entry
-                        list.add(new VarInsnNode(ALOAD, maxLocals));
-                        list.add(new InsnNode(DUP2_X2)); // swap2 for long/double
-                        list.add(new InsnNode(POP2));
-                        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
-                                '(' + type.getDescriptor() + ")V", false));
-                        list.add(new InsnNode(POP)); // remove dummy stack entry
-                    } else {
-                        list.add(new VarInsnNode(ALOAD, maxLocals));
-                        list.add(new InsnNode(SWAP));
-                        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
-                                '(' + type.getDescriptor() + ")V", false));
-                    }
-                }
-            }
-
-            if ((access & ACC_STATIC) == 0) {
-                list.add(new VarInsnNode(ALOAD, maxLocals));
-                list.add(new VarInsnNode(ALOAD, 0));
-                list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushReference", "(Ljava/lang/Object;)V",
-                        false));
-            }
-
-            // save locals
-            for (int j = node.locals.length - 1; j >= 0; j--) {
-                Object obj = node.locals[j];
-                if (obj instanceof String) {
-                    list.add(new VarInsnNode(ALOAD, maxLocals));
-                    list.add(new VarInsnNode(ALOAD, j));
-                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V",
-                            false));
-                } else if (obj instanceof Integer && obj != TOP && obj != NULL && obj != UNINITIALIZED_THIS) {
-                    list.add(new VarInsnNode(ALOAD, maxLocals));
-                    int opcode1 = (Integer) obj;
-                    Type type = getType(opcode1);
-                    list.add(new VarInsnNode(type.getOpcode(ILOAD), j));
                     list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
                             '(' + type.getDescriptor() + ")V", false));
                 }
             }
-
-            list.add(new VarInsnNode(ALOAD, maxLocals));
-
-            switch (i) {
-                case 0:
-                    list.add(new InsnNode(ICONST_0));
-                    break;
-                case 1:
-                    list.add(new InsnNode(ICONST_1));
-                    break;
-                case 2:
-                    list.add(new InsnNode(ICONST_2));
-                    break;
-                case 3:
-                    list.add(new InsnNode(ICONST_3));
-                    break;
-                case 4:
-                    list.add(new InsnNode(ICONST_4));
-                    break;
-                case 5:
-                    list.add(new InsnNode(ICONST_5));
-                    break;
-                default:
-                    if (i <= Byte.MAX_VALUE) {
-                        list.add(new IntInsnNode(BIPUSH, i));
-                    } else {
-                        list.add(new IntInsnNode(SIPUSH, i));
-                    }
-            }
-
-            list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushInt", "(I)V", false));
-
-            Type methodReturnType = Type.getReturnType(this.desc);
-            pushDefault(list, methodReturnType.getSort());
-            list.add(new InsnNode(methodReturnType.getOpcode(IRETURN)));
-            list.add(getLabelNode(label));
-
-            instructions.insert(insn, list);
         }
+
+        if ((access & ACC_STATIC) == 0) {
+            list.add(new VarInsnNode(ALOAD, maxLocals));
+            list.add(new VarInsnNode(ALOAD, 0));
+            list.add(
+                    new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushReference", "(Ljava/lang/Object;)V", false));
+        }
+
+        // save locals
+        for (int j = node.locals.length - 1; j >= 0; j--) {
+            Object obj = node.locals[j];
+            if (obj instanceof String) {
+                list.add(new VarInsnNode(ALOAD, maxLocals));
+                list.add(new VarInsnNode(ALOAD, j));
+                list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V",
+                        false));
+            } else if (obj instanceof Integer && obj != TOP && obj != NULL && obj != UNINITIALIZED_THIS) {
+                list.add(new VarInsnNode(ALOAD, maxLocals));
+                int opcode1 = (Integer) obj;
+                Type type = getType(opcode1);
+                list.add(new VarInsnNode(type.getOpcode(ILOAD), j));
+                list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, getPushMethod(opcode1),
+                        '(' + type.getDescriptor() + ")V", false));
+            }
+        }
+
+        list.add(new VarInsnNode(ALOAD, maxLocals));
+
+        if (index <= 5) {
+            list.add(new InsnNode(ICONST_0 + index));
+        } else if (index <= Byte.MAX_VALUE) {
+            list.add(new IntInsnNode(BIPUSH, index));
+        } else if (index <= Short.MAX_VALUE) {
+            list.add(new IntInsnNode(SIPUSH, index));
+        } else {
+            list.add(new LdcInsnNode(index));
+        }
+
+        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushInt", "(I)V", false));
+
+        Type methodReturnType = Type.getReturnType(this.desc);
+        addPushDefault(list, methodReturnType.getSort());
+        list.add(new InsnNode(methodReturnType.getOpcode(IRETURN)));
+        list.add(labelNode);
     }
 
-    private void restoring(List<Node> nodes) {
-        InsnList list = new InsnList();
-        Label startLabel = new Label();
-
+    private void addRestoring(InsnList list, List<Node> nodes) {
         int n = nodes.size();
-        Label[] restoreLabels = new Label[n];
+        LabelNode[] restoreLabelNodes = new LabelNode[n];
         for (int i = 0; i < n; i++) {
-            restoreLabels[i] = new Label();
+            restoreLabelNodes[i] = getLabelNode(new Label());
         }
 
         // verify if restoring
-        Label label = new Label();
+        LabelNode labelNode = getLabelNode(new Label());
 
         // PC: StackRecorder stackRecorder = StackRecorder.get();
         list.add(new MethodInsnNode(INVOKESTATIC, STACK_RECORDER, "get", "()L" + STACK_RECORDER + ';', false));
         list.add(new InsnNode(DUP));
         list.add(new VarInsnNode(ASTORE, maxLocals));
-        list.add(getLabelNode(startLabel));
 
         // PC: if (stackRecorder != null && !stackRecorder.isRestoring) {
-        list.add(new JumpInsnNode(IFNULL, getLabelNode(label)));
+        list.add(new JumpInsnNode(IFNULL, labelNode));
         list.add(new VarInsnNode(ALOAD, maxLocals));
         list.add(new FieldInsnNode(GETFIELD, STACK_RECORDER, "isRestoring", "Z"));
-        list.add(new JumpInsnNode(IFEQ, getLabelNode(label)));
+        list.add(new JumpInsnNode(IFEQ, labelNode));
 
         list.add(new VarInsnNode(ALOAD, maxLocals));
         // PC: stackRecorder.popInt();
         list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "popInt", "()I", false));
-        list.add(new TableSwitchInsnNode(0, n - 1, getLabelNode(label), getLabelNodes(restoreLabels)));
+        list.add(new TableSwitchInsnNode(0, n - 1, labelNode, restoreLabelNodes));
 
         // switch cases
         for (int i = 0; i < n; i++) {
-            list.add(getLabelNode(restoreLabels[i]));
+            list.add(restoreLabelNodes[i]);
 
             Node node = nodes.get(i);
 
@@ -374,32 +361,16 @@ final class ContinuationMethodAdapter extends MethodNode {
 
             // Create null types for the parameters of the method invocation
             for (Type paramType : Type.getArgumentTypes(insn.desc)) {
-                pushDefault(list, paramType.getSort());
+                addPushDefault(list, paramType.getSort());
             }
 
             // continue to the next method
-            list.add(new JumpInsnNode(GOTO, getLabelNode(node.label)));
+            list.add(new JumpInsnNode(GOTO, node.labelNode));
         }
 
         // PC: }
         // end of start block
-        list.add(getLabelNode(label));
-
-        instructions.insert(list);
-
-        Label endLabel = new Label();
-        instructions.add(getLabelNode(endLabel));
-        localVariables.add(new LocalVariableNode("__stackRecorder", 'L' + STACK_RECORDER + ';', null,
-                getLabelNode(startLabel), getLabelNode(endLabel), maxLocals));
-    }
-
-    private LabelNode[] getLabelNodes(Label[] labels) {
-        int n = labels.length;
-        LabelNode[] nodes = new LabelNode[n];
-        for (int i = 0; i < n; ++i) {
-            nodes[i] = getLabelNode(labels[i]);
-        }
-        return nodes;
+        list.add(labelNode);
     }
 
     private static Type getType(int opcode) {
@@ -447,7 +418,7 @@ final class ContinuationMethodAdapter extends MethodNode {
         }
     }
 
-    private void pushDefault(InsnList list, int sort) {
+    private static void addPushDefault(InsnList list, int sort) {
         switch (sort) {
             case Type.VOID:
                 break;
@@ -472,13 +443,13 @@ final class ContinuationMethodAdapter extends MethodNode {
 
     private static final class Node {
 
-        final Label label;
+        final LabelNode labelNode;
         final MethodInsnNode insn;
         final Object[] locals;
         final Object[] stack;
 
-        Node(Label label, MethodInsnNode insn, Object[] locals, Object[] stack) {
-            this.label = label;
+        Node(LabelNode labelNode, MethodInsnNode insn, Object[] locals, Object[] stack) {
+            this.labelNode = labelNode;
             this.insn = insn;
             this.locals = locals;
             this.stack = stack;
