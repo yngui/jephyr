@@ -90,32 +90,36 @@ final class ContinuationMethodAdapter extends MethodNode {
 
     @Override
     public void visitEnd() {
-        List<Node> nodes = analyze();
+        Node[] nodes = analyze();
 
-        if (nodes.isEmpty()) {
+        int n = nodes.length;
+        if (n == 0) {
             accept(mv);
             return;
         }
 
-        for (Node node : nodes) {
-            instructions.insertBefore(node.methodNode, node.labelNode);
+        LabelNode startLabelNode = newLabelNode();
+        instructions.insert(startLabelNode);
+
+        LabelNode[] labelNodes = new LabelNode[n];
+        for (int i = 0; i < n; i++) {
+            labelNodes[i] = newLabelNode();
         }
 
         InsnList list = new InsnList();
-        addRestoring(list, nodes);
+        addRestoring(list, nodes, labelNodes);
         instructions.insert(list);
 
-        for (int i = 0, n = nodes.size(); i < n; i++) {
+        for (int i = 0; i < n; i++) {
+            Node node = nodes[i];
             InsnList list1 = new InsnList();
-            Node node = nodes.get(i);
             addCapturing(list1, node, i);
-            instructions.insert(node.methodNode, list1);
+            MethodInsnNode methodNode = node.methodNode;
+            instructions.insertBefore(methodNode, labelNodes[i]);
+            instructions.insert(methodNode, list1);
         }
 
-        LabelNode startLabelNode = newLabelNode();
         LabelNode endLabelNode = newLabelNode();
-
-        instructions.insert(startLabelNode);
         instructions.add(endLabelNode);
 
         localVariables.add(new LocalVariableNode("__stackRecorder", 'L' + STACK_RECORDER + ';', null, startLabelNode,
@@ -139,7 +143,7 @@ final class ContinuationMethodAdapter extends MethodNode {
         }
     }
 
-    private List<Node> analyze() {
+    private Node[] analyze() {
         final List<Node> nodes = new ArrayList<>();
 
         final class Analyzer extends AnalyzerAdapter {
@@ -154,7 +158,7 @@ final class ContinuationMethodAdapter extends MethodNode {
             public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
                 if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && name.charAt(0) != '<' ||
                         opcode == INVOKESTATIC || opcode == INVOKEVIRTUAL) {
-                    nodes.add(new Node(newLabelNode(), (MethodInsnNode) node, locals.toArray(), stack.toArray()));
+                    nodes.add(new Node((MethodInsnNode) node, locals.toArray(), stack.toArray()));
                 }
                 super.visitMethodInsn(opcode, owner, name, desc, itf);
             }
@@ -167,11 +171,11 @@ final class ContinuationMethodAdapter extends MethodNode {
             node.accept(analyzer);
         }
 
-        return nodes;
+        return nodes.toArray(new Node[nodes.size()]);
     }
 
-    private void addRestoring(InsnList list, List<Node> nodes) {
-        int n = nodes.size();
+    private void addRestoring(InsnList list, Node[] nodes, LabelNode[] labelNodes) {
+        int n = nodes.length;
         LabelNode[] restoreLabelNodes = new LabelNode[n];
         for (int i = 0; i < n; i++) {
             restoreLabelNodes[i] = newLabelNode();
@@ -198,9 +202,9 @@ final class ContinuationMethodAdapter extends MethodNode {
 
         // switch cases
         for (int i = 0; i < n; i++) {
-            list.add(restoreLabelNodes[i]);
+            Node node = nodes[i];
 
-            Node node = nodes.get(i);
+            list.add(restoreLabelNodes[i]);
 
             // for each local variable store the value in locals popping it from the stack!
             // locals
@@ -272,7 +276,7 @@ final class ContinuationMethodAdapter extends MethodNode {
             }
 
             // continue to the next method
-            list.add(new JumpInsnNode(GOTO, node.labelNode));
+            list.add(new JumpInsnNode(GOTO, labelNodes[i]));
         }
 
         // PC: }
@@ -455,13 +459,11 @@ final class ContinuationMethodAdapter extends MethodNode {
 
     private static final class Node {
 
-        final LabelNode labelNode;
         final MethodInsnNode methodNode;
         final Object[] locals;
         final Object[] stack;
 
-        Node(LabelNode labelNode, MethodInsnNode methodNode, Object[] locals, Object[] stack) {
-            this.labelNode = labelNode;
+        Node(MethodInsnNode methodNode, Object[] locals, Object[] stack) {
             this.methodNode = methodNode;
             this.locals = locals;
             this.stack = stack;
