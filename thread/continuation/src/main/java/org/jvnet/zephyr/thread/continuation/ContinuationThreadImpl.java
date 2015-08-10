@@ -38,8 +38,6 @@ import java.util.concurrent.locks.LockSupport;
 
 final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
-    private static final AtomicInteger nextNum = new AtomicInteger();
-
     private final AtomicInteger state = new AtomicInteger(NEW);
     private final Runnable unparkTask = new UnparkTask();
     private final AtomicReference<Node<T>> joiner = new AtomicReference<>();
@@ -202,8 +200,6 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
     @Override
     public void join() throws InterruptedException {
-        long base = System.currentTimeMillis();
-
         T thread = threadAccess.currentThread();
         ThreadImpl<T> impl = threadAccess.getImpl(thread);
 

@@ -55,6 +55,7 @@ import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.apache.commons.io.FilenameUtils.isExtension;
 import static org.codehaus.plexus.util.SelectorUtils.matchPath;
+import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 public abstract class AbstractJavaflowMojo extends AbstractMojo {
 
@@ -152,35 +153,9 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
             throw new MojoExecutionException("An error occurred while reading " + file, e);
         }
 
-        ClassWriter writer = new ClassWriter(ClassWriter.COMPUTE_FRAMES) {
-            @Override
-            protected String getCommonSuperClass(String type1, String type2) {
-                Class<?> c, d;
-                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                try {
-                    c = Class.forName(type1.replace('/', '.'), false, classLoader);
-                    d = Class.forName(type2.replace('/', '.'), false, classLoader);
-                } catch (Exception e) {
-                    throw new RuntimeException(e);
-                }
-                if (c.isAssignableFrom(d)) {
-                    return type1;
-                }
-                if (d.isAssignableFrom(c)) {
-                    return type2;
-                }
-                if (c.isInterface() || d.isInterface()) {
-                    return "java/lang/Object";
-                } else {
-                    do {
-                        c = c.getSuperclass();
-                    } while (!c.isAssignableFrom(d));
-                    return c.getName().replace('.', '/');
-                }
-            }
-        };
+        ClassWriter writer = new ClassWriter(0);
         ClassReader reader = new ClassReader(original);
-        reader.accept(new ContinuationClassAdapter(writer, predicate), ClassReader.EXPAND_FRAMES);
+        reader.accept(new ContinuationClassAdapter(writer, predicate), EXPAND_FRAMES);
         byte[] transformed = writer.toByteArray();
 
         try {
