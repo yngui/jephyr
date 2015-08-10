@@ -38,7 +38,7 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.maven</groupId>
+                <groupId>org.jvnet.zephyr.javaflow</groupId>
                 <artifactId>javaflow-maven-plugin</artifactId>
                 <dependencies>
                     <dependency>

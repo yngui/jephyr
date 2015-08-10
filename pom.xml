@@ -37,7 +37,7 @@
         <module>thread</module>
         <module>jcl</module>
         <module>javaflow</module>
-        <module>maven</module>
+        <module>remapping</module>
     </modules>
 
     <properties>
@@ -80,12 +80,12 @@
                     <version>1.9.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.maven</groupId>
+                    <groupId>org.jvnet.zephyr.remapping</groupId>
                     <artifactId>remapping-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.maven</groupId>
+                    <groupId>org.jvnet.zephyr.javaflow</groupId>
                     <artifactId>javaflow-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
