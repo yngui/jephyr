@@ -38,7 +38,12 @@ final class ThreadContinuation extends Continuation {
     }
 
     @Override
-    public boolean resume() {
-        return thread.resumeContinuation();
+    public void resume() {
+        thread.resumeContinuation();
+    }
+
+    @Override
+    public boolean isDone() {
+        return thread.isDone();
     }
 }

@@ -78,7 +78,7 @@ final class ContinuationThread extends Thread {
         }
     }
 
-    boolean resumeContinuation() {
+    void resumeContinuation() {
         lock.lock();
         try {
             if (state == DONE) {
@@ -91,12 +91,10 @@ final class ContinuationThread extends Thread {
             }
             if (state == COMPLETE) {
                 state = DONE;
-                if (exception == null) {
-                    return true;
+                if (exception != null) {
+                    throw ContinuationThread.<RuntimeException>throwException(exception);
                 }
-                throw ContinuationThread.<RuntimeException>throwException(exception);
             }
-            return false;
         } finally {
             lock.unlock();
         }
@@ -105,5 +103,14 @@ final class ContinuationThread extends Thread {
     @SuppressWarnings("unchecked")
     private static <E extends Throwable> E throwException(Throwable exception) throws E {
         throw (E) exception;
+    }
+
+    boolean isDone() {
+        lock.lock();
+        try {
+            return state == DONE;
+        } finally {
+            lock.unlock();
+        }
     }
 }

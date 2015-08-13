@@ -32,6 +32,10 @@ public final class StackRecorder implements Serializable {
     private static final long[] EMPTY_LONG_STACK = {};
     private static final double[] EMPTY_DOUBLE_STACK = {};
     private static final Object[] EMPTY_OBJECT_STACK = {};
+    private static final int RESUMED = 0;
+    private static final int SUSPENDING = 1;
+    private static final int SUSPENDED = 2;
+    private static final int DONE = 3;
 
     private static final ThreadLocal<StackRecorder> stackRecorder = new ThreadLocal<>();
 
@@ -45,12 +49,10 @@ public final class StackRecorder implements Serializable {
     private int longTop;
     private int doubleTop;
     private int objectTop;
-    private Runnable target;
-    private transient boolean restoring;
-    private transient boolean capturing;
+    private int state;
 
     public StackRecorder(Runnable target) {
-        this.target = requireNonNull(target);
+        pushObject(requireNonNull(target));
     }
 
     public static StackRecorder getStackRecorder() {
@@ -62,33 +64,34 @@ public final class StackRecorder implements Serializable {
         if (stackRecorder == null) {
             throw new IllegalStateException("No continuation is running");
         }
-        stackRecorder.capturing = !stackRecorder.restoring;
-        stackRecorder.restoring = false;
+        stackRecorder.state = stackRecorder.state == SUSPENDED ? RESUMED : SUSPENDING;
     }
 
-    public boolean resume() {
+    public void resume() {
+        if (state == DONE) {
+            throw new IllegalStateException();
+        }
+        Runnable target = (Runnable) popObject();
         StackRecorder stackRecorder = StackRecorder.stackRecorder.get();
         StackRecorder.stackRecorder.set(this);
         try {
-            if (intTop != 0 || longTop != 0 || doubleTop != 0 || floatTop != 0 || objectTop != 0) {
-                restoring = true;
-                ((Runnable) popObject()).run();
-            } else {
-                restoring = false;
-                target.run();
-            }
-            return capturing;
+            target.run();
         } finally {
             StackRecorder.stackRecorder.set(stackRecorder);
         }
+        state = state == SUSPENDING ? SUSPENDED : DONE;
     }
 
-    public boolean isRestoring() {
-        return restoring;
+    public boolean isSuspending() {
+        return state == SUSPENDING;
     }
 
-    public boolean isCapturing() {
-        return capturing;
+    public boolean isSuspended() {
+        return state == SUSPENDED;
+    }
+
+    public boolean isDone() {
+        return state == DONE;
     }
 
     public void pushInt(int value) {
@@ -213,7 +216,7 @@ public final class StackRecorder implements Serializable {
             out.writeObject(objectStack[i]);
         }
 
-        out.writeObject(target);
+        out.writeInt(state);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -247,6 +250,6 @@ public final class StackRecorder implements Serializable {
             objectStack[i] = in.readObject();
         }
 
-        target = (Runnable) in.readObject();
+        state = in.readInt();
     }
 }

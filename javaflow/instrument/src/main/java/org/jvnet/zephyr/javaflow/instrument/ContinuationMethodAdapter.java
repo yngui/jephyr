@@ -232,10 +232,10 @@ final class ContinuationMethodAdapter extends MethodNode {
         list.add(new InsnNode(DUP));
         list.add(new VarInsnNode(ASTORE, maxLocals));
 
-        // PC: if (stackRecorder != null && !stackRecorder.isRestoring()) {
+        // PC: if (stackRecorder != null && !stackRecorder.isSuspended()) {
         list.add(new JumpInsnNode(IFNULL, labelNode));
         list.add(new VarInsnNode(ALOAD, maxLocals));
-        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isRestoring", "()Z", false));
+        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isSuspended", "()Z", false));
         list.add(new JumpInsnNode(IFEQ, labelNode));
 
         list.add(new VarInsnNode(ALOAD, maxLocals));
@@ -390,7 +390,7 @@ final class ContinuationMethodAdapter extends MethodNode {
         list.add(new VarInsnNode(ALOAD, maxLocals));
         list.add(new JumpInsnNode(IFNULL, labelNode));
         list.add(new VarInsnNode(ALOAD, maxLocals));
-        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isCapturing", "()Z", false));
+        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isSuspending", "()Z", false));
         list.add(new JumpInsnNode(IFEQ, labelNode));
 
         if (maxStack < newMaxStack + 1) {

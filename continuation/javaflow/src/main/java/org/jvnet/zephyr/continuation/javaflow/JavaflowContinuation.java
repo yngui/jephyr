@@ -38,7 +38,12 @@ final class JavaflowContinuation extends Continuation {
     }
 
     @Override
-    public boolean resume() {
-        return stackRecorder.resume();
+    public void resume() {
+        stackRecorder.resume();
+    }
+
+    @Override
+    public boolean isDone() {
+        return stackRecorder.isDone();
     }
 }

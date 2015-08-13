@@ -41,5 +41,7 @@ public abstract class Continuation implements Serializable {
         ContinuationProvider.provider().suspendContinuation();
     }
 
-    public abstract boolean resume();
+    public abstract void resume();
+
+    public abstract boolean isDone();
 }

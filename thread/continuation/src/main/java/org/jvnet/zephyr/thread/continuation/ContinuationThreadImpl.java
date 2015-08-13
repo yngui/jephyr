@@ -288,21 +288,21 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     private void execute() {
         threadAccess.setCurrentThread(thread);
 
-        boolean suspended;
         try {
-            suspended = continuation.resume();
+            continuation.resume();
         } catch (Throwable e) {
+            javaThread = Thread.currentThread();
             boolean unsuspendable = this.unsuspendable;
             this.unsuspendable = true;
             try {
                 threadAccess.dispatchUncaughtException(thread, e);
             } finally {
                 this.unsuspendable = unsuspendable;
+                javaThread = null;
             }
-            suspended = false;
         }
 
-        if (!suspended) {
+        if (continuation.isDone()) {
             state.set(TERMINATED);
             Node<T> node = joiner.getAndSet(null);
             while (node != null) {
