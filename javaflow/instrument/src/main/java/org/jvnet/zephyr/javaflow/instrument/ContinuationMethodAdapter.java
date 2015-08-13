@@ -22,7 +22,6 @@ import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
 import org.objectweb.asm.tree.AbstractInsnNode;
-import org.objectweb.asm.tree.FieldInsnNode;
 import org.objectweb.asm.tree.FrameNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
@@ -53,7 +52,6 @@ import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.DUP_X2;
 import static org.objectweb.asm.Opcodes.FCONST_0;
 import static org.objectweb.asm.Opcodes.F_NEW;
-import static org.objectweb.asm.Opcodes.GETFIELD;
 import static org.objectweb.asm.Opcodes.GOTO;
 import static org.objectweb.asm.Opcodes.ICONST_0;
 import static org.objectweb.asm.Opcodes.IFEQ;
@@ -81,7 +79,7 @@ final class ContinuationMethodAdapter extends MethodNode {
     private static final int FLOAT = 2;
     private static final int DOUBLE = 3;
     private static final int LONG = 4;
-    private static final Object[] EMPTY_STACK = new Object[0];
+    private static final Object[] EMPTY_STACK = {};
 
     private final String owner;
     private final MethodVisitor mv;
@@ -229,14 +227,15 @@ final class ContinuationMethodAdapter extends MethodNode {
         LabelNode labelNode = newLabelNode();
 
         // PC: StackRecorder stackRecorder = StackRecorder.get();
-        list.add(new MethodInsnNode(INVOKESTATIC, STACK_RECORDER, "get", "()L" + STACK_RECORDER + ';', false));
+        list.add(new MethodInsnNode(INVOKESTATIC, STACK_RECORDER, "getStackRecorder", "()L" + STACK_RECORDER + ';',
+                false));
         list.add(new InsnNode(DUP));
         list.add(new VarInsnNode(ASTORE, maxLocals));
 
-        // PC: if (stackRecorder != null && !stackRecorder.isRestoring) {
+        // PC: if (stackRecorder != null && !stackRecorder.isRestoring()) {
         list.add(new JumpInsnNode(IFNULL, labelNode));
         list.add(new VarInsnNode(ALOAD, maxLocals));
-        list.add(new FieldInsnNode(GETFIELD, STACK_RECORDER, "isRestoring", "Z"));
+        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isRestoring", "()Z", false));
         list.add(new JumpInsnNode(IFEQ, labelNode));
 
         list.add(new VarInsnNode(ALOAD, maxLocals));
@@ -391,7 +390,7 @@ final class ContinuationMethodAdapter extends MethodNode {
         list.add(new VarInsnNode(ALOAD, maxLocals));
         list.add(new JumpInsnNode(IFNULL, labelNode));
         list.add(new VarInsnNode(ALOAD, maxLocals));
-        list.add(new FieldInsnNode(GETFIELD, STACK_RECORDER, "isCapturing", "Z"));
+        list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isCapturing", "()Z", false));
         list.add(new JumpInsnNode(IFEQ, labelNode));
 
         if (maxStack < newMaxStack + 1) {

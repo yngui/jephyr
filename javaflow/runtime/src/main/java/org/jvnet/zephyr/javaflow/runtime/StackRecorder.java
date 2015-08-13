@@ -4,7 +4,7 @@
  * this work for additional information regarding copyright ownership.
  * The ASF licenses this file to You under the Apache License, Version 2.0
  * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain a copy of the License at
+ * the License.  You may obtain array copy of the License at
  *
  *      http://www.apache.org/licenses/LICENSE-2.0
  *
@@ -16,145 +16,271 @@
  */
 package org.jvnet.zephyr.javaflow.runtime;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
-/**
- * Adds additional behaviors necessary for stack capture/restore
- * on top of {@link Stack}.
- */
-public final class StackRecorder extends Stack {
+import static java.util.Objects.requireNonNull;
 
-    private static final Log log = LogFactory.getLog(StackRecorder.class);
-    private static final long serialVersionUID = 2L;
+public final class StackRecorder implements Serializable {
 
-    private static final ThreadLocal<StackRecorder> threadMap = new ThreadLocal<StackRecorder>();
+    private static final long serialVersionUID = 1L;
 
-    /**
-     * True, if the continuation restores the previous stack trace to the last
-     * invocation of suspend().
-     *
-     * <p>
-     * This field is accessed from the byte code injected into application code,
-     * and therefore defining a wrapper get method makes it awkward to
-     * step through the user code. That's why this field is public.
-     */
-    public transient boolean isRestoring = false;
+    private static final int[] EMPTY_INT_STACK = {};
+    private static final float[] EMPTY_FLOAT_STACK = {};
+    private static final long[] EMPTY_LONG_STACK = {};
+    private static final double[] EMPTY_DOUBLE_STACK = {};
+    private static final Object[] EMPTY_OBJECT_STACK = {};
 
-    /**
-     * True, is the continuation freeze the strack trace, and stops the
-     * continuation.
-     *
-     * @see #isRestoring
-     */
-    public transient boolean isCapturing = false;
+    private static final ThreadLocal<StackRecorder> stackRecorder = new ThreadLocal<>();
 
-    /** Context object passed by the client code to continuation during resume */
-    private transient Object context;
-    /** Result object passed by the continuation to the client code during suspend */
-    public transient Object value;
+    private int[] intStack = EMPTY_INT_STACK;
+    private float[] floatStack = EMPTY_FLOAT_STACK;
+    private long[] longStack = EMPTY_LONG_STACK;
+    private double[] doubleStack = EMPTY_DOUBLE_STACK;
+    private Object[] objectStack = EMPTY_OBJECT_STACK;
+    private Object[] referenceStack = EMPTY_OBJECT_STACK;
+    private int intTop;
+    private int floatTop;
+    private int longTop;
+    private int doubleTop;
+    private int objectTop;
+    private int referenceTop;
+    private Runnable target;
+    private transient boolean restoring;
+    private transient boolean capturing;
 
-    /**
-     * Creates a new empty {@link StackRecorder} that runs the given target.
-     */
-    public StackRecorder( final Runnable pTarget ) {
-        super(pTarget);
+    public StackRecorder(Runnable target) {
+        this.target = requireNonNull(target);
     }
 
-    /**
-     * Creates a clone of the given {@link StackRecorder}.
-     */
-    public StackRecorder(final Stack pParent) {
-        super(pParent);
+    public static StackRecorder getStackRecorder() {
+        return stackRecorder.get();
     }
 
-    public static Object suspend(final Object value) {
-        log.debug("suspend()");
-
-        final StackRecorder stackRecorder = get();
-        if(stackRecorder == null) {
+    public static void suspend() {
+        StackRecorder stackRecorder = StackRecorder.stackRecorder.get();
+        if (stackRecorder == null) {
             throw new IllegalStateException("No continuation is running");
         }
-
-        stackRecorder.isCapturing = !stackRecorder.isRestoring;
-        stackRecorder.isRestoring = false;
-        stackRecorder.value = value;
-
-        // flow breaks here, actual return will be executed in resumed continuation
-        // return in continuation to be suspended is executed as well but ignored
-
-        return stackRecorder.context;
+        stackRecorder.capturing = !stackRecorder.restoring;
+        stackRecorder.restoring = false;
     }
 
-    public StackRecorder execute(final Object context) {
-        final StackRecorder old = registerThread();
+    public boolean resume() {
+        StackRecorder stackRecorder = StackRecorder.stackRecorder.get();
+        StackRecorder.stackRecorder.set(this);
         try {
-            isRestoring = !isEmpty(); // start restoring if we have a filled stack
-            this.context = context;
-            
-            if (isRestoring) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Restoring state of " + ReflectionUtils.getClassName(runnable) + "/" + ReflectionUtils.getClassLoaderName(runnable));
-                }
-            }
-            
-            log.debug("calling runnable");
-            runnable.run();
-
-            if (isCapturing) {
-                if(isEmpty()) {
-                    // if we were really capturing the stack, at least we should have
-                    // one object in the reference stack. Otherwise, it usually means
-                    // that the application wasn't instrumented correctly.
-                    throw new IllegalStateException("stack corruption. Is "+runnable.getClass()+" instrumented for javaflow?");
-                }
-                // top of the reference stack is the object that we'll call into
-                // when resuming this continuation. we have a separate Runnable
-                // for this, so throw it away
+            restoring = intTop != 0 || longTop != 0 || doubleTop != 0 || floatTop != 0 || objectTop != 0 ||
+                    referenceTop != 0;
+            target.run();
+            if (capturing) {
                 popReference();
-                return this;
+                return true;
             } else {
-                return null;    // nothing more to continue
+                return false;
             }
-        } catch(final ContinuationDeath cd) {
-            // this isn't an error, so no need to log
-            throw cd;
-        } catch(final Error e) {
-            log.error(e.getMessage(), e);
-            throw e;
-        } catch(final RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw e;
         } finally {
-            this.context = null;
-            deregisterThread(old);
+            StackRecorder.stackRecorder.set(stackRecorder);
         }
     }
 
-    public Object getContext() {
-        return context;
+    public boolean isRestoring() {
+        return restoring;
     }
 
-    /**
-     * Bind this stack recorder to running thread.
-     */
-    private StackRecorder registerThread() {
-        final StackRecorder old = get();
-        threadMap.set(this);
-        return old;
+    public boolean isCapturing() {
+        return capturing;
     }
 
-    /**
-     * Unbind the current stack recorder to running thread.
-     */
-    private void deregisterThread(final StackRecorder old) {
-        threadMap.set(old);
+    public void pushInt(int value) {
+        int length = intStack.length;
+        if (length == 0) {
+            intStack = new int[8];
+        } else if (intTop == length) {
+            int[] array = new int[length << 1];
+            System.arraycopy(intStack, 0, array, 0, length);
+            intStack = array;
+        }
+        intStack[intTop++] = value;
     }
 
-    /**
-     * Return the continuation, which is associated to the current thread.
-     */
-    public static StackRecorder get() {
-        return threadMap.get();
+    public int popInt() {
+        int index = intTop - 1;
+        int value = intStack[index];
+        intTop = index;
+        return value;
+    }
+
+    public void pushFloat(float value) {
+        int length = floatStack.length;
+        if (length == 0) {
+            floatStack = new float[8];
+        } else if (floatTop == length) {
+            float[] array = new float[length << 1];
+            System.arraycopy(floatStack, 0, array, 0, length);
+            floatStack = array;
+        }
+        floatStack[floatTop++] = value;
+    }
+
+    public float popFloat() {
+        int index = floatTop - 1;
+        float value = floatStack[index];
+        floatTop = index;
+        return value;
+    }
+
+    public void pushLong(long value) {
+        int length = longStack.length;
+        if (length == 0) {
+            longStack = new long[8];
+        } else if (longTop == length) {
+            long[] array = new long[length << 1];
+            System.arraycopy(longStack, 0, array, 0, length);
+            longStack = array;
+        }
+        longStack[longTop++] = value;
+    }
+
+    public long popLong() {
+        int index = longTop - 1;
+        long value = longStack[index];
+        longTop = index;
+        return value;
+    }
+
+    public void pushDouble(double value) {
+        int length = doubleStack.length;
+        if (length == 0) {
+            doubleStack = new double[8];
+        } else if (doubleTop == length) {
+            double[] array = new double[length << 1];
+            System.arraycopy(doubleStack, 0, array, 0, length);
+            doubleStack = array;
+        }
+        doubleStack[doubleTop++] = value;
+    }
+
+    public double popDouble() {
+        int index = doubleTop - 1;
+        double value = doubleStack[index];
+        doubleTop = index;
+        return value;
+    }
+
+    public void pushObject(Object value) {
+        int length = objectStack.length;
+        if (length == 0) {
+            objectStack = new Object[8];
+        } else if (objectTop == length) {
+            Object[] array = new Object[length << 1];
+            System.arraycopy(objectStack, 0, array, 0, length);
+            objectStack = array;
+        }
+        objectStack[objectTop++] = value;
+    }
+
+    public Object popObject() {
+        int index = objectTop - 1;
+        Object value = objectStack[index];
+        objectStack[index] = null;
+        objectTop = index;
+        return value;
+    }
+
+    public void pushReference(Object value) {
+        int length = referenceStack.length;
+        if (length == 0) {
+            referenceStack = new Object[8];
+        } else if (referenceTop == length) {
+            Object[] array = new Object[length << 1];
+            System.arraycopy(referenceStack, 0, array, 0, length);
+            referenceStack = array;
+        }
+        referenceStack[referenceTop++] = value;
+    }
+
+    public Object popReference() {
+        int index = referenceTop - 1;
+        Object value = referenceStack[index];
+        referenceStack[index] = null;
+        referenceTop = index;
+        return value;
+    }
+
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        out.writeInt(intTop);
+        for (int i = 0; i < intTop; i++) {
+            out.writeInt(intStack[i]);
+        }
+
+        out.writeInt(longTop);
+        for (int i = 0; i < longTop; i++) {
+            out.writeLong(longStack[i]);
+        }
+
+        out.writeInt(doubleTop);
+        for (int i = 0; i < doubleTop; i++) {
+            out.writeDouble(doubleStack[i]);
+        }
+
+        out.writeInt(floatTop);
+        for (int i = 0; i < floatTop; i++) {
+            out.writeDouble(floatStack[i]);
+        }
+
+        out.writeInt(objectTop);
+        for (int i = 0; i < objectTop; i++) {
+            out.writeObject(objectStack[i]);
+        }
+
+        out.writeInt(referenceTop);
+        for (int i = 0; i < referenceTop; i++) {
+            out.writeObject(referenceStack[i]);
+        }
+
+        out.writeObject(target);
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        intTop = in.readInt();
+        intStack = new int[intTop];
+        for (int i = 0; i < intTop; i++) {
+            intStack[i] = in.readInt();
+        }
+
+        longTop = in.readInt();
+        longStack = new long[longTop];
+        for (int i = 0; i < longTop; i++) {
+            longStack[i] = in.readLong();
+        }
+
+        doubleTop = in.readInt();
+        doubleStack = new double[doubleTop];
+        for (int i = 0; i < doubleTop; i++) {
+            doubleStack[i] = in.readDouble();
+        }
+
+        floatTop = in.readInt();
+        floatStack = new float[floatTop];
+        for (int i = 0; i < floatTop; i++) {
+            floatStack[i] = in.readFloat();
+        }
+
+        objectTop = in.readInt();
+        objectStack = new Object[objectTop];
+        for (int i = 0; i < objectTop; i++) {
+            objectStack[i] = in.readObject();
+        }
+
+        referenceTop = in.readInt();
+        referenceStack = new Object[referenceTop];
+        for (int i = 0; i < referenceTop; i++) {
+            referenceStack[i] = in.readObject();
+        }
+
+        target = (Runnable) in.readObject();
     }
 }

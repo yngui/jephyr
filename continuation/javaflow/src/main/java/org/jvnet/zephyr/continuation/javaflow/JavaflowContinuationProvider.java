@@ -40,6 +40,6 @@ public final class JavaflowContinuationProvider extends ContinuationProvider {
 
     @Override
     public void suspendContinuation() {
-        StackRecorder.suspend(null);
+        StackRecorder.suspend();
     }
 }
