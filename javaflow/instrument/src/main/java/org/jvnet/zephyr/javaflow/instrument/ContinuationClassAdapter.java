@@ -16,20 +16,16 @@
 */
 package org.jvnet.zephyr.javaflow.instrument;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jvnet.zephyr.common.util.Predicate;
-import org.jvnet.zephyr.javaflow.runtime.Continuable;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
-import org.objectweb.asm.Type;
 
 import static org.objectweb.asm.Opcodes.ACC_ANNOTATION;
 import static org.objectweb.asm.Opcodes.ASM5;
 
 public final class ContinuationClassAdapter extends ClassVisitor {
 
-    private static final Log log = LogFactory.getLog(ContinuationClassAdapter.class);
+    private static final String CONTINUABLE = "org/jvnet/zephyr/javaflow/runtime/Continuable";
 
     private final Predicate<MethodRef> predicate;
     private String className;
@@ -51,7 +47,7 @@ public final class ContinuationClassAdapter extends ClassVisitor {
         // Check that it doesn't implement Continuable (already been instrumented)
         String[] newInterfaces = new String[interfaces.length + 1];
         for (int i = interfaces.length - 1; i >= 0; i--) {
-            if (interfaces[i].equals(Type.getInternalName(Continuable.class))) {
+            if (interfaces[i].equals(CONTINUABLE)) {
                 throw new RuntimeException(className + " has already been instrumented");
             }
 
@@ -59,7 +55,7 @@ public final class ContinuationClassAdapter extends ClassVisitor {
         }
 
         // Add the Continuable interface so that the class is marked and wont be instrumented again by mistake
-        newInterfaces[newInterfaces.length - 1] = Type.getInternalName(Continuable.class);
+        newInterfaces[newInterfaces.length - 1] = CONTINUABLE;
 
         cv.visit(version, access, name, signature, superName, newInterfaces);
     }
@@ -70,9 +66,6 @@ public final class ContinuationClassAdapter extends ClassVisitor {
         // TODO skip native and abstract methods?
         if (name.charAt(0) == '<' || !predicate.test(new MethodRef(className, name, desc))) {
             return mv;
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("Instrumenting " + className + '.' + name + desc);
         }
         return new NewRelocator(access, name, desc, signature, exceptions, className,
                 new ContinuationMethodAdapter(className, access, name, desc, signature, exceptions, mv));

@@ -37,10 +37,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jvnet.zephyr.javaflow</groupId>
-            <artifactId>javaflow-runtime</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.jvnet.zephyr.common</groupId>
             <artifactId>common-util</artifactId>
         </dependency>
