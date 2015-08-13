@@ -38,16 +38,31 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jvnet.zephyr.remapping</groupId>
+                <artifactId>remapping-maven-plugin</artifactId>
+                <configuration>
+                    <mappingEntries>
+                        <mappingEntry>
+                            <oldName>org/jvnet/zephyr/continuation/Continuation</oldName>
+                            <newName>org/jvnet/zephyr/continuation/javaflow/JavaflowContinuation</newName>
+                        </mappingEntry>
+                    </mappingEntries>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>remapping</goal>
+                            <goal>testRemapping</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jvnet.zephyr.javaflow</groupId>
                 <artifactId>javaflow-maven-plugin</artifactId>
-                <dependencies>
-                    <dependency>
-                        <groupId>org.jvnet.zephyr.javaflow</groupId>
-                        <artifactId>javaflow-runtime</artifactId>
-                        <version>${project.version}</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
+                    <classesDirectory>${project.build.directory}/remapping-classes</classesDirectory>
+                    <testClassesDirectory>${project.build.directory}/remapping-test-classes</testClassesDirectory>
                     <excludes>
                         <exclude>org/jvnet/zephyr/thread/continuation/AdaptingExecutor.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ExecuteTask.class</exclude>

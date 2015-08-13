@@ -27,14 +27,22 @@ package org.jvnet.zephyr.continuation.javaflow;
 import org.jvnet.zephyr.continuation.Continuation;
 import org.jvnet.zephyr.javaflow.runtime.StackRecorder;
 
-final class JavaflowContinuation extends Continuation {
+public final class JavaflowContinuation extends Continuation {
 
     private static final long serialVersionUID = 1L;
 
     private final StackRecorder stackRecorder;
 
-    JavaflowContinuation(Runnable target) {
+    private JavaflowContinuation(Runnable target) {
         stackRecorder = new StackRecorder(target);
+    }
+
+    public static JavaflowContinuation create(Runnable target) {
+        return new JavaflowContinuation(target);
+    }
+
+    public static void suspend() {
+        StackRecorder.suspend();
     }
 
     @Override

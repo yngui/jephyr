@@ -26,20 +26,16 @@ package org.jvnet.zephyr.continuation.javaflow;
 
 import org.jvnet.zephyr.continuation.Continuation;
 import org.jvnet.zephyr.continuation.ContinuationProvider;
-import org.jvnet.zephyr.javaflow.runtime.StackRecorder;
-
-import static java.util.Objects.requireNonNull;
 
 public final class JavaflowContinuationProvider extends ContinuationProvider {
 
     @Override
     public Continuation createContinuation(Runnable target) {
-        requireNonNull(target);
-        return new JavaflowContinuation(target);
+        return JavaflowContinuation.create(target);
     }
 
     @Override
     public void suspendContinuation() {
-        StackRecorder.suspend();
+        JavaflowContinuation.suspend();
     }
 }
