@@ -40,13 +40,11 @@ public final class StackRecorder implements Serializable {
     private long[] longStack = EMPTY_LONG_STACK;
     private double[] doubleStack = EMPTY_DOUBLE_STACK;
     private Object[] objectStack = EMPTY_OBJECT_STACK;
-    private Object[] referenceStack = EMPTY_OBJECT_STACK;
     private int intTop;
     private int floatTop;
     private int longTop;
     private int doubleTop;
     private int objectTop;
-    private int referenceTop;
     private Runnable target;
     private transient boolean restoring;
     private transient boolean capturing;
@@ -72,15 +70,14 @@ public final class StackRecorder implements Serializable {
         StackRecorder stackRecorder = StackRecorder.stackRecorder.get();
         StackRecorder.stackRecorder.set(this);
         try {
-            restoring = intTop != 0 || longTop != 0 || doubleTop != 0 || floatTop != 0 || objectTop != 0 ||
-                    referenceTop != 0;
-            target.run();
-            if (capturing) {
-                popReference();
-                return true;
+            if (intTop != 0 || longTop != 0 || doubleTop != 0 || floatTop != 0 || objectTop != 0) {
+                restoring = true;
+                ((Runnable) popObject()).run();
             } else {
-                return false;
+                restoring = false;
+                target.run();
             }
+            return capturing;
         } finally {
             StackRecorder.stackRecorder.set(stackRecorder);
         }
@@ -190,26 +187,6 @@ public final class StackRecorder implements Serializable {
         return value;
     }
 
-    public void pushReference(Object value) {
-        int length = referenceStack.length;
-        if (length == 0) {
-            referenceStack = new Object[8];
-        } else if (referenceTop == length) {
-            Object[] array = new Object[length << 1];
-            System.arraycopy(referenceStack, 0, array, 0, length);
-            referenceStack = array;
-        }
-        referenceStack[referenceTop++] = value;
-    }
-
-    public Object popReference() {
-        int index = referenceTop - 1;
-        Object value = referenceStack[index];
-        referenceStack[index] = null;
-        referenceTop = index;
-        return value;
-    }
-
     private void writeObject(ObjectOutputStream out) throws IOException {
         out.writeInt(intTop);
         for (int i = 0; i < intTop; i++) {
@@ -234,11 +211,6 @@ public final class StackRecorder implements Serializable {
         out.writeInt(objectTop);
         for (int i = 0; i < objectTop; i++) {
             out.writeObject(objectStack[i]);
-        }
-
-        out.writeInt(referenceTop);
-        for (int i = 0; i < referenceTop; i++) {
-            out.writeObject(referenceStack[i]);
         }
 
         out.writeObject(target);
@@ -273,12 +245,6 @@ public final class StackRecorder implements Serializable {
         objectStack = new Object[objectTop];
         for (int i = 0; i < objectTop; i++) {
             objectStack[i] = in.readObject();
-        }
-
-        referenceTop = in.readInt();
-        referenceStack = new Object[referenceTop];
-        for (int i = 0; i < referenceTop; i++) {
-            referenceStack[i] = in.readObject();
         }
 
         target = (Runnable) in.readObject();

@@ -355,7 +355,7 @@ final class ContinuationMethodAdapter extends MethodNode {
                     list.add(new InsnNode(ACONST_NULL));
                 } else {
                     list.add(new VarInsnNode(ALOAD, maxLocals));
-                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "popReference", "()Ljava/lang/Object;",
+                    list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "popObject", "()Ljava/lang/Object;",
                             false));
                     list.add(new TypeInsnNode(CHECKCAST, (String) obj));
                 }
@@ -451,13 +451,6 @@ final class ContinuationMethodAdapter extends MethodNode {
             }
         }
 
-        if ((access & ACC_STATIC) == 0) {
-            list.add(new VarInsnNode(ALOAD, maxLocals));
-            list.add(new VarInsnNode(ALOAD, 0));
-            list.add(
-                    new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushReference", "(Ljava/lang/Object;)V", false));
-        }
-
         // save locals
         int maxStackDelta = 2;
 
@@ -496,6 +489,13 @@ final class ContinuationMethodAdapter extends MethodNode {
         }
 
         list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushInt", "(I)V", false));
+
+        if ((access & ACC_STATIC) == 0) {
+            list.add(new VarInsnNode(ALOAD, maxLocals));
+            list.add(new VarInsnNode(ALOAD, 0));
+            list.add(
+                    new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V", false));
+        }
 
         Type returnType = Type.getReturnType(desc);
         addPushDefault(list, returnType.getSort());
