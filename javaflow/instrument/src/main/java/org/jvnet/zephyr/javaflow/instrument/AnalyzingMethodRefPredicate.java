@@ -24,6 +24,7 @@
 
 package org.jvnet.zephyr.javaflow.instrument;
 
+import org.jvnet.zephyr.common.util.Predicate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -53,8 +54,8 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
     private static final Predicate<AbstractInsnNode> IS_METHOD_INSN_NODE = new Predicate<AbstractInsnNode>() {
         @Override
-        public boolean apply(AbstractInsnNode input) {
-            return input instanceof MethodInsnNode;
+        public boolean test(AbstractInsnNode t) {
+            return t instanceof MethodInsnNode;
         }
     };
 
@@ -68,8 +69,8 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
     }
 
     @Override
-    public boolean apply(MethodRef input) {
-        String owner = input.getOwner();
+    public boolean test(MethodRef t) {
+        String owner = t.getOwner();
         if (owner.charAt(0) == '[') {
             owner = "java/lang/Object";
         }
@@ -91,8 +92,8 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 map = prevMap;
             }
         }
-        String name = input.getName();
-        String desc = input.getDesc();
+        String name = t.getName();
+        String desc = t.getDesc();
         Boolean suspendable = map.get(new Key(name, desc));
         if (suspendable == null) {
             throw new IllegalArgumentException("Method " + owner + '.' + name + desc + " not found");
@@ -102,7 +103,7 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
     private static <T> boolean any(Iterator<? extends T> iterator, Predicate<? super T> predicate) {
         while (iterator.hasNext()) {
-            if (predicate.apply(iterator.next())) {
+            if (predicate.test(iterator.next())) {
                 return true;
             }
         }
@@ -139,9 +140,9 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
         public void visitEnd() {
             Predicate<AbstractInsnNode> isForeign = new Predicate<AbstractInsnNode>() {
                 @Override
-                public boolean apply(AbstractInsnNode input) {
-                    if (input instanceof MethodInsnNode) {
-                        MethodInsnNode insn = (MethodInsnNode) input;
+                public boolean test(AbstractInsnNode t) {
+                    if (t instanceof MethodInsnNode) {
+                        MethodInsnNode insn = (MethodInsnNode) t;
                         if (!insn.owner.equals(name)) {
                             if (insn.owner.charAt(0) != '[' && (!insn.owner.startsWith("java/") ||
                                     insn.getOpcode() != INVOKESPECIAL && insn.getOpcode() != INVOKESTATIC)) {
@@ -160,7 +161,7 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
             };
 
             for (MethodNode method : methods.values()) {
-                if (!parent.apply(new MethodRef(name, method.name, method.desc)) ||
+                if (!parent.test(new MethodRef(name, method.name, method.desc)) ||
                         !any(method.instructions.iterator(), IS_METHOD_INSN_NODE)) {
                     map.put(new Key(method.name, method.desc), false);
                 } else if (any(method.instructions.iterator(), isForeign)) {
@@ -170,9 +171,9 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
             Predicate<AbstractInsnNode> isSuspendable = new Predicate<AbstractInsnNode>() {
                 @Override
-                public boolean apply(AbstractInsnNode input) {
-                    if (input instanceof MethodInsnNode) {
-                        MethodInsnNode insn = (MethodInsnNode) input;
+                public boolean test(AbstractInsnNode t) {
+                    if (t instanceof MethodInsnNode) {
+                        MethodInsnNode insn = (MethodInsnNode) t;
                         Boolean suspendable = map.get(new Key(insn.name, insn.desc));
                         if (suspendable != null && suspendable) {
                             return true;

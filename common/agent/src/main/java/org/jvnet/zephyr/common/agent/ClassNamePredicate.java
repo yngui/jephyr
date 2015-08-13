@@ -22,9 +22,25 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.javaflow.instrument;
+package org.jvnet.zephyr.common.agent;
 
-public interface Predicate<T> {
+import org.jvnet.zephyr.common.util.Predicate;
 
-    boolean apply(T input);
+import java.util.regex.Pattern;
+
+public final class ClassNamePredicate implements Predicate<String> {
+
+    private final Pattern includesPattern;
+    private final Pattern excludesPattern;
+
+    public ClassNamePredicate(Pattern includesPattern, Pattern excludesPattern) {
+        this.includesPattern = includesPattern;
+        this.excludesPattern = excludesPattern;
+    }
+
+    @Override
+    public boolean test(String t) {
+        return (includesPattern == null || includesPattern.matcher(t).find()) &&
+                (excludesPattern == null || !excludesPattern.matcher(t).find());
+    }
 }

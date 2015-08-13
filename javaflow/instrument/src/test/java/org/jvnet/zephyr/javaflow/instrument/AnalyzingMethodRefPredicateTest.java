@@ -24,6 +24,7 @@
 
 package org.jvnet.zephyr.javaflow.instrument;
 
+import org.jvnet.zephyr.common.util.Predicate;
 import org.objectweb.asm.Type;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -41,7 +42,7 @@ public final class AnalyzingMethodRefPredicateTest {
     public void setUp() throws Exception {
         predicate = new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
             @Override
-            public boolean apply(MethodRef input) {
+            public boolean test(MethodRef t) {
                 return true;
             }
         }, getClass().getClassLoader());
@@ -60,11 +61,11 @@ public final class AnalyzingMethodRefPredicateTest {
         }
         Predicate<MethodRef> predicate = new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
             @Override
-            public boolean apply(MethodRef input) {
-                return !input.getName().equals("m");
+            public boolean test(MethodRef t) {
+                return !t.getName().equals("m");
             }
         }, getClass().getClassLoader());
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m"))));
     }
 
     @Test
@@ -74,7 +75,7 @@ public final class AnalyzingMethodRefPredicateTest {
             void m() {
             }
         }
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m"))));
     }
 
     @Test
@@ -88,7 +89,7 @@ public final class AnalyzingMethodRefPredicateTest {
             void m2() {
             }
         }
-        assertTrue(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m"))));
+        assertTrue(predicate.test(createMethodRef(C.class.getDeclaredMethod("m"))));
     }
 
     @Test
@@ -102,7 +103,7 @@ public final class AnalyzingMethodRefPredicateTest {
             void m2() {
             }
         }
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m"))));
     }
 
     @Test
@@ -116,7 +117,7 @@ public final class AnalyzingMethodRefPredicateTest {
             private void m2() {
             }
         }
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m"))));
     }
 
     static class Static {
@@ -131,7 +132,7 @@ public final class AnalyzingMethodRefPredicateTest {
 
     @Test
     public void testApplyMethodWithCallStatic() throws Exception {
-        assertFalse(predicate.apply(createMethodRef(Static.class.getDeclaredMethod("m"))));
+        assertFalse(predicate.test(createMethodRef(Static.class.getDeclaredMethod("m"))));
     }
 
     @Test
@@ -145,7 +146,7 @@ public final class AnalyzingMethodRefPredicateTest {
             final void m2() {
             }
         }
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m"))));
     }
 
     @Test
@@ -160,8 +161,8 @@ public final class AnalyzingMethodRefPredicateTest {
                 m1();
             }
         }
-        assertTrue(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m1"))));
-        assertTrue(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m2"))));
+        assertTrue(predicate.test(createMethodRef(C.class.getDeclaredMethod("m1"))));
+        assertTrue(predicate.test(createMethodRef(C.class.getDeclaredMethod("m2"))));
     }
 
     @Test
@@ -176,18 +177,18 @@ public final class AnalyzingMethodRefPredicateTest {
                 m1();
             }
         }
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m1"))));
-        assertFalse(predicate.apply(createMethodRef(C.class.getDeclaredMethod("m2"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m1"))));
+        assertFalse(predicate.test(createMethodRef(C.class.getDeclaredMethod("m2"))));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testApplyNonExistentClass() throws Exception {
-        predicate.apply(new MethodRef(Type.getInternalName(getClass()) + "$NonExistentClass", "<clinit>", "()V"));
+        predicate.test(new MethodRef(Type.getInternalName(getClass()) + "$NonExistentClass", "<clinit>", "()V"));
     }
 
     @Test(expectedExceptions = IllegalArgumentException.class)
     public void testApplyNonExistentMethod() throws Exception {
-        predicate.apply(new MethodRef(Type.getInternalName(getClass()), "nonExistentMethod", "()V"));
+        predicate.test(new MethodRef(Type.getInternalName(getClass()), "nonExistentMethod", "()V"));
     }
 
     private static MethodRef createMethodRef(Method method) {

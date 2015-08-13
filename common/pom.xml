@@ -33,12 +33,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jvnet.zephyr.remapping</groupId>
-    <artifactId>remapping-parent</artifactId>
+    <groupId>org.jvnet.zephyr.common</groupId>
+    <artifactId>common-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>maven-plugin</module>
         <module>agent</module>
+        <module>util</module>
     </modules>
 </project>

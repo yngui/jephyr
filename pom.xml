@@ -38,6 +38,7 @@
         <module>jcl</module>
         <module>javaflow</module>
         <module>remapping</module>
+        <module>common</module>
     </modules>
 
     <properties>
@@ -131,6 +132,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jvnet.zephyr.thread</groupId>
+                <artifactId>thread-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jvnet.zephyr.javaflow</groupId>
                 <artifactId>javaflow-runtime</artifactId>
                 <version>${project.version}</version>
@@ -141,13 +147,13 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.thread</groupId>
-                <artifactId>thread-api</artifactId>
+                <groupId>org.jvnet.zephyr.common</groupId>
+                <artifactId>common-agent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.jcl</groupId>
-                <artifactId>jcl-jdk7</artifactId>
+                <groupId>org.jvnet.zephyr.common</groupId>
+                <artifactId>common-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

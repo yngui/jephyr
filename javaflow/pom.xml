@@ -41,15 +41,6 @@
         <module>runtime</module>
         <module>instrument</module>
         <module>maven-plugin</module>
+        <module>agent</module>
     </modules>
-
-    <dependencyManagement>
-        <dependencies>
-            <dependency>
-                <groupId>org.jvnet.zephyr.javaflow</groupId>
-                <artifactId>javaflow-instrument</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-        </dependencies>
-    </dependencyManagement>
 </project>
