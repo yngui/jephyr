@@ -38,8 +38,7 @@ public final class AgentUtils {
 
     static {
         DEFAULT_PROPERTIES = new Properties();
-        DEFAULT_PROPERTIES.setProperty("excludes",
-                "^(java/|javax/|sun/|com/sun/|jdk/|org/objectweb/asm/|org/jvnet/zephyr/javaflow/).+");
+        DEFAULT_PROPERTIES.setProperty("excludes", "^(java/|javax/|sun/|com/sun/|jdk/|org/objectweb/asm/)");
     }
 
     private AgentUtils() {
