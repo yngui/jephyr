@@ -14,6 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package org.jvnet.zephyr.javaflow.instrument;
 
 import org.objectweb.asm.Label;
@@ -493,8 +494,7 @@ final class ContinuationMethodAdapter extends MethodNode {
         if ((access & ACC_STATIC) == 0) {
             list.add(new VarInsnNode(ALOAD, maxLocals));
             list.add(new VarInsnNode(ALOAD, 0));
-            list.add(
-                    new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V", false));
+            list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "pushObject", "(Ljava/lang/Object;)V", false));
         }
 
         Type returnType = Type.getReturnType(desc);

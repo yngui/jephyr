@@ -16,8 +16,6 @@
  */
 package org.jvnet.zephyr.javaflow.runtime;
 
-/**
- * Marker interface to mark classes that are transformed by the AsmClassTransformer.
- */
 public interface Continuable {
+
 }
