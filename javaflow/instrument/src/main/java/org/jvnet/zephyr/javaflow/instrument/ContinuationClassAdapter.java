@@ -20,7 +20,10 @@ import org.jvnet.zephyr.common.util.Predicate;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
+import static java.util.Objects.requireNonNull;
+import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.ACC_ANNOTATION;
+import static org.objectweb.asm.Opcodes.ACC_NATIVE;
 import static org.objectweb.asm.Opcodes.ASM5;
 
 public final class ContinuationClassAdapter extends ClassVisitor {
@@ -32,7 +35,7 @@ public final class ContinuationClassAdapter extends ClassVisitor {
 
     public ContinuationClassAdapter(ClassVisitor cv, Predicate<MethodRef> predicate) {
         super(ASM5, cv);
-        this.predicate = predicate;
+        this.predicate = requireNonNull(predicate);
     }
 
     @Override
@@ -44,27 +47,23 @@ public final class ContinuationClassAdapter extends ClassVisitor {
             return;
         }
 
-        // Check that it doesn't implement Continuable (already been instrumented)
         String[] newInterfaces = new String[interfaces.length + 1];
         for (int i = interfaces.length - 1; i >= 0; i--) {
             if (interfaces[i].equals(CONTINUABLE)) {
                 throw new RuntimeException(className + " has already been instrumented");
             }
-
             newInterfaces[i] = interfaces[i];
         }
 
-        // Add the Continuable interface so that the class is marked and wont be instrumented again by mistake
         newInterfaces[newInterfaces.length - 1] = CONTINUABLE;
-
         cv.visit(version, access, name, signature, superName, newInterfaces);
     }
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-        // TODO skip native and abstract methods?
-        if (name.charAt(0) == '<' || !predicate.test(new MethodRef(className, name, desc))) {
+        if ((access & (ACC_NATIVE | ACC_ABSTRACT)) != 0 || name.charAt(0) == '<' ||
+                !predicate.test(new MethodRef(name, desc))) {
             return mv;
         }
         return new NewRelocator(access, name, desc, signature, exceptions, className,

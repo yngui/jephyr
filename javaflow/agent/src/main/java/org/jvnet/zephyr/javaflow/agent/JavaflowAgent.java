@@ -27,6 +27,7 @@ package org.jvnet.zephyr.javaflow.agent;
 import org.jvnet.zephyr.common.agent.ClassNameCheckClassAdapter;
 import org.jvnet.zephyr.common.agent.ClassNamePredicate;
 import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.javaflow.instrument.AnalyzingMethodRefPredicate;
 import org.jvnet.zephyr.javaflow.instrument.ContinuationClassAdapter;
 import org.jvnet.zephyr.javaflow.instrument.MethodRef;
 import org.objectweb.asm.ClassReader;
@@ -48,9 +49,8 @@ public final class JavaflowAgent {
         Properties props = parseArgs(agentArgs);
         Predicate<String> classNamePredicate = new ClassNamePredicate(getPattern(props.getProperty("includes")),
                 getPattern(props.getProperty("excludes")));
-        Predicate<MethodRef> methodRefPredicate =
-                new MethodRefPredicate(getPattern(props.getProperty("excludeMethods")));
-        inst.addTransformer(new ContinuationClassFileTransformer(classNamePredicate, methodRefPredicate));
+        inst.addTransformer(new ContinuationClassFileTransformer(classNamePredicate,
+                getPattern(props.getProperty("excludeMethods"))));
     }
 
     private static Pattern getPattern(String regex) {
@@ -60,38 +60,33 @@ public final class JavaflowAgent {
         return Pattern.compile(regex);
     }
 
-    private static final class MethodRefPredicate implements Predicate<MethodRef> {
-
-        private final Pattern pattern;
-
-        MethodRefPredicate(Pattern pattern) {
-            this.pattern = pattern;
-        }
-
-        @Override
-        public boolean test(MethodRef t) {
-            return pattern == null || pattern.matcher(t.getOwner() + '.' + t.getName() + t.getDesc()).find();
-        }
-    }
-
     private static final class ContinuationClassFileTransformer implements ClassFileTransformer {
 
         private final Predicate<String> classNamePredicate;
-        private final Predicate<MethodRef> methodRefPredicate;
+        private final Pattern methodRefPattern;
 
-        ContinuationClassFileTransformer(Predicate<String> classNamePredicate,
-                Predicate<MethodRef> methodRefPredicate) {
+        ContinuationClassFileTransformer(Predicate<String> classNamePredicate, Pattern methodRefPattern) {
             this.classNamePredicate = classNamePredicate;
-            this.methodRefPredicate = methodRefPredicate;
+            this.methodRefPattern = methodRefPattern;
         }
 
         @Override
-        public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
+        public byte[] transform(ClassLoader loader, final String className, Class<?> classBeingRedefined,
                 ProtectionDomain protectionDomain, byte[] classfileBuffer) {
+            Predicate<MethodRef> predicate =
+                    new AnalyzingMethodRefPredicate(classfileBuffer, new Predicate<MethodRef>() {
+
+                        @Override
+                        public boolean test(MethodRef t) {
+                            return methodRefPattern == null ||
+                                    methodRefPattern.matcher(className + '.' + t.getName() + t.getDesc()).find();
+                        }
+                    });
             ClassWriter writer = new ClassWriter(0);
             ClassReader reader = new ClassReader(classfileBuffer);
-            reader.accept(new ClassNameCheckClassAdapter(classNamePredicate,
-                    new ContinuationClassAdapter(writer, methodRefPredicate)), EXPAND_FRAMES);
+            reader.accept(
+                    new ClassNameCheckClassAdapter(classNamePredicate, new ContinuationClassAdapter(writer, predicate)),
+                    EXPAND_FRAMES);
             return writer.toByteArray();
         }
     }

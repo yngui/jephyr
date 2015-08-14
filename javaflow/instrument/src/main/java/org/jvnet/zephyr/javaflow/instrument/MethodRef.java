@@ -28,18 +28,12 @@ import static java.util.Objects.requireNonNull;
 
 public final class MethodRef {
 
-    private final String owner;
     private final String name;
     private final String desc;
 
-    public MethodRef(String owner, String name, String desc) {
-        this.owner = requireNonNull(owner);
+    public MethodRef(String name, String desc) {
         this.name = requireNonNull(name);
         this.desc = requireNonNull(desc);
-    }
-
-    public String getOwner() {
-        return owner;
     }
 
     public String getName() {

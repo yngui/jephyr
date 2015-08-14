@@ -25,7 +25,6 @@
 package org.jvnet.zephyr.javaflow.maven;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -39,21 +38,17 @@ import org.objectweb.asm.ClassWriter;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.nio.file.Path;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.apache.commons.io.FilenameUtils.isExtension;
+import static org.apache.commons.io.FilenameUtils.removeExtension;
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.codehaus.plexus.util.SelectorUtils.matchPath;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
@@ -68,7 +63,6 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
     @Parameter
     private Collection<String> excludedMethods = Collections.emptySet();
 
-    @SuppressWarnings("unchecked")
     protected final void execute(File classesDirectory, File outputDirectory) throws MojoExecutionException {
         if (classesDirectory.equals(outputDirectory)) {
             throw new MojoExecutionException(
@@ -76,33 +70,8 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
                             " are the same");
         }
 
-        List<String> classpathElements;
-        try {
-            classpathElements = project.getCompileClasspathElements();
-        } catch (DependencyResolutionRequiredException e) {
-            throw new MojoExecutionException("An error occurred while getting compile classpath elements", e);
-        }
-
-        List<URL> urls = new ArrayList<>(classpathElements.size());
-
-        urls.add(toURL(classesDirectory));
-
-        for (String element : classpathElements) {
-            urls.add(toURL(new File(element)));
-        }
-
-        Thread thread = Thread.currentThread();
-        ClassLoader loader = new URLClassLoader(urls.toArray(new URL[urls.size()]), thread.getContextClassLoader());
-        thread.setContextClassLoader(loader);
-
         Path outputPath = outputDirectory.toPath();
         Path classesPath = classesDirectory.toPath();
-        Predicate<MethodRef> predicate = new AnalyzingMethodRefPredicate(new Predicate<MethodRef>() {
-            @Override
-            public boolean test(MethodRef t) {
-                return !excludedMethods.contains(t.getOwner() + '.' + t.getName() + t.getDesc());
-            }
-        }, Thread.currentThread().getContextClassLoader());
 
         if (classesDirectory.isDirectory()) {
             for (File file : listFiles(classesDirectory, null, true)) {
@@ -111,24 +80,13 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
                 if (file.lastModified() > destination.lastModified()) {
                     String name = relativePath.toString();
                     if (isExtension(name, "class") && isIncluded(name)) {
-                        transform(predicate, file, destination);
+                        transform(separatorsToUnix(removeExtension(name)), file, destination);
                     } else {
                         copy(file, destination);
                     }
                 }
             }
         }
-    }
-
-    private static URL toURL(File file) throws MojoExecutionException {
-        URI uri = file.toURI();
-        URL url;
-        try {
-            url = uri.toURL();
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException("An error occurred while constructing the URL from " + uri, e);
-        }
-        return url;
     }
 
     private boolean isIncluded(String name) {
@@ -144,8 +102,7 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
         return include;
     }
 
-    private static void transform(Predicate<MethodRef> predicate, File file, File destination)
-            throws MojoExecutionException {
+    private void transform(final String className, File file, File destination) throws MojoExecutionException {
         byte[] original;
         try {
             original = readFileToByteArray(file);
@@ -153,6 +110,12 @@ public abstract class AbstractJavaflowMojo extends AbstractMojo {
             throw new MojoExecutionException("An error occurred while reading " + file, e);
         }
 
+        AnalyzingMethodRefPredicate predicate = new AnalyzingMethodRefPredicate(original, new Predicate<MethodRef>() {
+            @Override
+            public boolean test(MethodRef t) {
+                return !excludedMethods.contains(className + '.' + t.getName() + t.getDesc());
+            }
+        });
         ClassWriter writer = new ClassWriter(0);
         ClassReader reader = new ClassReader(original);
         reader.accept(new ContinuationClassAdapter(writer, predicate), EXPAND_FRAMES);

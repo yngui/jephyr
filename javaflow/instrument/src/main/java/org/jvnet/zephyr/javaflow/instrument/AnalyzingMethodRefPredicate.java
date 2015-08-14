@@ -32,13 +32,9 @@ import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.ClassReader.SKIP_DEBUG;
@@ -59,44 +55,23 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
         }
     };
 
-    private final ConcurrentMap<String, Map<Key, Boolean>> map = new ConcurrentHashMap<>();
-    private final Predicate<MethodRef> parent;
-    private final ClassLoader loader;
+    private final Map<Key, Boolean> suspendables = new HashMap<>();
 
-    public AnalyzingMethodRefPredicate(Predicate<MethodRef> parent, ClassLoader loader) {
-        this.parent = requireNonNull(parent);
-        this.loader = requireNonNull(loader);
+    public AnalyzingMethodRefPredicate(byte[] buffer, Predicate<MethodRef> predicate) {
+        requireNonNull(buffer);
+        requireNonNull(predicate);
+        ClassReader reader = new ClassReader(buffer);
+        ClassAdapter adapter = new ClassAdapter(suspendables, predicate);
+        reader.accept(adapter, SKIP_DEBUG | SKIP_FRAMES);
     }
 
     @Override
     public boolean test(MethodRef t) {
-        String owner = t.getOwner();
-        if (owner.charAt(0) == '[') {
-            owner = "java/lang/Object";
-        }
-        Map<Key, Boolean> map = this.map.get(owner);
-        if (map == null) {
-            try (InputStream in = loader.getResourceAsStream(owner + ".class")) {
-                if (in == null) {
-                    throw new IllegalArgumentException("Object type " + owner + " not found");
-                }
-                ClassReader reader = new ClassReader(in);
-                map = new HashMap<>();
-                ClassAdapter adapter = new ClassAdapter(map);
-                reader.accept(adapter, SKIP_DEBUG | SKIP_FRAMES);
-            } catch (IOException e) {
-                throw new IllegalArgumentException(e);
-            }
-            Map<Key, Boolean> prevMap = this.map.putIfAbsent(owner, map);
-            if (prevMap != null) {
-                map = prevMap;
-            }
-        }
         String name = t.getName();
         String desc = t.getDesc();
-        Boolean suspendable = map.get(new Key(name, desc));
+        Boolean suspendable = suspendables.get(new Key(name, desc));
         if (suspendable == null) {
-            throw new IllegalArgumentException("Method " + owner + '.' + name + desc + " not found");
+            throw new IllegalArgumentException("Method " + name + desc + " not found");
         }
         return suspendable;
     }
@@ -110,16 +85,18 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
         return false;
     }
 
-    private final class ClassAdapter extends ClassVisitor {
+    private static final class ClassAdapter extends ClassVisitor {
 
-        final Map<Key, MethodNode> methods = new HashMap<>();
-        final Map<Key, Boolean> map;
-        int access;
-        String name;
+        private final Map<Key, MethodNode> methods = new HashMap<>();
+        private final Map<Key, Boolean> suspendables;
+        private final Predicate<MethodRef> predicate;
+        private int access;
+        private String name;
 
-        ClassAdapter(Map<Key, Boolean> map) {
+        ClassAdapter(Map<Key, Boolean> suspendables, Predicate<MethodRef> predicate) {
             super(ASM5);
-            this.map = map;
+            this.suspendables = suspendables;
+            this.predicate = predicate;
         }
 
         @Override
@@ -161,11 +138,11 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
             };
 
             for (MethodNode method : methods.values()) {
-                if (!parent.test(new MethodRef(name, method.name, method.desc)) ||
+                if (!predicate.test(new MethodRef(method.name, method.desc)) ||
                         !any(method.instructions.iterator(), IS_METHOD_INSN_NODE)) {
-                    map.put(new Key(method.name, method.desc), false);
+                    suspendables.put(new Key(method.name, method.desc), false);
                 } else if (any(method.instructions.iterator(), isForeign)) {
-                    map.put(new Key(method.name, method.desc), true);
+                    suspendables.put(new Key(method.name, method.desc), true);
                 }
             }
 
@@ -174,7 +151,7 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 public boolean test(AbstractInsnNode t) {
                     if (t instanceof MethodInsnNode) {
                         MethodInsnNode insn = (MethodInsnNode) t;
-                        Boolean suspendable = map.get(new Key(insn.name, insn.desc));
+                        Boolean suspendable = suspendables.get(new Key(insn.name, insn.desc));
                         if (suspendable != null && suspendable) {
                             return true;
                         }
@@ -188,9 +165,9 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 found = false;
                 for (MethodNode method : methods.values()) {
                     Key key = new Key(method.name, method.desc);
-                    if (!map.containsKey(key)) {
+                    if (!suspendables.containsKey(key)) {
                         if (any(method.instructions.iterator(), isSuspendable)) {
-                            map.put(key, true);
+                            suspendables.put(key, true);
                             found = true;
                         }
                     }
@@ -199,8 +176,8 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
             for (MethodNode method : methods.values()) {
                 Key key = new Key(method.name, method.desc);
-                if (!map.containsKey(key)) {
-                    map.put(key, false);
+                if (!suspendables.containsKey(key)) {
+                    suspendables.put(key, false);
                 }
             }
         }
@@ -236,5 +213,4 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
             return result;
         }
     }
-
 }
