@@ -55,7 +55,7 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
         }
     };
 
-    private final Map<Key, Boolean> suspendables = new HashMap<>();
+    private final Map<MethodRef, Boolean> suspendables = new HashMap<>();
 
     public AnalyzingMethodRefPredicate(byte[] buffer, Predicate<MethodRef> predicate) {
         requireNonNull(buffer);
@@ -67,11 +67,9 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
     @Override
     public boolean test(MethodRef t) {
-        String name = t.getName();
-        String desc = t.getDesc();
-        Boolean suspendable = suspendables.get(new Key(name, desc));
+        Boolean suspendable = suspendables.get(t);
         if (suspendable == null) {
-            throw new IllegalArgumentException("Method " + name + desc + " not found");
+            throw new IllegalArgumentException("Method " + t.getName() + t.getDesc() + " not found");
         }
         return suspendable;
     }
@@ -87,13 +85,13 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
     private static final class ClassAdapter extends ClassVisitor {
 
-        private final Map<Key, MethodNode> methods = new HashMap<>();
-        private final Map<Key, Boolean> suspendables;
+        private final Map<MethodRef, MethodNode> nodes = new HashMap<>();
+        private final Map<MethodRef, Boolean> suspendables;
         private final Predicate<MethodRef> predicate;
         private int access;
         private String name;
 
-        ClassAdapter(Map<Key, Boolean> suspendables, Predicate<MethodRef> predicate) {
+        ClassAdapter(Map<MethodRef, Boolean> suspendables, Predicate<MethodRef> predicate) {
             super(ASM5);
             this.suspendables = suspendables;
             this.predicate = predicate;
@@ -108,9 +106,9 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
         @Override
         public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
-            MethodNode method = new MethodNode(access, name, desc, signature, exceptions);
-            methods.put(new Key(name, desc), method);
-            return method;
+            MethodNode node = new MethodNode(access, name, desc, signature, exceptions);
+            nodes.put(new MethodRef(name, desc), node);
+            return node;
         }
 
         @Override
@@ -126,9 +124,9 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                                 return true;
                             }
                         } else if (insn.getOpcode() != INVOKESPECIAL) {
-                            MethodNode method = methods.get(new Key(insn.name, insn.desc));
-                            if (method == null || (access & ACC_FINAL) == 0 &&
-                                    (method.access & (ACC_PRIVATE | ACC_STATIC | ACC_FINAL)) == 0) {
+                            MethodNode node = nodes.get(new MethodRef(insn.name, insn.desc));
+                            if (node == null || (access & ACC_FINAL) == 0 &&
+                                    (node.access & (ACC_PRIVATE | ACC_STATIC | ACC_FINAL)) == 0) {
                                 return true;
                             }
                         }
@@ -137,12 +135,13 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 }
             };
 
-            for (MethodNode method : methods.values()) {
-                if (!predicate.test(new MethodRef(method.name, method.desc)) ||
-                        !any(method.instructions.iterator(), IS_METHOD_INSN_NODE)) {
-                    suspendables.put(new Key(method.name, method.desc), false);
-                } else if (any(method.instructions.iterator(), isForeign)) {
-                    suspendables.put(new Key(method.name, method.desc), true);
+            for (Map.Entry<MethodRef, MethodNode> entry : nodes.entrySet()) {
+                MethodRef ref = entry.getKey();
+                MethodNode node = entry.getValue();
+                if (!predicate.test(ref) || !any(node.instructions.iterator(), IS_METHOD_INSN_NODE)) {
+                    suspendables.put(ref, false);
+                } else if (any(node.instructions.iterator(), isForeign)) {
+                    suspendables.put(ref, true);
                 }
             }
 
@@ -151,7 +150,7 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 public boolean test(AbstractInsnNode t) {
                     if (t instanceof MethodInsnNode) {
                         MethodInsnNode insn = (MethodInsnNode) t;
-                        Boolean suspendable = suspendables.get(new Key(insn.name, insn.desc));
+                        Boolean suspendable = suspendables.get(new MethodRef(insn.name, insn.desc));
                         if (suspendable != null && suspendable) {
                             return true;
                         }
@@ -163,54 +162,21 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
             boolean found;
             do {
                 found = false;
-                for (MethodNode method : methods.values()) {
-                    Key key = new Key(method.name, method.desc);
-                    if (!suspendables.containsKey(key)) {
-                        if (any(method.instructions.iterator(), isSuspendable)) {
-                            suspendables.put(key, true);
-                            found = true;
-                        }
+                for (Map.Entry<MethodRef, MethodNode> entry : nodes.entrySet()) {
+                    MethodRef ref = entry.getKey();
+                    if (!suspendables.containsKey(ref) &&
+                            any(entry.getValue().instructions.iterator(), isSuspendable)) {
+                        suspendables.put(ref, true);
+                        found = true;
                     }
                 }
             } while (found);
 
-            for (MethodNode method : methods.values()) {
-                Key key = new Key(method.name, method.desc);
-                if (!suspendables.containsKey(key)) {
-                    suspendables.put(key, false);
+            for (MethodRef ref : nodes.keySet()) {
+                if (!suspendables.containsKey(ref)) {
+                    suspendables.put(ref, false);
                 }
             }
-        }
-    }
-
-    private static final class Key {
-
-        private final String name;
-        private final String desc;
-
-        Key(String name, String desc) {
-            this.name = name;
-            this.desc = desc;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            if (obj == this) {
-                return true;
-            }
-            if (!(obj instanceof Key)) {
-                return false;
-            }
-            Key other = (Key) obj;
-            return name.equals(other.name) && desc.equals(other.desc);
-        }
-
-        @Override
-        public int hashCode() {
-            int result = 17;
-            result = 31 * result + name.hashCode();
-            result = 31 * result + desc.hashCode();
-            return result;
         }
     }
 }

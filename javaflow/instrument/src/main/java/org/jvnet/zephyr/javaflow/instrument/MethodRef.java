@@ -43,4 +43,24 @@ public final class MethodRef {
     public String getDesc() {
         return desc;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) {
+            return true;
+        }
+        if (!(obj instanceof MethodRef)) {
+            return false;
+        }
+        MethodRef other = (MethodRef) obj;
+        return name.equals(other.name) && desc.equals(other.desc);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = 17;
+        result = 31 * result + name.hashCode();
+        result = 31 * result + desc.hashCode();
+        return result;
+    }
 }
