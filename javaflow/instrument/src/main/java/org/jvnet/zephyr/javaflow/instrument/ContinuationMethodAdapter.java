@@ -49,7 +49,6 @@ import static org.objectweb.asm.Opcodes.ASTORE;
 import static org.objectweb.asm.Opcodes.BIPUSH;
 import static org.objectweb.asm.Opcodes.CHECKCAST;
 import static org.objectweb.asm.Opcodes.DCONST_0;
-import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.DUP_X2;
 import static org.objectweb.asm.Opcodes.FCONST_0;
 import static org.objectweb.asm.Opcodes.F_NEW;
@@ -111,113 +110,13 @@ final class ContinuationMethodAdapter extends MethodNode {
             }
         }
 
-        LabelNode startLabelNode = newLabelNode();
-        instructions.insert(startLabelNode);
-
         LabelNode[] labelNodes = new LabelNode[n];
         for (int i = 0; i < n; i++) {
             labelNodes[i] = newLabelNode();
         }
 
         InsnList list = new InsnList();
-        addRestoring(list, frames, labelNodes);
-        instructions.insert(list);
 
-        for (int i = 0; i < n; i++) {
-            Frame frame = frames[i];
-            InsnList list1 = new InsnList();
-            addCapturing(list1, frame, i);
-            MethodInsnNode node = frame.node;
-            instructions.insertBefore(node, labelNodes[i]);
-            instructions.insertBefore(node, newFrameNode(getValues(frame.beforeLocals), getValues(frame.beforeStack)));
-            instructions.insert(node, list1);
-        }
-
-        LabelNode endLabelNode = newLabelNode();
-        instructions.add(endLabelNode);
-
-        localVariables.add(new LocalVariableNode("__stackRecorder", 'L' + STACK_RECORDER + ';', null, startLabelNode,
-                endLabelNode, maxLocals));
-
-        FrameNode prevFrameNode = null;
-        for (AbstractInsnNode node = instructions.getFirst(); node != null; node = node.getNext()) {
-            if (node instanceof FrameNode) {
-                FrameNode frameNode = (FrameNode) node;
-                if (prevFrameNode != null) {
-                    instructions.remove(prevFrameNode);
-                }
-                prevFrameNode = frameNode;
-            } else if (node.getOpcode() != -1) {
-                prevFrameNode = null;
-            }
-        }
-
-        maxLocals += 1;
-
-        accept(mv);
-    }
-
-    @Override
-    protected LabelNode getLabelNode(Label l) {
-        Object info = l.info;
-        if (info instanceof LabelNode) {
-            return (LabelNode) info;
-        } else {
-            LabelNode labelNode = new LabelNode(l);
-            l.info = labelNode;
-            return labelNode;
-        }
-    }
-
-    private Frame[] analyze() {
-        final List<Frame> frames = new ArrayList<>();
-
-        final class Analyzer extends AnalyzerAdapter {
-
-            AbstractInsnNode node;
-
-            Analyzer() {
-                super(ASM5, owner, access, name, desc, null);
-            }
-
-            @Override
-            public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-                if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && name.charAt(0) != '<' ||
-                        opcode == INVOKESTATIC || opcode == INVOKEVIRTUAL) {
-                    Object[] beforeLocals = locals.toArray();
-                    Object[] beforeStack = stack.toArray();
-                    super.visitMethodInsn(opcode, owner, name, desc, itf);
-                    frames.add(new Frame((MethodInsnNode) node, beforeLocals, beforeStack, locals.toArray(),
-                            stack.toArray()));
-                } else {
-                    super.visitMethodInsn(opcode, owner, name, desc, itf);
-                }
-            }
-        }
-
-        Analyzer analyzer = new Analyzer();
-
-        for (AbstractInsnNode node = instructions.getFirst(); node != null; node = node.getNext()) {
-            analyzer.node = node;
-            node.accept(analyzer);
-        }
-
-        return frames.toArray(new Frame[frames.size()]);
-    }
-
-    private static Object[] getValues(Object[] values) {
-        Collection<Object> col = new ArrayList<>(values.length);
-        int i = 0;
-        int n = values.length;
-        while (i < n) {
-            Object value = values[i];
-            col.add(value);
-            i += value == Opcodes.LONG || value == Opcodes.DOUBLE ? 2 : 1;
-        }
-        return col.toArray();
-    }
-
-    private void addRestoring(InsnList list, Frame[] frames, LabelNode[] labelNodes) {
         int n1 = frames.length;
         LabelNode[] restoreLabelNodes = new LabelNode[n1];
         for (int i = 0; i < n1; i++) {
@@ -230,10 +129,13 @@ final class ContinuationMethodAdapter extends MethodNode {
         // PC: StackRecorder stackRecorder = StackRecorder.get();
         list.add(new MethodInsnNode(INVOKESTATIC, STACK_RECORDER, "getStackRecorder", "()L" + STACK_RECORDER + ';',
                 false));
-        list.add(new InsnNode(DUP));
         list.add(new VarInsnNode(ASTORE, maxLocals));
 
+        LabelNode startLabelNode = newLabelNode();
+        list.add(startLabelNode);
+
         // PC: if (stackRecorder != null && !stackRecorder.isSuspended()) {
+        list.add(new VarInsnNode(ALOAD, maxLocals));
         list.add(new JumpInsnNode(IFNULL, labelNode));
         list.add(new VarInsnNode(ALOAD, maxLocals));
         list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "isSuspended", "()Z", false));
@@ -244,8 +146,8 @@ final class ContinuationMethodAdapter extends MethodNode {
         list.add(new MethodInsnNode(INVOKEVIRTUAL, STACK_RECORDER, "popInt", "()I", false));
         list.add(new TableSwitchInsnNode(0, n1 - 1, labelNode, restoreLabelNodes));
 
-        if (maxStack < 2) {
-            maxStack = 2;
+        if (maxStack < 1) {
+            maxStack = 1;
         }
 
         int rem = maxLocals;
@@ -381,6 +283,101 @@ final class ContinuationMethodAdapter extends MethodNode {
         // end of start block
         list.add(labelNode);
         list.add(new FrameNode(F_NEW, n2, locals, 0, EMPTY_STACK));
+
+        instructions.insert(list);
+
+        for (int i = 0; i < n; i++) {
+            Frame frame = frames[i];
+            InsnList list1 = new InsnList();
+            addCapturing(list1, frame, i);
+            MethodInsnNode node = frame.node;
+            instructions.insertBefore(node, labelNodes[i]);
+            instructions.insertBefore(node, newFrameNode(getValues(frame.beforeLocals), getValues(frame.beforeStack)));
+            instructions.insert(node, list1);
+        }
+
+        LabelNode endLabelNode = newLabelNode();
+        instructions.add(endLabelNode);
+
+        localVariables.add(new LocalVariableNode("__stackRecorder", 'L' + STACK_RECORDER + ';', null, startLabelNode,
+                endLabelNode, maxLocals));
+
+        FrameNode prevFrameNode = null;
+        for (AbstractInsnNode node = instructions.getFirst(); node != null; node = node.getNext()) {
+            if (node instanceof FrameNode) {
+                FrameNode frameNode = (FrameNode) node;
+                if (prevFrameNode != null) {
+                    instructions.remove(prevFrameNode);
+                }
+                prevFrameNode = frameNode;
+            } else if (node.getOpcode() != -1) {
+                prevFrameNode = null;
+            }
+        }
+
+        maxLocals += 1;
+
+        accept(mv);
+    }
+
+    @Override
+    protected LabelNode getLabelNode(Label l) {
+        Object info = l.info;
+        if (info instanceof LabelNode) {
+            return (LabelNode) info;
+        } else {
+            LabelNode labelNode = new LabelNode(l);
+            l.info = labelNode;
+            return labelNode;
+        }
+    }
+
+    private Frame[] analyze() {
+        final List<Frame> frames = new ArrayList<>();
+
+        final class Analyzer extends AnalyzerAdapter {
+
+            AbstractInsnNode node;
+
+            Analyzer() {
+                super(ASM5, owner, access, name, desc, null);
+            }
+
+            @Override
+            public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+                if (opcode == INVOKEINTERFACE || opcode == INVOKESPECIAL && name.charAt(0) != '<' ||
+                        opcode == INVOKESTATIC || opcode == INVOKEVIRTUAL) {
+                    Object[] beforeLocals = locals.toArray();
+                    Object[] beforeStack = stack.toArray();
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                    frames.add(new Frame((MethodInsnNode) node, beforeLocals, beforeStack, locals.toArray(),
+                            stack.toArray()));
+                } else {
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                }
+            }
+        }
+
+        Analyzer analyzer = new Analyzer();
+
+        for (AbstractInsnNode node = instructions.getFirst(); node != null; node = node.getNext()) {
+            analyzer.node = node;
+            node.accept(analyzer);
+        }
+
+        return frames.toArray(new Frame[frames.size()]);
+    }
+
+    private static Object[] getValues(Object[] values) {
+        Collection<Object> col = new ArrayList<>(values.length);
+        int i = 0;
+        int n = values.length;
+        while (i < n) {
+            Object value = values[i];
+            col.add(value);
+            i += value == Opcodes.LONG || value == Opcodes.DOUBLE ? 2 : 1;
+        }
+        return col.toArray();
     }
 
     private void addCapturing(InsnList list, Frame frame, int index) {
