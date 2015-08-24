@@ -38,6 +38,11 @@ import java.util.concurrent.locks.LockSupport;
 
 final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
+    private static final int NONE = 0;
+    private static final int PARK = 1;
+    private static final int TIMED_PARK = 2;
+    private static final int YIELD = 3;
+
     private final AtomicInteger state = new AtomicInteger(NEW);
     private final Runnable unparkTask = new UnparkTask();
     private final AtomicReference<Node<T>> joiner = new AtomicReference<>();
@@ -50,9 +55,8 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     private volatile boolean interrupted;
     private volatile boolean unparked;
     private ScheduledFuture<?> cancelable;
-    private boolean yielded;
-    private volatile boolean unsuspendable;
-    private Thread javaThread;
+    private int action;
+    private volatile Thread javaThread;
 
     ContinuationThreadImpl(T thread, ThreadAccess<T> threadAccess, Executor executor,
             ScheduledExecutorService scheduler) {
@@ -89,14 +93,19 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         if (unparked) {
             unparked = false;
         } else {
-            cancelable = null;
-            if (unsuspendable) {
+            action = PARK;
+            Continuation.suspend();
+            if (action != NONE) {
+                javaThread = Thread.currentThread();
                 state.set(WAITING);
-                while (state.get() != RUNNABLE) {
-                    LockSupport.park();
+                if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
+                    unparked = false;
+                    javaThread = null;
+                } else {
+                    while (javaThread != null) {
+                        LockSupport.park();
+                    }
                 }
-            } else {
-                Continuation.suspend();
             }
         }
     }
@@ -107,34 +116,30 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             unparked = false;
         } else {
             cancelable = scheduler.schedule(unparkTask, timeout, unit);
-            if (unsuspendable) {
+            action = TIMED_PARK;
+            Continuation.suspend();
+            if (action != NONE) {
+                javaThread = Thread.currentThread();
                 state.set(TIMED_WAITING);
-                while (state.get() != RUNNABLE) {
-                    LockSupport.park();
+                if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
+                    cancelable.cancel(false);
+                    cancelable = null;
+                    unparked = false;
+                    javaThread = null;
+                } else {
+                    while (javaThread != null) {
+                        LockSupport.park();
+                    }
                 }
-            } else {
-                Continuation.suspend();
             }
         }
     }
 
     @Override
     public void parkUntil(long deadline) {
-        if (unparked) {
-            unparked = false;
-        } else {
-            long delay = deadline - System.currentTimeMillis();
-            if (delay > 0) {
-                cancelable = scheduler.schedule(unparkTask, delay, TimeUnit.MILLISECONDS);
-                if (unsuspendable) {
-                    state.set(TIMED_WAITING);
-                    while (state.get() != RUNNABLE) {
-                        LockSupport.park();
-                    }
-                } else {
-                    Continuation.suspend();
-                }
-            }
+        long delay = deadline - System.currentTimeMillis();
+        if (delay > 0) {
+            park(delay, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -146,27 +151,31 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             if (state == WAITING) {
                 if (this.state.compareAndSet(WAITING, RUNNABLE)) {
                     unparked = false;
-                    if (unsuspendable) {
-                        LockSupport.unpark(javaThread);
-                    } else {
+                    Thread javaThread = this.javaThread;
+                    if (javaThread == null) {
                         executor.execute(executeTask);
+                    } else {
+                        this.javaThread = null;
+                        LockSupport.unpark(javaThread);
                     }
-                    return;
+                    break;
                 }
             } else if (state == TIMED_WAITING) {
                 if (this.state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
-                    unparked = false;
                     cancelable.cancel(false);
                     cancelable = null;
-                    if (unsuspendable) {
-                        LockSupport.unpark(javaThread);
-                    } else {
+                    unparked = false;
+                    Thread javaThread = this.javaThread;
+                    if (javaThread == null) {
                         executor.execute(executeTask);
+                    } else {
+                        this.javaThread = null;
+                        LockSupport.unpark(javaThread);
                     }
-                    return;
+                    break;
                 }
             } else {
-                return;
+                break;
             }
         }
     }
@@ -176,26 +185,15 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         if (timeout < 0) {
             throw new IllegalArgumentException();
         }
-        if (timeout == 0) {
-            return;
-        }
         long start = System.currentTimeMillis();
         long remaining = timeout;
-        do {
-            cancelable = scheduler.schedule(unparkTask, remaining, unit);
-            if (unsuspendable) {
-                state.set(TIMED_WAITING);
-                while (state.get() != RUNNABLE) {
-                    LockSupport.park();
-                }
-            } else {
-                Continuation.suspend();
-            }
+        while (remaining > 0) {
+            park(remaining, unit);
             if (interrupted()) {
                 throw new InterruptedException();
             }
             remaining = start - System.currentTimeMillis() + timeout;
-        } while (remaining > 0);
+        }
     }
 
     @Override
@@ -222,12 +220,11 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
     @Override
     public void join(long timeout, TimeUnit unit) throws InterruptedException {
-        long base = System.currentTimeMillis();
-
         if (timeout < 0) {
             throw new IllegalArgumentException("timeout value is negative");
         }
 
+        long start = System.currentTimeMillis();
         T thread = threadAccess.currentThread();
         ThreadImpl<T> impl = threadAccess.getImpl(thread);
 
@@ -238,17 +235,13 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             node = new Node<>(thread, next);
         } while (!joiner.compareAndSet(next, node));
 
-        long now = 0;
-        while (isAlive()) {
-            long remaining = timeout - now;
-            if (remaining <= 0) {
-                break;
-            }
+        long remaining = timeout;
+        while (isAlive() && remaining > 0) {
             impl.park(remaining, unit);
             if (impl.interrupted()) {
                 throw new InterruptedException();
             }
-            now = System.currentTimeMillis() - base;
+            remaining = start - System.currentTimeMillis() + timeout;
         }
 
         node.thread.set(null);
@@ -277,29 +270,21 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
     @Override
     public void yield() {
-        if (unsuspendable) {
+        action = YIELD;
+        Continuation.suspend();
+        if (action != NONE) {
             Thread.yield();
-        } else {
-            yielded = true;
-            Continuation.suspend();
         }
     }
 
     private void execute() {
         threadAccess.setCurrentThread(thread);
 
+        action = NONE;
         try {
             continuation.resume();
         } catch (Throwable e) {
-            javaThread = Thread.currentThread();
-            boolean unsuspendable = this.unsuspendable;
-            this.unsuspendable = true;
-            try {
-                threadAccess.dispatchUncaughtException(thread, e);
-            } finally {
-                this.unsuspendable = unsuspendable;
-                javaThread = null;
-            }
+            threadAccess.dispatchUncaughtException(thread, e);
         }
 
         if (continuation.isDone()) {
@@ -312,41 +297,26 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
                 }
                 node = node.next;
             }
-            return;
-        }
-
-        if (yielded) {
-            yielded = false;
-            executor.execute(executeTask);
-            return;
-        }
-
-        if (cancelable == null) {
-            state.set(WAITING);
         } else {
-            state.set(TIMED_WAITING);
-        }
-
-        if (unparked) {
-            while (true) {
-                int state = this.state.get();
-                if (state == WAITING) {
-                    if (this.state.compareAndSet(WAITING, RUNNABLE)) {
+            switch (action) {
+                case PARK:
+                    state.set(WAITING);
+                    if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
                         unparked = false;
                         executor.execute(executeTask);
-                        return;
                     }
-                } else if (state == TIMED_WAITING) {
-                    if (this.state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
-                        unparked = false;
+                    break;
+                case TIMED_PARK:
+                    state.set(TIMED_WAITING);
+                    if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
                         cancelable.cancel(false);
                         cancelable = null;
+                        unparked = false;
                         executor.execute(executeTask);
-                        return;
                     }
-                } else {
-                    return;
-                }
+                    break;
+                default:
+                    executor.execute(executeTask);
             }
         }
     }

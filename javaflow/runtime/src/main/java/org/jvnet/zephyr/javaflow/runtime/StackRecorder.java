@@ -1,18 +1,25 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one or more
- * contributor license agreements.  See the NOTICE file distributed with
- * this work for additional information regarding copyright ownership.
- * The ASF licenses this file to You under the Apache License, Version 2.0
- * (the "License"); you may not use this file except in compliance with
- * the License.  You may obtain array copy of the License at
+ * The MIT License (MIT)
  *
- *      http://www.apache.org/licenses/LICENSE-2.0
+ * Copyright (c) 2015 Igor Konev
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
  */
 
 package org.jvnet.zephyr.javaflow.runtime;
@@ -33,30 +40,33 @@ public final class StackRecorder implements Serializable {
     private static final long[] EMPTY_LONG_STACK = {};
     private static final double[] EMPTY_DOUBLE_STACK = {};
     private static final Object[] EMPTY_OBJECT_STACK = {};
-    private static final int RESUMED = 0;
-    private static final int SUSPENDING = 1;
-    private static final int SUSPENDED = 2;
-    private static final int DONE = 3;
+    private static final int NEW = 0;
+    private static final int SUSPENDED = 1;
+    private static final int RESUMED = 2;
+    private static final int SUSPENDING = 3;
+    private static final int DONE = 4;
 
     private static final ThreadLocal<StackRecorder> stackRecorder = new ThreadLocal<>();
 
-    private int[] intStack = EMPTY_INT_STACK;
-    private float[] floatStack = EMPTY_FLOAT_STACK;
-    private long[] longStack = EMPTY_LONG_STACK;
-    private double[] doubleStack = EMPTY_DOUBLE_STACK;
-    private Object[] objectStack = EMPTY_OBJECT_STACK;
-    private int intTop;
-    private int floatTop;
-    private int longTop;
-    private int doubleTop;
-    private int objectTop;
-    private int state;
+    private transient int[] intStack = EMPTY_INT_STACK;
+    private transient float[] floatStack = EMPTY_FLOAT_STACK;
+    private transient long[] longStack = EMPTY_LONG_STACK;
+    private transient double[] doubleStack = EMPTY_DOUBLE_STACK;
+    private transient Object[] objectStack = EMPTY_OBJECT_STACK;
+    private transient int intTop;
+    private transient int floatTop;
+    private transient int longTop;
+    private transient int doubleTop;
+    private transient int objectTop;
+    private transient int state;
+    private transient boolean unsuspendable;
+    private transient int depth;
 
     public StackRecorder(Runnable target) {
         pushObject(requireNonNull(target));
     }
 
-    public static StackRecorder getStackRecorder() {
+    public static StackRecorder stackRecorder() {
         return stackRecorder.get();
     }
 
@@ -65,11 +75,13 @@ public final class StackRecorder implements Serializable {
         if (stackRecorder == null) {
             throw new IllegalStateException("No continuation is running");
         }
-        stackRecorder.state = stackRecorder.state == SUSPENDED ? RESUMED : SUSPENDING;
+        if (!stackRecorder.unsuspendable) {
+            stackRecorder.state = stackRecorder.state == SUSPENDED ? RESUMED : SUSPENDING;
+        }
     }
 
     public void resume() {
-        if (state == DONE) {
+        if (state != NEW && state != SUSPENDED) {
             throw new IllegalStateException();
         }
         Runnable target = (Runnable) popObject();
@@ -79,8 +91,12 @@ public final class StackRecorder implements Serializable {
             target.run();
         } finally {
             StackRecorder.stackRecorder.set(stackRecorder);
+            state = state == SUSPENDING ? SUSPENDED : DONE;
         }
-        state = state == SUSPENDING ? SUSPENDED : DONE;
+    }
+
+    public boolean isDone() {
+        return state == DONE;
     }
 
     public boolean isSuspending() {
@@ -91,8 +107,20 @@ public final class StackRecorder implements Serializable {
         return state == SUSPENDED;
     }
 
-    public boolean isDone() {
-        return state == DONE;
+    public void setUnsuspendable() {
+        if (unsuspendable) {
+            depth++;
+        } else {
+            unsuspendable = true;
+        }
+    }
+
+    public void resetUnsuspendable() {
+        if (depth > 0) {
+            depth--;
+        } else {
+            unsuspendable = false;
+        }
     }
 
     public void pushInt(int value) {
@@ -192,6 +220,12 @@ public final class StackRecorder implements Serializable {
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {
+        out.defaultWriteObject();
+
+        if (state != NEW && state != SUSPENDED) {
+            throw new IllegalStateException();
+        }
+
         out.writeInt(intTop);
         for (int i = 0; i < intTop; i++) {
             out.writeInt(intStack[i]);
@@ -217,10 +251,12 @@ public final class StackRecorder implements Serializable {
             out.writeObject(objectStack[i]);
         }
 
-        out.writeInt(state);
+        out.writeBoolean(state == SUSPENDED);
     }
 
     private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+
         intTop = in.readInt();
         intStack = new int[intTop];
         for (int i = 0; i < intTop; i++) {
@@ -251,6 +287,6 @@ public final class StackRecorder implements Serializable {
             objectStack[i] = in.readObject();
         }
 
-        state = in.readInt();
+        state = in.readBoolean() ? SUSPENDED : NEW;
     }
 }

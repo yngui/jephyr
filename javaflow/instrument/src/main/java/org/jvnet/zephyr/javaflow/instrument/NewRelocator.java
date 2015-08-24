@@ -17,19 +17,16 @@
 
 package org.jvnet.zephyr.javaflow.instrument;
 
+import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
+import org.objectweb.asm.commons.AnalyzerAdapter;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.InsnList;
 import org.objectweb.asm.tree.InsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.VarInsnNode;
-import org.objectweb.asm.tree.analysis.Analyzer;
-import org.objectweb.asm.tree.analysis.AnalyzerException;
-import org.objectweb.asm.tree.analysis.Frame;
-import org.objectweb.asm.tree.analysis.SourceInterpreter;
-import org.objectweb.asm.tree.analysis.SourceValue;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,90 +41,31 @@ import static org.objectweb.asm.Opcodes.DUP2_X2;
 import static org.objectweb.asm.Opcodes.DUP_X1;
 import static org.objectweb.asm.Opcodes.DUP_X2;
 import static org.objectweb.asm.Opcodes.ILOAD;
-import static org.objectweb.asm.Opcodes.INVOKESPECIAL;
 import static org.objectweb.asm.Opcodes.ISTORE;
 import static org.objectweb.asm.Opcodes.NEW;
 import static org.objectweb.asm.Opcodes.POP;
 import static org.objectweb.asm.Opcodes.POP2;
 import static org.objectweb.asm.Opcodes.SWAP;
 
-final class NewRelocator extends MethodNode {
+final class NewRelocator {
 
-    private final Collection<MethodInsnNode> methods = new ArrayList<>();
-    private final String className;
-    private final MethodVisitor mv;
+    void process(String owner, MethodNode methodNode) {
+        Analyzer analyzer = new Analyzer();
+        analyzer.analyze(owner, methodNode);
 
-    NewRelocator(int access, String name, String desc, String signature, String[] exceptions, String className,
-            MethodVisitor mv) {
-        super(ASM5, access, name, desc, signature, exceptions);
-        this.className = className;
-        this.mv = mv;
-    }
-
-    @Override
-    public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
-        MethodInsnNode mnode = new MethodInsnNode(opcode, owner, name, desc, itf);
-        if (opcode == INVOKESPECIAL || name.charAt(0) == '<') {
-            methods.add(mnode);
-        }
-        instructions.add(mnode);
-    }
-
-    @Override
-    public void visitEnd() {
-        if (methods.isEmpty()) {
-            accept(mv);
+        Collection<Entry> entries = analyzer.entries;
+        if (entries.isEmpty()) {
             return;
         }
 
-        Analyzer<SourceValue> analyzer = new Analyzer<>(new SourceInterpreter());
-        try {
-            analyzer.analyze(className, this);
-        } catch (AnalyzerException e) {
-            throw new RuntimeException(e);
-        }
-        Frame<SourceValue>[] frames = analyzer.getFrames();
-
-        Map<AbstractInsnNode, MethodInsnNode> nodes = new HashMap<>();
-
-        for (MethodInsnNode node : methods) {
-            // require to move NEW instruction
-            int n = instructions.indexOf(node);
-            Frame<SourceValue> frame = frames[n];
-            Type[] types = Type.getArgumentTypes(node.desc);
-            SourceValue value = frame.getStack(frame.getStackSize() - types.length - 1);
-
-            for (AbstractInsnNode node1 : value.insns) {
-                if (node1.getOpcode() == NEW) {
-                    nodes.put(node1, node);
-                } else {
-                    // other known patterns
-                    int n1 = instructions.indexOf(node1);
-
-                    if (node1.getOpcode() == DUP) { // <init> with params
-                        AbstractInsnNode node2 = instructions.get(n1 - 1);
-                        if (node2.getOpcode() == NEW) {
-                            nodes.put(node2, node);
-                        }
-                    } else if (node1.getOpcode() == SWAP) { // in exception handler
-                        AbstractInsnNode node2 = instructions.get(n1 - 1);
-                        AbstractInsnNode node3 = instructions.get(n1 - 2);
-                        if (node2.getOpcode() == DUP_X1 && node3.getOpcode() == NEW) {
-                            nodes.put(node3, node);
-                        }
-                    }
-                }
-            }
-        }
-
+        InsnList instructions = methodNode.instructions;
         int maxStackDelta = 0;
 
-        for (Map.Entry<AbstractInsnNode, MethodInsnNode> entry : nodes.entrySet()) {
-            AbstractInsnNode node1 = entry.getKey();
-            int n1 = instructions.indexOf(node1);
-            AbstractInsnNode node2 = instructions.get(n1 + 1);
-            AbstractInsnNode node3 = instructions.get(n1 + 2);
-            instructions.remove(node1); // NEW
+        for (Entry entry : entries) {
+            AbstractInsnNode newNode = entry.newNode;
+            AbstractInsnNode node2 = newNode.getNext();
+            AbstractInsnNode node3 = node2.getNext();
+            instructions.remove(newNode); // NEW
             boolean requireDup = false;
 
             int opcode = node2.getOpcode();
@@ -140,23 +78,23 @@ final class NewRelocator extends MethodNode {
                 requireDup = true;
             }
 
-            MethodInsnNode node = entry.getValue();
+            MethodInsnNode node = entry.node;
             Type[] types = Type.getArgumentTypes(node.desc);
-            int n2 = types.length;
+            int n = types.length;
 
             // optimizations for some common cases
-            if (n2 == 0) {
+            if (n == 0) {
                 InsnList list = new InsnList();
-                list.add(node1); // NEW
+                list.add(newNode); // NEW
 
                 if (requireDup) {
                     list.add(new InsnNode(DUP));
                 }
 
                 instructions.insertBefore(node, list);
-            } else if (n2 == 1 && types[0].getSize() == 1) {
+            } else if (n == 1 && types[0].getSize() == 1) {
                 InsnList list = new InsnList();
-                list.add(node1); // NEW
+                list.add(newNode); // NEW
 
                 if (requireDup) {
                     list.add(new InsnNode(DUP));
@@ -171,11 +109,11 @@ final class NewRelocator extends MethodNode {
                 }
 
                 instructions.insertBefore(node, list);
-            } else if (n2 == 1 && types[0].getSize() == 2 ||
-                    n2 == 2 && types[0].getSize() == 1 && types[1].getSize() == 1) {
+            } else if (n == 1 && types[0].getSize() == 2 ||
+                    n == 2 && types[0].getSize() == 1 && types[1].getSize() == 1) {
                 // TODO this one untested!
                 InsnList list = new InsnList();
-                list.add(node1); // NEW
+                list.add(newNode); // NEW
 
                 if (requireDup) {
                     list.add(new InsnNode(DUP));
@@ -197,19 +135,19 @@ final class NewRelocator extends MethodNode {
                 instructions.insertBefore(node, list);
             } else {
                 InsnList list = new InsnList();
-                int var = maxLocals;
+                int var = methodNode.maxLocals;
 
                 // generic code using temporary locals
                 // save stack
-                for (int i = n2 - 1; i >= 0; i--) {
+                for (int i = n - 1; i >= 0; i--) {
                     Type type = types[i];
                     list.add(new VarInsnNode(type.getOpcode(ISTORE), var));
                     var += type.getSize();
                 }
 
-                maxLocals = var;
+                methodNode.maxLocals = var;
 
-                list.add(node1); // NEW
+                list.add(newNode); // NEW
 
                 if (requireDup) {
                     list.add(new InsnNode(DUP));
@@ -236,8 +174,65 @@ final class NewRelocator extends MethodNode {
             }
         }
 
-        maxStack += maxStackDelta;
+        methodNode.maxStack += maxStackDelta;
+    }
 
-        accept(mv);
+    private static final class Analyzer {
+
+        Collection<Entry> entries;
+
+        Analyzer() {
+        }
+
+        void analyze(final String owner, final MethodNode methodNode) {
+            entries = new ArrayList<>();
+
+            final class ClassAdapter extends AnalyzerAdapter {
+
+                AbstractInsnNode node;
+                private final Map<Label, AbstractInsnNode> nodes = new HashMap<>();
+
+                ClassAdapter() {
+                    super(ASM5, owner, methodNode.access, methodNode.name, methodNode.desc, null);
+                    mv = new MethodVisitor(ASM5) {
+                        @Override
+                        public void visitLabel(Label label) {
+                            nodes.put(label, node);
+                        }
+                    };
+                }
+
+                @Override
+                public void visitMethodInsn(int opcode, String owner, String name, String desc, boolean itf) {
+                    if (name.charAt(0) == '<') {
+                        Label label = (Label) stack.get(stack.size() - (Type.getArgumentsAndReturnSizes(desc) >> 2));
+                        AbstractInsnNode node1 = nodes.get(label);
+                        while (node1.getOpcode() != NEW) {
+                            node1 = node1.getNext();
+                        }
+                        entries.add(new Entry((MethodInsnNode) node, node1));
+                    }
+                    super.visitMethodInsn(opcode, owner, name, desc, itf);
+                }
+            }
+
+            ClassAdapter classAdapter = new ClassAdapter();
+
+            for (AbstractInsnNode node = methodNode.instructions.getFirst(); node != null; node = node.getNext()) {
+                classAdapter.node = node;
+                node.accept(classAdapter);
+            }
+        }
+    }
+
+    private static final class Entry {
+
+        final MethodInsnNode node;
+        final AbstractInsnNode newNode;
+
+        Entry(MethodInsnNode node, AbstractInsnNode newNode) {
+            this.node = node;
+            this.newNode = newNode;
+        }
     }
 }
