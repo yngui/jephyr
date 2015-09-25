@@ -24,7 +24,7 @@
 
 package org.jvnet.zephyr.thread;
 
-public interface ThreadAccess<T extends Runnable> {
+public interface ThreadAccess<T extends Runnable, U> {
 
     T currentThread();
 
@@ -33,4 +33,6 @@ public interface ThreadAccess<T extends Runnable> {
     ThreadImpl<T> getImpl(T thread);
 
     void dispatchUncaughtException(T thread, Throwable e);
+
+    void blockedOn(T thread, U interruptible);
 }

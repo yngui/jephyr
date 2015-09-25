@@ -24,11 +24,13 @@
 
 package org.jvnet.zephyr.thread.continuation;
 
-import org.jvnet.zephyr.continuation.Continuation;
+import org.jvnet.zephyr.continuation.runtime.Continuation;
 import org.jvnet.zephyr.thread.ThreadAccess;
 import org.jvnet.zephyr.thread.ThreadImpl;
 
-import java.util.concurrent.Executor;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ManagedBlocker;
+import java.util.concurrent.ForkJoinTask;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
@@ -38,35 +40,33 @@ import java.util.concurrent.locks.LockSupport;
 
 final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
-    private static final int NONE = 0;
-    private static final int PARK = 1;
-    private static final int TIMED_PARK = 2;
-    private static final int YIELD = 3;
+    private static final int PARK = 0;
+    private static final int TIMED_PARK = 1;
+    private static final int YIELD = 2;
 
     private final AtomicInteger state = new AtomicInteger(NEW);
+    private final ForkJoinTask<Void> executeTask = new ExecuteTask();
     private final Runnable unparkTask = new UnparkTask();
+    private final ManagedBlocker blocker = new ParkBlocker();
     private final AtomicReference<Node<T>> joiner = new AtomicReference<>();
     private final T thread;
-    private final ThreadAccess<T> threadAccess;
-    private final Executor executor;
+    private final ThreadAccess<T, ?> threadAccess;
+    private final ForkJoinPool pool;
     private final ScheduledExecutorService scheduler;
     private final Continuation continuation;
-    private final Runnable executeTask;
     private volatile boolean interrupted;
     private volatile boolean unparked;
     private ScheduledFuture<?> cancelable;
     private int action;
     private volatile Thread javaThread;
 
-    ContinuationThreadImpl(T thread, ThreadAccess<T> threadAccess, Executor executor,
+    ContinuationThreadImpl(T thread, ThreadAccess<T, ?> threadAccess, ForkJoinPool pool,
             ScheduledExecutorService scheduler) {
         this.thread = thread;
         this.threadAccess = threadAccess;
-        this.executor = executor;
+        this.pool = pool;
         this.scheduler = scheduler;
-        continuation = Continuation.create(thread);
-        executeTask = executor instanceof AdaptingExecutor ? ((AdaptingExecutor) executor).adapt(new ExecuteTask()) :
-                new ExecuteTask();
+        continuation = new Continuation(thread);
     }
 
     @Override
@@ -85,7 +85,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         if (!state.compareAndSet(NEW, RUNNABLE)) {
             throw new IllegalStateException();
         }
-        executor.execute(executeTask);
+        pool.execute(executeTask);
     }
 
     @Override
@@ -94,16 +94,16 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             unparked = false;
         } else {
             action = PARK;
-            Continuation.suspend();
-            if (action != NONE) {
+            if (!Continuation.suspend()) {
                 javaThread = Thread.currentThread();
                 state.set(WAITING);
                 if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
                     unparked = false;
                     javaThread = null;
                 } else {
-                    while (javaThread != null) {
-                        LockSupport.park();
+                    try {
+                        ForkJoinPool.managedBlock(blocker);
+                    } catch (InterruptedException ignored) {
                     }
                 }
             }
@@ -117,8 +117,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         } else {
             cancelable = scheduler.schedule(unparkTask, timeout, unit);
             action = TIMED_PARK;
-            Continuation.suspend();
-            if (action != NONE) {
+            if (!Continuation.suspend()) {
                 javaThread = Thread.currentThread();
                 state.set(TIMED_WAITING);
                 if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
@@ -127,8 +126,9 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
                     unparked = false;
                     javaThread = null;
                 } else {
-                    while (javaThread != null) {
-                        LockSupport.park();
+                    try {
+                        ForkJoinPool.managedBlock(blocker);
+                    } catch (InterruptedException ignored) {
                     }
                 }
             }
@@ -147,35 +147,37 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     public void unpark() {
         unparked = true;
         while (true) {
-            int state = this.state.get();
-            if (state == WAITING) {
-                if (this.state.compareAndSet(WAITING, RUNNABLE)) {
-                    unparked = false;
-                    Thread javaThread = this.javaThread;
-                    if (javaThread == null) {
-                        executor.execute(executeTask);
-                    } else {
-                        this.javaThread = null;
-                        LockSupport.unpark(javaThread);
+            switch (state.get()) {
+                case WAITING:
+                    if (state.compareAndSet(WAITING, RUNNABLE)) {
+                        unparked = false;
+                        Thread javaThread = this.javaThread;
+                        if (javaThread == null) {
+                            pool.execute(executeTask);
+                        } else {
+                            this.javaThread = null;
+                            LockSupport.unpark(javaThread);
+                        }
+                        return;
                     }
                     break;
-                }
-            } else if (state == TIMED_WAITING) {
-                if (this.state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
-                    cancelable.cancel(false);
-                    cancelable = null;
-                    unparked = false;
-                    Thread javaThread = this.javaThread;
-                    if (javaThread == null) {
-                        executor.execute(executeTask);
-                    } else {
-                        this.javaThread = null;
-                        LockSupport.unpark(javaThread);
+                case TIMED_WAITING:
+                    if (state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
+                        cancelable.cancel(false);
+                        cancelable = null;
+                        unparked = false;
+                        Thread javaThread = this.javaThread;
+                        if (javaThread == null) {
+                            pool.execute(executeTask);
+                        } else {
+                            this.javaThread = null;
+                            LockSupport.unpark(javaThread);
+                        }
+                        return;
                     }
                     break;
-                }
-            } else {
-                break;
+                default:
+                    return;
             }
         }
     }
@@ -271,8 +273,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     @Override
     public void yield() {
         action = YIELD;
-        Continuation.suspend();
-        if (action != NONE) {
+        if (!Continuation.suspend()) {
             Thread.yield();
         }
     }
@@ -280,14 +281,36 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     private void execute() {
         threadAccess.setCurrentThread(thread);
 
-        action = NONE;
+        boolean suspended;
         try {
-            continuation.resume();
+            suspended = continuation.resume();
         } catch (Throwable e) {
             threadAccess.dispatchUncaughtException(thread, e);
+            suspended = false;
         }
 
-        if (continuation.isDone()) {
+        if (suspended) {
+            switch (action) {
+                case PARK:
+                    state.set(WAITING);
+                    if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
+                        unparked = false;
+                        pool.execute(executeTask);
+                    }
+                    break;
+                case TIMED_PARK:
+                    state.set(TIMED_WAITING);
+                    if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
+                        cancelable.cancel(false);
+                        cancelable = null;
+                        unparked = false;
+                        pool.execute(executeTask);
+                    }
+                    break;
+                default:
+                    pool.execute(executeTask);
+            }
+        } else {
             state.set(TERMINATED);
             Node<T> node = joiner.getAndSet(null);
             while (node != null) {
@@ -297,38 +320,27 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
                 }
                 node = node.next;
             }
-        } else {
-            switch (action) {
-                case PARK:
-                    state.set(WAITING);
-                    if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
-                        unparked = false;
-                        executor.execute(executeTask);
-                    }
-                    break;
-                case TIMED_PARK:
-                    state.set(TIMED_WAITING);
-                    if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
-                        cancelable.cancel(false);
-                        cancelable = null;
-                        unparked = false;
-                        executor.execute(executeTask);
-                    }
-                    break;
-                default:
-                    executor.execute(executeTask);
-            }
         }
     }
 
-    private final class ExecuteTask implements Runnable {
+    private final class ExecuteTask extends ForkJoinTask<Void> {
 
         ExecuteTask() {
         }
 
         @Override
-        public void run() {
+        public Void getRawResult() {
+            return null;
+        }
+
+        @Override
+        protected void setRawResult(Void value) {
+        }
+
+        @Override
+        protected boolean exec() {
             execute();
+            return false;
         }
     }
 
@@ -340,6 +352,23 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         @Override
         public void run() {
             unpark();
+        }
+    }
+
+    private final class ParkBlocker implements ManagedBlocker {
+
+        ParkBlocker() {
+        }
+
+        @Override
+        public boolean block() {
+            LockSupport.park();
+            return false;
+        }
+
+        @Override
+        public boolean isReleasable() {
+            return javaThread == null;
         }
     }
 

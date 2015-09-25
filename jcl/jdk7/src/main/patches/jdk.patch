@@ -812,7 +812,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/System.java
 diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 --- a/src/share/classes/java/lang/Thread.java	Tue Apr 14 13:48:05 2015 -0700
 +++ b/src/share/classes/java/lang/Thread.java	Fri Jul 31 15:48:18 2015 +0300
-@@ -23,23 +23,28 @@
+@@ -23,23 +23,29 @@
   * questions.
   */
 
@@ -820,6 +820,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 +package org.jvnet.zephyr.jcl.java.lang;
 +
 +import org.jvnet.zephyr.jcl.impl.misc.ReflectionUtils;
++import org.jvnet.zephyr.jcl.impl.misc.SharedSecrets;
 +import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
 +import org.jvnet.zephyr.jcl.java.nio.channels.Selector;
 +import org.jvnet.zephyr.jcl.java.util.HashMap;
@@ -850,7 +851,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 
 
  /**
-@@ -139,26 +144,23 @@
+@@ -139,26 +144,27 @@
   */
  public
  class Thread implements Runnable {
@@ -866,7 +867,11 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 +            return new Thread(java.lang.Thread.currentThread());
 +        }
 +    };
-+    private static final ThreadAccess<Thread> threadAccess = new ThreadThreadAccess();
++    private static final ThreadAccess<Thread, Interruptible> threadAccess = new ThreadAccessImpl();
++
++    static {
++        SharedSecrets.setThreadAccess(threadAccess);
++    }
 +
 +    final ThreadImpl<Thread> impl;
 
@@ -1343,7 +1348,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
      }
 
      // Added in JSR-166
-@@ -2049,10 +2100,45 @@
+@@ -2049,10 +2100,50 @@
      }
 
      /* Some private helper methods */
@@ -1369,9 +1374,9 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 +        impl.interrupt();
 +    }
 +
-+    private static final class ThreadThreadAccess implements ThreadAccess<Thread> {
++    private static final class ThreadAccessImpl implements ThreadAccess<Thread, Interruptible> {
 +
-+        ThreadThreadAccess() {
++        ThreadAccessImpl() {
 +        }
 +
 +        @Override
@@ -1392,6 +1397,11 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 +        @Override
 +        public void dispatchUncaughtException(Thread thread, Throwable e) {
 +            thread.dispatchUncaughtException(e);
++        }
++
++        @Override
++        public void blockedOn(Thread thread, Interruptible interruptible) {
++            thread.blockedOn(interruptible);
 +        }
 +    }
  }
@@ -1933,9 +1943,9 @@ diff -r 55f6804b4352 src/share/classes/java/nio/channels/spi/AbstractInterruptib
 -package java.nio.channels.spi;
 +package org.jvnet.zephyr.jcl.java.nio.channels.spi;
 +
++import org.jvnet.zephyr.jcl.impl.misc.SharedSecrets;
 +import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
 +import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 
  import java.io.IOException;
 -import java.lang.reflect.Method;
@@ -1956,7 +1966,7 @@ diff -r 55f6804b4352 src/share/classes/java/nio/channels/spi/AbstractInterruptib
      // -- sun.misc.SharedSecrets --
      static void blockedOn(Interruptible intr) {         // package-private
 -        sun.misc.SharedSecrets.getJavaLangAccess().blockedOn(Thread.currentThread(),
-+        ThreadUtils.blockedOn(
++        SharedSecrets.getThreadAccess().blockedOn(Thread.currentThread(),
                                                               intr);
      }
  }
@@ -5135,9 +5145,9 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
 -import java.util.concurrent.*;
 +package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
 +
++import org.jvnet.zephyr.jcl.impl.misc.SharedSecrets;
 +import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
 +import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.lang.ThreadUtils;
 +import org.jvnet.zephyr.jcl.java.util.concurrent.Semaphore;
  import sun.misc.Unsafe;
 
@@ -5175,7 +5185,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
      public static void unpark(Thread thread) {
          if (thread != null)
 -            unsafe.unpark(thread);
-+            ThreadUtils.unpark(thread);
++            SharedSecrets.getThreadAccess().getImpl(thread).unpark();
      }
 
      /**
@@ -5184,7 +5194,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
          Thread t = Thread.currentThread();
          setBlocker(t, blocker);
 -        unsafe.park(false, 0L);
-+        ThreadUtils.park();
++        SharedSecrets.getThreadAccess().getImpl(Thread.currentThread()).park();
          setBlocker(t, null);
      }
 
@@ -5193,7 +5203,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
              Thread t = Thread.currentThread();
              setBlocker(t, blocker);
 -            unsafe.park(false, nanos);
-+            ThreadUtils.park(nanos, TimeUnit.NANOSECONDS);
++            SharedSecrets.getThreadAccess().getImpl(Thread.currentThread()).park(nanos, TimeUnit.NANOSECONDS);
              setBlocker(t, null);
          }
      }
@@ -5202,7 +5212,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
          Thread t = Thread.currentThread();
          setBlocker(t, blocker);
 -        unsafe.park(true, deadline);
-+        ThreadUtils.parkUntil(deadline);
++        SharedSecrets.getThreadAccess().getImpl(Thread.currentThread()).parkUntil(deadline);
          setBlocker(t, null);
      }
 
@@ -5211,7 +5221,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
       */
      public static void park() {
 -        unsafe.park(false, 0L);
-+        ThreadUtils.park();
++        SharedSecrets.getThreadAccess().getImpl(Thread.currentThread()).park();
      }
 
      /**
@@ -5220,7 +5230,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
      public static void parkNanos(long nanos) {
          if (nanos > 0)
 -            unsafe.park(false, nanos);
-+            ThreadUtils.park(nanos, TimeUnit.NANOSECONDS);
++            SharedSecrets.getThreadAccess().getImpl(Thread.currentThread()).park(nanos, TimeUnit.NANOSECONDS);
      }
 
      /**
@@ -5229,7 +5239,7 @@ diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/LockSupport.ja
       */
      public static void parkUntil(long deadline) {
 -        unsafe.park(true, deadline);
-+        ThreadUtils.parkUntil(deadline);
++        SharedSecrets.getThreadAccess().getImpl(Thread.currentThread()).parkUntil(deadline);
      }
  }
 diff -r 55f6804b4352 src/share/classes/java/util/concurrent/locks/ReadWriteLock.java

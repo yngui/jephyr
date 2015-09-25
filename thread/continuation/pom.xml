@@ -38,40 +38,19 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.remapping</groupId>
-                <artifactId>remapping-maven-plugin</artifactId>
+                <groupId>org.jvnet.zephyr.continuation</groupId>
+                <artifactId>continuation-maven-plugin</artifactId>
                 <configuration>
-                    <mappingEntries>
-                        <mappingEntry>
-                            <oldName>org/jvnet/zephyr/continuation/Continuation</oldName>
-                            <newName>org/jvnet/zephyr/continuation/javaflow/JavaflowContinuation</newName>
-                        </mappingEntry>
-                    </mappingEntries>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>remapping</goal>
-                            <goal>testRemapping</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.jvnet.zephyr.javaflow</groupId>
-                <artifactId>javaflow-maven-plugin</artifactId>
-                <configuration>
-                    <classesDirectory>${project.build.directory}/remapping-classes</classesDirectory>
-                    <testClassesDirectory>${project.build.directory}/remapping-test-classes</testClassesDirectory>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/thread/continuation/AdaptingExecutor.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ExecuteTask.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$Node.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ParkBlocker.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$UnparkTask.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolExecutor.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolExecutor$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ForkJoinPoolProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/ForkJoinPoolProvider$*.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.getState()I
@@ -89,8 +68,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>javaflow</goal>
-                            <goal>testJavaflow</goal>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -99,13 +78,12 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>javaflow</id>
+                        <id>default-jar</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>javaflow</classifier>
-                            <classesDirectory>${project.build.directory}/javaflow-classes</classesDirectory>
+                            <classesDirectory>${project.build.directory}/continuation-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -117,11 +95,11 @@
         <dependency>
             <groupId>org.jvnet.zephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
-            <optional>true</optional>
+            <classifier>continuation</classifier>
         </dependency>
         <dependency>
             <groupId>org.jvnet.zephyr.continuation</groupId>
-            <artifactId>continuation-api</artifactId>
+            <artifactId>continuation-runtime</artifactId>
         </dependency>
     </dependencies>
 </project>

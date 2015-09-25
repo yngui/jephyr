@@ -33,10 +33,9 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>continuation</module>
         <module>thread</module>
         <module>jcl</module>
-        <module>javaflow</module>
+        <module>continuation</module>
         <module>remapping</module>
         <module>common</module>
     </modules>
@@ -49,6 +48,7 @@
         <maven-plugin-api.version>3.3.1</maven-plugin-api.version>
         <maven-plugin-plugin.version>3.4</maven-plugin-plugin.version>
         <testng.version>6.8.21</testng.version>
+        <mockito.version>1.10.19</mockito.version>
     </properties>
 
     <build>
@@ -80,13 +80,13 @@
                     <version>1.9.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.remapping</groupId>
-                    <artifactId>remapping-maven-plugin</artifactId>
+                    <groupId>org.jvnet.zephyr.continuation</groupId>
+                    <artifactId>continuation-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.javaflow</groupId>
-                    <artifactId>javaflow-maven-plugin</artifactId>
+                    <groupId>org.jvnet.zephyr.remapping</groupId>
+                    <artifactId>remapping-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
                 <plugin>
@@ -127,7 +127,12 @@
         <dependencies>
             <dependency>
                 <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-api</artifactId>
+                <artifactId>continuation-instrument</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.zephyr.continuation</groupId>
+                <artifactId>continuation-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -136,14 +141,10 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.javaflow</groupId>
-                <artifactId>javaflow-runtime</artifactId>
+                <groupId>org.jvnet.zephyr.thread</groupId>
+                <artifactId>thread-api</artifactId>
                 <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jvnet.zephyr.javaflow</groupId>
-                <artifactId>javaflow-instrument</artifactId>
-                <version>${project.version}</version>
+                <classifier>continuation</classifier>
             </dependency>
             <dependency>
                 <groupId>org.jvnet.zephyr.common</groupId>
@@ -199,6 +200,12 @@
                 <groupId>org.testng</groupId>
                 <artifactId>testng</artifactId>
                 <version>${testng.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-all</artifactId>
+                <version>${mockito.version}</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>

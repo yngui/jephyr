@@ -37,7 +37,7 @@ public abstract class ThreadImpl<T extends Runnable> {
     protected ThreadImpl() {
     }
 
-    public static <T extends Runnable> ThreadImpl<T> create(T thread, ThreadAccess<T> threadAccess) {
+    public static <T extends Runnable> ThreadImpl<T> create(T thread, ThreadAccess<T, ?> threadAccess) {
         return ThreadImplProvider.provider().createThreadImpl(thread, threadAccess);
     }
 

@@ -46,7 +46,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifestEntries>
-                            <Premain-Class>org.jvnet.zephyr.remapping.agent.RemappingAgent</Premain-Class>
+                            <Premain-Class>org.jvnet.zephyr.remapping.agent.Agent</Premain-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>

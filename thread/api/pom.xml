@@ -38,8 +38,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.javaflow</groupId>
-                <artifactId>javaflow-maven-plugin</artifactId>
+                <groupId>org.jvnet.zephyr.continuation</groupId>
+                <artifactId>continuation-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
                         <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
@@ -53,8 +53,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>javaflow</goal>
-                            <goal>testJavaflow</goal>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -63,13 +63,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>javaflow</id>
+                        <id>continuation</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>javaflow</classifier>
-                            <classesDirectory>${project.build.directory}/javaflow-classes</classesDirectory>
+                            <classifier>continuation</classifier>
+                            <classesDirectory>${project.build.directory}/continuation-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>

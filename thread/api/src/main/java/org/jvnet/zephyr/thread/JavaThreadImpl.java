@@ -74,16 +74,7 @@ public final class JavaThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
     @Override
     public void park(long timeout, TimeUnit unit) {
-        long ms = unit.toMillis(timeout);
-        if (ms == 0) {
-            LockSupport.parkNanos(unit.toNanos(timeout));
-        } else {
-            int ns = excessNanos(timeout, ms, unit);
-            if (ns >= 500000) {
-                ms++;
-            }
-            LockSupport.park(ms);
-        }
+        LockSupport.parkNanos(unit.toNanos(timeout));
     }
 
     @Override
@@ -99,8 +90,7 @@ public final class JavaThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     @Override
     public void sleep(long timeout, TimeUnit unit) throws InterruptedException {
         long ms = unit.toMillis(timeout);
-        int ns = excessNanos(timeout, ms, unit);
-        Thread.sleep(ms, ns);
+        Thread.sleep(ms, excessNanos(timeout, ms, unit));
     }
 
     @Override
@@ -134,7 +124,7 @@ public final class JavaThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         Thread.yield();
     }
 
-    private int excessNanos(long d, long m, TimeUnit unit) {
+    private static int excessNanos(long d, long m, TimeUnit unit) {
         switch (unit) {
             case NANOSECONDS:
                 return (int) (d - m * 1000000L);

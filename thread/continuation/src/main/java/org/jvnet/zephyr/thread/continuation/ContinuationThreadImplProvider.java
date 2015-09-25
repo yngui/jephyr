@@ -28,8 +28,6 @@ import org.jvnet.zephyr.thread.ThreadAccess;
 import org.jvnet.zephyr.thread.ThreadImpl;
 import org.jvnet.zephyr.thread.ThreadImplProvider;
 
-import java.lang.reflect.InvocationTargetException;
-import java.util.concurrent.Executor;
 import java.util.concurrent.ScheduledThreadPoolExecutor;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -38,52 +36,26 @@ import static java.util.Objects.requireNonNull;
 
 public final class ContinuationThreadImplProvider extends ThreadImplProvider {
 
-    private static final String EXECUTOR = ContinuationThreadImplProvider.class.getName() + ".executor";
-
-    private final Executor executor = loadExecutor();
-    private final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1,
-            new DaemonThreadFactory(ContinuationThreadImplProvider.class.getSimpleName() + "-scheduler-"));
+    private static final AtomicInteger providerNum = new AtomicInteger(1);
+    private final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
+        @Override
+        public Thread newThread(Runnable r) {
+            Thread thread = new Thread(r);
+            thread.setName(ContinuationThreadImplProvider.class.getSimpleName() + '-' + providerNum.getAndIncrement() +
+                    "-scheduler");
+            thread.setDaemon(true);
+            return thread;
+        }
+    });
 
     public ContinuationThreadImplProvider() {
         scheduler.prestartCoreThread();
     }
 
     @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(T thread, ThreadAccess<T> threadAccess) {
+    public <T extends Runnable> ThreadImpl<T> createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess) {
         requireNonNull(thread);
         requireNonNull(threadAccess);
-        return new ContinuationThreadImpl<T>(thread, threadAccess, executor, scheduler);
-    }
-
-    private static Executor loadExecutor() {
-        String name = System.getProperty(EXECUTOR);
-        if (name == null) {
-            return new DefaultForkJoinPoolExecutor();
-        } else {
-            try {
-                return (Executor) ClassLoader.getSystemClassLoader().loadClass(name).getConstructor().newInstance();
-            } catch (ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException
-                    | InvocationTargetException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }
-
-    private static final class DaemonThreadFactory implements ThreadFactory {
-
-        private final AtomicInteger threadNum = new AtomicInteger(1);
-        private final String namePrefix;
-
-        DaemonThreadFactory(String namePrefix) {
-            this.namePrefix = namePrefix;
-        }
-
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r);
-            thread.setName(namePrefix + threadNum.getAndIncrement());
-            thread.setDaemon(true);
-            return thread;
-        }
+        return new ContinuationThreadImpl<>(thread, threadAccess, ForkJoinPoolProvider.provider().getPool(), scheduler);
     }
 }

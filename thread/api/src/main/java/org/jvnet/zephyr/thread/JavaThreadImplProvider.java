@@ -31,7 +31,7 @@ import static java.util.Objects.requireNonNull;
 final class JavaThreadImplProvider extends ThreadImplProvider {
 
     @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T> threadAccess) {
+    public <T extends Runnable> ThreadImpl<T> createThreadImpl(final T thread, final ThreadAccess<T, ?> threadAccess) {
         requireNonNull(thread);
         requireNonNull(threadAccess);
         Thread javaThread = new Thread(thread);
@@ -41,6 +41,6 @@ final class JavaThreadImplProvider extends ThreadImplProvider {
                 threadAccess.dispatchUncaughtException(thread, e);
             }
         });
-        return new JavaThreadImpl(javaThread);
+        return new JavaThreadImpl<>(javaThread);
     }
 }

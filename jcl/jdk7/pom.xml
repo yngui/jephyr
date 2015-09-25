@@ -327,10 +327,13 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jvnet.zephyr.javaflow</groupId>
-                <artifactId>javaflow-maven-plugin</artifactId>
+                <groupId>org.jvnet.zephyr.continuation</groupId>
+                <artifactId>continuation-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
+                        <exclude>org/jvnet/zephyr/jcl/impl/misc/ReflectionUtils.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/impl/misc/ReflectionUtils$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/jcl/impl/misc/SharedSecrets.class</exclude>
                         <exclude>org/jvnet/zephyr/jcl/impl/misc/UnsafeHolder.class</exclude>
                         <exclude>org/jvnet/zephyr/jcl/impl/nio/ch/DefaultSelectorProvider.class</exclude>
                     </excludes>
@@ -392,16 +395,16 @@
                             org/jvnet/zephyr/jcl/java/lang/Thread.currentThread()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadThreadAccess.currentThread()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
+                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadAccessImpl.currentThread()Lorg/jvnet/zephyr/jcl/java/lang/Thread;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadThreadAccess.setCurrentThread(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
+                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadAccessImpl.setCurrentThread(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)V
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadUtils.getImpl(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Lorg/jvnet/zephyr/thread/ThreadImpl;
+                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadAccessImpl.getImpl(Lorg/jvnet/zephyr/jcl/java/lang/Thread;)Lorg/jvnet/zephyr/thread/ThreadImpl;
                         </excludedMethod>
                         <excludedMethod>
-                            org/jvnet/zephyr/jcl/java/lang/ThreadUtils.blockedOn(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Lorg/jvnet/zephyr/jcl/impl/nio/ch/Interruptible;)V
+                            org/jvnet/zephyr/jcl/java/lang/Thread$ThreadAccessImpl.blockedOn(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Lorg/jvnet/zephyr/jcl/impl/nio/ch/Interruptible;)V
                         </excludedMethod>
                         <excludedMethod>
                             org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport.setBlocker(Lorg/jvnet/zephyr/jcl/java/lang/Thread;Ljava/lang/Object;)V
@@ -417,8 +420,8 @@
                 <executions>
                     <execution>
                         <goals>
-                            <goal>javaflow</goal>
-                            <goal>testJavaflow</goal>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
                         </goals>
                     </execution>
                 </executions>
@@ -427,13 +430,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>javaflow</id>
+                        <id>continuation</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>javaflow</classifier>
-                            <classesDirectory>${project.build.directory}/javaflow-classes</classesDirectory>
+                            <classifier>continuation</classifier>
+                            <classesDirectory>${project.build.directory}/continuation-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>
