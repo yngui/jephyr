@@ -33,12 +33,14 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jvnet.zephyr.continuation</groupId>
-    <artifactId>continuation-parent</artifactId>
+    <groupId>org.jvnet.zephyr.easyflow</groupId>
+    <artifactId>easyflow-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>api</module>
-        <module>easyflow</module>
+        <module>runtime</module>
+        <module>instrument</module>
+        <module>maven-plugin</module>
+        <module>agent</module>
     </modules>
 </project>

@@ -38,9 +38,35 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-maven-plugin</artifactId>
+                <groupId>org.jvnet.zephyr.remapping</groupId>
+                <artifactId>remapping-maven-plugin</artifactId>
                 <configuration>
+                    <mappingEntries>
+                        <mappingEntry>
+                            <oldName>org/jvnet/zephyr/continuation/Continuation</oldName>
+                            <newName>org/jvnet/zephyr/easyflow/runtime/Continuation</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>org/jvnet/zephyr/continuation/UnsuspendableError</oldName>
+                            <newName>org/jvnet/zephyr/easyflow/runtime/UnsuspendableError</newName>
+                        </mappingEntry>
+                    </mappingEntries>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>${project.build.directory}/remapping-classes</classesDirectory>
+                    <testClassesDirectory>${project.build.directory}/remapping-test-classes</testClassesDirectory>
                     <excludes>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ExecuteTask.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$Node.class</exclude>
@@ -78,12 +104,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-jar</id>
+                        <id>easyflow</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classesDirectory>${project.build.directory}/continuation-classes</classesDirectory>
+                            <classifier>easyflow</classifier>
+                            <classesDirectory>${project.build.directory}/easyflow-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -95,11 +122,12 @@
         <dependency>
             <groupId>org.jvnet.zephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
-            <classifier>continuation</classifier>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.zephyr.continuation</groupId>
-            <artifactId>continuation-runtime</artifactId>
+            <artifactId>continuation-api</artifactId>
+            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>

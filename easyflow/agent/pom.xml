@@ -28,52 +28,59 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.thread</groupId>
-        <artifactId>thread-parent</artifactId>
+        <groupId>org.jvnet.zephyr.easyflow</groupId>
+        <artifactId>easyflow-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>thread-api</artifactId>
+    <artifactId>easyflow-agent</artifactId>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
-                <artifactId>easyflow-maven-plugin</artifactId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.5.5</version>
                 <configuration>
-                    <excludes>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
-                    </excludes>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifestEntries>
+                            <Premain-Class>org.jvnet.zephyr.easyflow.agent.Agent</Premain-Class>
+                        </manifestEntries>
+                    </archive>
                 </configuration>
                 <executions>
                     <execution>
+                        <id>make-assembly</id>
+                        <phase>package</phase>
                         <goals>
-                            <goal>enhance</goal>
-                            <goal>testEnhance</goal>
+                            <goal>single</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>easyflow</id>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>easyflow</classifier>
-                            <classesDirectory>${project.build.directory}/easyflow-classes</classesDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jvnet.zephyr.easyflow</groupId>
+            <artifactId>easyflow-instrument</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.zephyr.common</groupId>
+            <artifactId>common-agent</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-debug-all</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.ow2.asm</groupId>
+            <artifactId>asm-commons</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+    </dependencies>
 </project>

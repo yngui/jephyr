@@ -36,6 +36,7 @@
         <module>thread</module>
         <module>jcl</module>
         <module>continuation</module>
+        <module>easyflow</module>
         <module>remapping</module>
         <module>common</module>
     </modules>
@@ -80,8 +81,8 @@
                     <version>1.9.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.continuation</groupId>
-                    <artifactId>continuation-maven-plugin</artifactId>
+                    <groupId>org.jvnet.zephyr.easyflow</groupId>
+                    <artifactId>easyflow-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
                 <plugin>
@@ -126,25 +127,24 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-instrument</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-runtime</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.jvnet.zephyr.thread</groupId>
                 <artifactId>thread-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.thread</groupId>
-                <artifactId>thread-api</artifactId>
+                <groupId>org.jvnet.zephyr.continuation</groupId>
+                <artifactId>continuation-api</artifactId>
                 <version>${project.version}</version>
-                <classifier>continuation</classifier>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <artifactId>easyflow-runtime</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <artifactId>easyflow-instrument</artifactId>
+                <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jvnet.zephyr.common</groupId>
@@ -163,17 +163,7 @@
             </dependency>
             <dependency>
                 <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-analysis</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-commons</artifactId>
-                <version>${asm.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.ow2.asm</groupId>
-                <artifactId>asm-util</artifactId>
                 <version>${asm.version}</version>
             </dependency>
             <dependency>

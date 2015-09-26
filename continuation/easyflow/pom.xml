@@ -28,28 +28,18 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.thread</groupId>
-        <artifactId>thread-parent</artifactId>
+        <groupId>org.jvnet.zephyr.continuation</groupId>
+        <artifactId>continuation-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>thread-api</artifactId>
+    <artifactId>continuation-easyflow</artifactId>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.jvnet.zephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
-                    </excludes>
-                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -63,12 +53,11 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>easyflow</id>
+                        <id>default-jar</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>easyflow</classifier>
                             <classesDirectory>${project.build.directory}/easyflow-classes</classesDirectory>
                         </configuration>
                     </execution>
@@ -76,4 +65,15 @@
             </plugin>
         </plugins>
     </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jvnet.zephyr.continuation</groupId>
+            <artifactId>continuation-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jvnet.zephyr.easyflow</groupId>
+            <artifactId>easyflow-runtime</artifactId>
+        </dependency>
+    </dependencies>
 </project>

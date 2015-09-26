@@ -469,8 +469,8 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-maven-plugin</artifactId>
+                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
                         <exclude>org/jvnet/zephyr/jcl/impl/misc/ReflectionUtils.class</exclude>
@@ -572,13 +572,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>continuation</id>
+                        <id>easyflow</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>continuation</classifier>
-                            <classesDirectory>${project.build.directory}/continuation-classes</classesDirectory>
+                            <classifier>easyflow</classifier>
+                            <classesDirectory>${project.build.directory}/easyflow-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>

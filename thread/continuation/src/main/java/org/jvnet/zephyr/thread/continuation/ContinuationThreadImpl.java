@@ -24,7 +24,8 @@
 
 package org.jvnet.zephyr.thread.continuation;
 
-import org.jvnet.zephyr.continuation.runtime.Continuation;
+import org.jvnet.zephyr.continuation.Continuation;
+import org.jvnet.zephyr.continuation.UnsuspendableError;
 import org.jvnet.zephyr.thread.ThreadAccess;
 import org.jvnet.zephyr.thread.ThreadImpl;
 
@@ -66,7 +67,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         this.threadAccess = threadAccess;
         this.pool = pool;
         this.scheduler = scheduler;
-        continuation = new Continuation(thread);
+        continuation = Continuation.create(thread);
     }
 
     @Override
@@ -94,7 +95,10 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             unparked = false;
         } else {
             action = PARK;
-            if (!Continuation.suspend()) {
+            try {
+                Continuation.suspend();
+            } catch (UnsuspendableError e) {
+                System.err.println("Cannot suspend: " + e.getMessage());
                 javaThread = Thread.currentThread();
                 state.set(WAITING);
                 if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
@@ -117,7 +121,10 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         } else {
             cancelable = scheduler.schedule(unparkTask, timeout, unit);
             action = TIMED_PARK;
-            if (!Continuation.suspend()) {
+            try {
+                Continuation.suspend();
+            } catch (UnsuspendableError e) {
+                System.err.println("Cannot suspend: " + e.getMessage());
                 javaThread = Thread.currentThread();
                 state.set(TIMED_WAITING);
                 if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
@@ -273,7 +280,10 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     @Override
     public void yield() {
         action = YIELD;
-        if (!Continuation.suspend()) {
+        try {
+            Continuation.suspend();
+        } catch (UnsuspendableError e) {
+            System.err.println("Cannot suspend: " + e.getMessage());
             Thread.yield();
         }
     }

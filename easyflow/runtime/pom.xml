@@ -28,17 +28,10 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr</groupId>
-        <artifactId>zephyr-parent</artifactId>
+        <groupId>org.jvnet.zephyr.easyflow</groupId>
+        <artifactId>easyflow-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jvnet.zephyr.continuation</groupId>
-    <artifactId>continuation-parent</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>api</module>
-        <module>easyflow</module>
-    </modules>
+    <artifactId>easyflow-runtime</artifactId>
 </project>
