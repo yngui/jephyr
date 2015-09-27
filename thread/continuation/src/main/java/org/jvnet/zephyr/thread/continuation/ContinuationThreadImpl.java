@@ -45,6 +45,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     private static final int TIMED_PARK = 1;
     private static final int YIELD = 2;
 
+    private static final boolean debug;
     private final AtomicInteger state = new AtomicInteger(NEW);
     private final ForkJoinTask<Void> executeTask = new ExecuteTask();
     private final Runnable unparkTask = new UnparkTask();
@@ -60,6 +61,10 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     private ScheduledFuture<?> cancelable;
     private int action;
     private volatile Thread javaThread;
+
+    static {
+        debug = Boolean.getBoolean(ContinuationThreadImpl.class.getName() + ".debug");
+    }
 
     ContinuationThreadImpl(T thread, ThreadAccess<T, ?> threadAccess, ForkJoinPool pool,
             ScheduledExecutorService scheduler) {
@@ -98,7 +103,9 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             try {
                 Continuation.suspend();
             } catch (UnsuspendableError e) {
-                System.err.println("Cannot suspend: " + e.getMessage());
+                if (debug) {
+                    System.err.println("Cannot suspend: " + e.getMessage());
+                }
                 javaThread = Thread.currentThread();
                 state.set(WAITING);
                 if (unparked && state.compareAndSet(WAITING, RUNNABLE)) {
@@ -124,7 +131,9 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
             try {
                 Continuation.suspend();
             } catch (UnsuspendableError e) {
-                System.err.println("Cannot suspend: " + e.getMessage());
+                if (debug) {
+                    System.err.println("Cannot suspend: " + e.getMessage());
+                }
                 javaThread = Thread.currentThread();
                 state.set(TIMED_WAITING);
                 if (unparked && state.compareAndSet(TIMED_WAITING, RUNNABLE)) {
@@ -283,7 +292,9 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
         try {
             Continuation.suspend();
         } catch (UnsuspendableError e) {
-            System.err.println("Cannot suspend: " + e.getMessage());
+            if (debug) {
+                System.err.println("Cannot suspend: " + e.getMessage());
+            }
             Thread.yield();
         }
     }
