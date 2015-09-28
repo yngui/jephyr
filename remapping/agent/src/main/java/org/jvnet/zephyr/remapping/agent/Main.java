@@ -25,7 +25,6 @@
 package org.jvnet.zephyr.remapping.agent;
 
 import org.jvnet.zephyr.common.agent.ClassNameCheckClassAdapter;
-import org.jvnet.zephyr.common.agent.ClassNamePredicate;
 import org.jvnet.zephyr.common.util.Predicate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -46,24 +45,28 @@ import java.util.regex.Pattern;
 import static org.jvnet.zephyr.common.agent.AgentUtils.parseArgs;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
-public final class Agent {
+public final class Main {
 
     private static final String KEY_VALUE_DELIM = ":";
     private static final String ENTRY_DELIM = ";";
 
     public static void premain(String agentArgs, Instrumentation inst) throws IOException {
         Properties props = parseArgs(agentArgs);
-        Predicate<String> classNamePredicate = new ClassNamePredicate(getPattern(props.getProperty("includes")),
-                getPattern(props.getProperty("excludes")));
+        final Pattern includes = getPattern(props.getProperty("includes"));
+        final Pattern excludes = getPattern(props.getProperty("excludes"));
+        Predicate<String> classNamePredicate = new Predicate<String>() {
+            @Override
+            public boolean test(String t) {
+                return (includes == null || includes.matcher(t).find()) &&
+                        (excludes == null || !excludes.matcher(t).find());
+            }
+        };
         Remapper remapper = new SimpleRemapper(parseMapping(props.getProperty("mapping")));
         inst.addTransformer(new RemappingClassFileTransformer(classNamePredicate, remapper));
     }
 
     private static Pattern getPattern(String regex) {
-        if (regex == null) {
-            return null;
-        }
-        return Pattern.compile(regex);
+        return regex == null ? null : Pattern.compile(regex);
     }
 
     private static Map<String, String> parseMapping(String mapping) {

@@ -38,6 +38,7 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +80,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
                 if (file.lastModified() > destination.lastModified()) {
                     String name = relativePath.toString();
                     if (isExtension(name, "class") && isIncluded(name)) {
-                        transform(remapper, file, destination);
+                        enhance(remapper, file, destination);
                     } else {
                         copy(file, destination);
                     }
@@ -91,7 +92,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
     private boolean isIncluded(String name) {
         boolean include;
         if (includes == null) {
-            include = matchPath("**/**", name);
+            include = true;
         } else {
             include = false;
             for (String pattern : includes) {
@@ -106,7 +107,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         return include;
     }
 
-    private static void transform(Remapper remapper, File file, File destination) throws MojoExecutionException {
+    private static void enhance(Remapper remapper, File file, File destination) throws MojoExecutionException {
         byte[] original;
         try {
             original = readFileToByteArray(file);
@@ -117,10 +118,10 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         ClassWriter writer = new ClassWriter(0);
         ClassReader reader = new ClassReader(original);
         reader.accept(new RemappingClassAdapter(writer, remapper), EXPAND_FRAMES);
-        byte[] transformed = writer.toByteArray();
+        byte[] enhanced = writer.toByteArray();
 
         try {
-            writeByteArrayToFile(destination, transformed);
+            writeByteArrayToFile(destination, enhanced);
         } catch (IOException e) {
             throw new MojoExecutionException("An error occurred while writing " + destination, e);
         }
@@ -135,6 +136,9 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
     }
 
     private Map<String, String> createMapping() {
+        if (mappingEntries == null) {
+            return Collections.emptyMap();
+        }
         Map<String, String> mapping = new HashMap<>(mappingEntries.size());
         for (MappingEntry mappingEntry : mappingEntries) {
             mapping.put(mappingEntry.getOldName(), mappingEntry.getNewName());

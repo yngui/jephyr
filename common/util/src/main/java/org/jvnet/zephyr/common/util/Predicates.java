@@ -22,25 +22,28 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.common.agent;
+package org.jvnet.zephyr.common.util;
 
-import org.jvnet.zephyr.common.util.Predicate;
+public final class Predicates {
 
-import java.util.regex.Pattern;
+    private static final Predicate<Object> ALWAYS_TRUE = new AlwaysTrue<>();
 
-public final class ClassNamePredicate implements Predicate<String> {
-
-    private final Pattern includesPattern;
-    private final Pattern excludesPattern;
-
-    public ClassNamePredicate(Pattern includesPattern, Pattern excludesPattern) {
-        this.includesPattern = includesPattern;
-        this.excludesPattern = excludesPattern;
+    private Predicates() {
     }
 
-    @Override
-    public boolean test(String t) {
-        return (includesPattern == null || includesPattern.matcher(t).find()) &&
-                (excludesPattern == null || !excludesPattern.matcher(t).find());
+    @SuppressWarnings("unchecked")
+    public static <T> Predicate<T> alwaysTrue() {
+        return (Predicate<T>) ALWAYS_TRUE;
+    }
+
+    private static final class AlwaysTrue<T> implements Predicate<T> {
+
+        AlwaysTrue() {
+        }
+
+        @Override
+        public boolean test(T t) {
+            return true;
+        }
     }
 }

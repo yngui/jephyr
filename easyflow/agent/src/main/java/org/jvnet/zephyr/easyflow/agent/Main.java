@@ -25,10 +25,9 @@
 package org.jvnet.zephyr.easyflow.agent;
 
 import org.jvnet.zephyr.common.agent.ClassNameCheckClassAdapter;
-import org.jvnet.zephyr.common.agent.ClassNamePredicate;
 import org.jvnet.zephyr.common.util.Predicate;
 import org.jvnet.zephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
-import org.jvnet.zephyr.easyflow.instrument.ContinuationClassAdapter;
+import org.jvnet.zephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jvnet.zephyr.easyflow.instrument.MethodRef;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -41,23 +40,28 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import static org.jvnet.zephyr.common.agent.AgentUtils.parseArgs;
+import static org.jvnet.zephyr.common.util.Predicates.alwaysTrue;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
-public final class Agent {
+public final class Main {
 
     public static void premain(String agentArgs, Instrumentation inst) throws IOException {
         Properties props = parseArgs(agentArgs);
-        Predicate<String> classNamePredicate = new ClassNamePredicate(getPattern(props.getProperty("includes")),
-                getPattern(props.getProperty("excludes")));
+        final Pattern includes = getPattern(props.getProperty("includes"));
+        final Pattern excludes = getPattern(props.getProperty("excludes"));
+        Predicate<String> classNamePredicate = new Predicate<String>() {
+            @Override
+            public boolean test(String t) {
+                return (includes == null || includes.matcher(t).find()) &&
+                        (excludes == null || !excludes.matcher(t).find());
+            }
+        };
         inst.addTransformer(new ContinuationClassFileTransformer(classNamePredicate,
                 getPattern(props.getProperty("excludeMethods"))));
     }
 
     private static Pattern getPattern(String regex) {
-        if (regex == null) {
-            return null;
-        }
-        return Pattern.compile(regex);
+        return regex == null ? null : Pattern.compile(regex);
     }
 
     private static final class ContinuationClassFileTransformer implements ClassFileTransformer {
@@ -73,20 +77,22 @@ public final class Agent {
         @Override
         public byte[] transform(ClassLoader loader, final String className, Class<?> classBeingRedefined,
                 ProtectionDomain protectionDomain, byte[] classfileBuffer) {
-            Predicate<MethodRef> predicate =
-                    new AnalyzingMethodRefPredicate(classfileBuffer, new Predicate<MethodRef>() {
+            Predicate<MethodRef> methodRefPredicate;
+            if (methodRefPattern == null || className == null) {
+                methodRefPredicate = alwaysTrue();
+            } else {
+                methodRefPredicate = new AnalyzingMethodRefPredicate(classfileBuffer, new Predicate<MethodRef>() {
 
-                        @Override
-                        public boolean test(MethodRef t) {
-                            return methodRefPattern == null ||
-                                    methodRefPattern.matcher(className + '.' + t.getName() + t.getDesc()).find();
-                        }
-                    });
+                    @Override
+                    public boolean test(MethodRef t) {
+                        return methodRefPattern.matcher(className + '.' + t.getName() + t.getDesc()).find();
+                    }
+                });
+            }
             ClassWriter writer = new ClassWriter(0);
             ClassReader reader = new ClassReader(classfileBuffer);
-            reader.accept(
-                    new ClassNameCheckClassAdapter(classNamePredicate, new ContinuationClassAdapter(writer, predicate)),
-                    EXPAND_FRAMES);
+            reader.accept(new ClassNameCheckClassAdapter(classNamePredicate,
+                    new EasyFlowClassAdapter(methodRefPredicate, writer)), EXPAND_FRAMES);
             return writer.toByteArray();
         }
     }

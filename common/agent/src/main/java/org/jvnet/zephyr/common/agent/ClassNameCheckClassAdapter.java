@@ -32,17 +32,17 @@ import static org.objectweb.asm.Opcodes.ASM5;
 
 public final class ClassNameCheckClassAdapter extends ClassVisitor {
 
-    private final Predicate<String> predicate;
+    private final Predicate<String> classNamePredicate;
 
-    public ClassNameCheckClassAdapter(Predicate<String> predicate, ClassVisitor cv) {
+    public ClassNameCheckClassAdapter(Predicate<String> classNamePredicate, ClassVisitor cv) {
         super(ASM5, cv);
-        this.predicate = requireNonNull(predicate);
+        this.classNamePredicate = requireNonNull(classNamePredicate);
     }
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        if (!predicate.test(name)) {
-            throw new RuntimeException();
+        if (!classNamePredicate.test(name)) {
+            throw new IllegalStateException();
         }
         super.visit(version, access, name, signature, superName, interfaces);
     }

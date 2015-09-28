@@ -25,56 +25,48 @@
 package org.jvnet.zephyr.easyflow.instrument;
 
 import org.jvnet.zephyr.common.util.Predicate;
+import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
-import static org.objectweb.asm.Opcodes.ACC_ANNOTATION;
 import static org.objectweb.asm.Opcodes.ACC_NATIVE;
 import static org.objectweb.asm.Opcodes.ACC_SYNCHRONIZED;
 import static org.objectweb.asm.Opcodes.ASM5;
 
-public final class ContinuationClassAdapter extends ClassVisitor {
+public final class EasyFlowClassAdapter extends ClassVisitor {
 
-    private static final String CONTINUABLE = "org/jvnet/zephyr/easyflow/runtime/Continuable";
+    private static final String ALREADY_INSTRUMENTED = "org/jvnet/zephyr/easyflow/runtime/AlreadyInstrumented";
 
-    private final Predicate<MethodRef> predicate;
+    private final Predicate<MethodRef> methodRefPredicate;
     private String name;
 
-    public ContinuationClassAdapter(ClassVisitor cv, Predicate<MethodRef> predicate) {
+    public EasyFlowClassAdapter(Predicate<MethodRef> methodRefPredicate, ClassVisitor cv) {
         super(ASM5, cv);
-        this.predicate = requireNonNull(predicate);
+        this.methodRefPredicate = requireNonNull(methodRefPredicate);
     }
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         this.name = name;
+        super.visit(version, access, name, signature, superName, interfaces);
+        super.visitAnnotation(ALREADY_INSTRUMENTED, false);
+    }
 
-        if ((access & ACC_ANNOTATION) != 0) {
-            super.visit(version, access, name, signature, superName, interfaces);
-            return;
+    @Override
+    public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
+        if (desc.equals(ALREADY_INSTRUMENTED)) {
+            throw new IllegalStateException("already instrumented");
         }
-
-        for (String name1 : interfaces) {
-            if (name1.equals(CONTINUABLE)) {
-                throw new RuntimeException(name + " has already been instrumented");
-            }
-        }
-
-        int n = interfaces.length;
-        String[] interfaces1 = new String[n + 1];
-        System.arraycopy(interfaces, 0, interfaces1, 0, n);
-        interfaces1[n] = CONTINUABLE;
-
-        super.visit(version, access, name, signature, superName, interfaces1);
+        return super.visitAnnotation(desc, visible);
     }
 
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
         if ((access & (ACC_SYNCHRONIZED | ACC_NATIVE | ACC_ABSTRACT)) != 0 || name.charAt(0) == '<' ||
-                !predicate.test(new MethodRef(name, desc))) {
+                !methodRefPredicate.test(new MethodRef(name, desc))) {
             return mv;
         }
         return NewRelocatorMethodAdapter.create(this.name, access, name, desc, signature, exceptions,

@@ -30,7 +30,7 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 import org.jvnet.zephyr.common.util.Predicate;
 import org.jvnet.zephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
-import org.jvnet.zephyr.easyflow.instrument.ContinuationClassAdapter;
+import org.jvnet.zephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jvnet.zephyr.easyflow.instrument.MethodRef;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
@@ -49,6 +49,7 @@ import static org.apache.commons.io.FilenameUtils.isExtension;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.codehaus.plexus.util.SelectorUtils.matchPath;
+import static org.jvnet.zephyr.common.util.Predicates.alwaysTrue;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 public abstract class AbstractEnhanceMojo extends AbstractMojo {
@@ -79,7 +80,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
                 if (file.lastModified() > destination.lastModified()) {
                     String name = relativePath.toString();
                     if (isExtension(name, "class") && isIncluded(name)) {
-                        transform(separatorsToUnix(removeExtension(name)), file, destination);
+                        enhance(separatorsToUnix(removeExtension(name)), file, destination);
                     } else {
                         copy(file, destination);
                     }
@@ -91,7 +92,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
     private boolean isIncluded(String name) {
         boolean include;
         if (includes == null) {
-            include = matchPath("**/**", name);
+            include = true;
         } else {
             include = false;
             for (String pattern : includes) {
@@ -106,7 +107,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         return include;
     }
 
-    private void transform(final String className, File file, File destination) throws MojoExecutionException {
+    private void enhance(final String className, File file, File destination) throws MojoExecutionException {
         byte[] original;
         try {
             original = readFileToByteArray(file);
@@ -114,20 +115,25 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
             throw new MojoExecutionException("An error occurred while reading " + file, e);
         }
 
-        AnalyzingMethodRefPredicate predicate = new AnalyzingMethodRefPredicate(original, new Predicate<MethodRef>() {
-            @Override
-            public boolean test(MethodRef t) {
-                return excludedMethods == null ||
-                        !excludedMethods.contains(className + '.' + t.getName() + t.getDesc());
-            }
-        });
+        Predicate<MethodRef> methodRefPredicate;
+        if (excludedMethods == null) {
+            methodRefPredicate = alwaysTrue();
+        } else {
+            methodRefPredicate = new AnalyzingMethodRefPredicate(original, new Predicate<MethodRef>() {
+                @Override
+                public boolean test(MethodRef t) {
+                    return !excludedMethods.contains(className + '.' + t.getName() + t.getDesc());
+                }
+            });
+        }
+
         ClassWriter writer = new ClassWriter(0);
         ClassReader reader = new ClassReader(original);
-        reader.accept(new ContinuationClassAdapter(writer, predicate), EXPAND_FRAMES);
-        byte[] transformed = writer.toByteArray();
+        reader.accept(new EasyFlowClassAdapter(methodRefPredicate, writer), EXPAND_FRAMES);
+        byte[] enhanced = writer.toByteArray();
 
         try {
-            writeByteArrayToFile(destination, transformed);
+            writeByteArrayToFile(destination, enhanced);
         } catch (IOException e) {
             throw new MojoExecutionException("An error occurred while writing " + destination, e);
         }
