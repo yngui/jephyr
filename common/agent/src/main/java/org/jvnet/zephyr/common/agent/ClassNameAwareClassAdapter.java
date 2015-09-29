@@ -26,24 +26,31 @@ package org.jvnet.zephyr.common.agent;
 
 import org.jvnet.zephyr.common.util.Predicate;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.ClassWriter;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.Opcodes.ASM5;
 
-public final class ClassNameCheckClassAdapter extends ClassVisitor {
+public final class ClassNameAwareClassAdapter extends DelegationClassAdapter {
 
-    private final Predicate<String> classNamePredicate;
+    private final Predicate<String> predicate;
+    private final ClassWriter secondary;
+    private boolean primary;
 
-    public ClassNameCheckClassAdapter(Predicate<String> classNamePredicate, ClassVisitor cv) {
-        super(ASM5, cv);
-        this.classNamePredicate = requireNonNull(classNamePredicate);
+    public ClassNameAwareClassAdapter(Predicate<String> predicate, ClassVisitor primary, ClassWriter secondary) {
+        super(ASM5, primary);
+        this.predicate = requireNonNull(predicate);
+        this.secondary = secondary;
     }
 
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
-        if (!classNamePredicate.test(name)) {
-            throw new IllegalStateException();
-        }
+        primary = predicate.test(name);
         super.visit(version, access, name, signature, superName, interfaces);
+    }
+
+    @Override
+    protected ClassVisitor delegate() {
+        return primary ? cv : secondary;
     }
 }

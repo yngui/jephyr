@@ -27,6 +27,7 @@ package org.jvnet.zephyr.easyflow.instrument;
 import org.jvnet.zephyr.common.util.Predicate;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
+import org.objectweb.asm.FieldVisitor;
 import org.objectweb.asm.MethodVisitor;
 
 import static java.util.Objects.requireNonNull;
@@ -41,6 +42,8 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
 
     private final Predicate<MethodRef> methodRefPredicate;
     private String name;
+    private boolean alreadyInstrumented;
+    private boolean annotationVisited;
 
     public EasyFlowClassAdapter(Predicate<MethodRef> methodRefPredicate, ClassVisitor cv) {
         super(ASM5, cv);
@@ -51,24 +54,48 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         this.name = name;
         super.visit(version, access, name, signature, superName, interfaces);
-        super.visitAnnotation(ALREADY_INSTRUMENTED, false);
     }
 
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         if (desc.equals(ALREADY_INSTRUMENTED)) {
-            throw new IllegalStateException("already instrumented");
+            alreadyInstrumented = true;
+            annotationVisited = true;
         }
         return super.visitAnnotation(desc, visible);
     }
 
     @Override
+    public void visitInnerClass(String name, String outerName, String innerName, int access) {
+        if (!annotationVisited) {
+            super.visitAnnotation(ALREADY_INSTRUMENTED, false);
+            annotationVisited = true;
+        }
+        super.visitInnerClass(name, outerName, innerName, access);
+    }
+
+    @Override
+    public FieldVisitor visitField(int access, String name, String desc, String signature, Object value) {
+        if (!annotationVisited) {
+            super.visitAnnotation(ALREADY_INSTRUMENTED, false);
+            annotationVisited = true;
+        }
+        return super.visitField(access, name, desc, signature, value);
+    }
+
+    @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
+        if (!annotationVisited) {
+            super.visitAnnotation(ALREADY_INSTRUMENTED, false);
+            annotationVisited = true;
+        }
+
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-        if ((access & (ACC_SYNCHRONIZED | ACC_NATIVE | ACC_ABSTRACT)) != 0 || name.charAt(0) == '<' ||
-                !methodRefPredicate.test(new MethodRef(name, desc))) {
+        if (alreadyInstrumented || (access & (ACC_SYNCHRONIZED | ACC_NATIVE | ACC_ABSTRACT)) != 0 ||
+                name.charAt(0) == '<' || !methodRefPredicate.test(new MethodRef(name, desc))) {
             return mv;
         }
+
         return NewRelocatorMethodAdapter.create(this.name, access, name, desc, signature, exceptions,
                 ContinuationMethodAdapter.create(this.name, access, name, desc, signature, exceptions, mv));
     }

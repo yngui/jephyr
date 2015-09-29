@@ -24,18 +24,12 @@
 
 package org.jvnet.zephyr.remapping.agent;
 
-import org.jvnet.zephyr.common.agent.ClassNameCheckClassAdapter;
 import org.jvnet.zephyr.common.util.Predicate;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.Remapper;
-import org.objectweb.asm.commons.RemappingClassAdapter;
 import org.objectweb.asm.commons.SimpleRemapper;
 
 import java.io.IOException;
-import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.Instrumentation;
-import java.security.ProtectionDomain;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -43,7 +37,6 @@ import java.util.Properties;
 import java.util.regex.Pattern;
 
 import static org.jvnet.zephyr.common.agent.AgentUtils.parseArgs;
-import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 public final class Main {
 
@@ -89,28 +82,6 @@ public final class Main {
             }
             map.put(key, mapping.substring(fromIndex, index2));
             fromIndex = index2 + length2;
-        }
-    }
-
-    private static final class RemappingClassFileTransformer implements ClassFileTransformer {
-
-        private final Predicate<String> classNamePredicate;
-        private final Remapper remapper;
-
-        RemappingClassFileTransformer(Predicate<String> classNamePredicate, Remapper remapper) {
-            this.classNamePredicate = classNamePredicate;
-            this.remapper = remapper;
-        }
-
-        @Override
-        public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
-                ProtectionDomain protectionDomain, byte[] classfileBuffer) {
-            ClassWriter writer = new ClassWriter(0);
-            ClassReader reader = new ClassReader(classfileBuffer);
-            reader.accept(
-                    new ClassNameCheckClassAdapter(classNamePredicate, new RemappingClassAdapter(writer, remapper)),
-                    EXPAND_FRAMES);
-            return writer.toByteArray();
         }
     }
 }
