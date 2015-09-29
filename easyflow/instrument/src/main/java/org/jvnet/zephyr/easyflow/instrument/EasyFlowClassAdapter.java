@@ -37,7 +37,7 @@ import static org.objectweb.asm.Opcodes.ASM5;
 
 public final class EasyFlowClassAdapter extends ClassVisitor {
 
-    private static final String ALREADY_INSTRUMENTED = "org/jvnet/zephyr/easyflow/runtime/AlreadyInstrumented";
+    private static final String ALREADY_INSTRUMENTED = "Lorg/jvnet/zephyr/easyflow/runtime/AlreadyInstrumented;";
 
     private final Predicate<MethodRef> methodRefPredicate;
     private String name;
