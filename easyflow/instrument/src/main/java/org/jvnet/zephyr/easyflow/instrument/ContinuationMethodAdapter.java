@@ -95,7 +95,6 @@ import static org.objectweb.asm.Opcodes.TOP;
 
 final class ContinuationMethodAdapter extends AnalyzingMethodNode {
 
-    private static final String CONTINUATION = "org/jvnet/zephyr/easyflow/runtime/Continuation";
     private static final Object[] EMPTY_OBJECTS = new Object[0];
 
     private final String owner;
@@ -130,7 +129,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
         maxLocals += 1;
 
         Object[] initialLocals =
-                appendValue(ensureSize(frames.get(instructions.getFirst()).locals, continuationVarIndex), CONTINUATION);
+                appendValue(ensureSize(frames.get(instructions.getFirst()).locals, continuationVarIndex),
+                        "org/jvnet/zephyr/easyflow/runtime/Continuation");
 
         updateFrames(continuationVarIndex);
         addMonitorHooks(continuationVarIndex);
@@ -146,16 +146,17 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
         addInvocationEndedHook(continuationVarIndex, labelNode);
 
         instructions.insertBefore(labelNode,
-                new MethodInsnNode(INVOKESTATIC, CONTINUATION, "currentContinuation", "()L" + CONTINUATION + ';',
-                        false));
+                new MethodInsnNode(INVOKESTATIC, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                        "currentContinuation", "()Lorg/jvnet/zephyr/easyflow/runtime/Continuation;", false));
         instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, continuationVarIndex));
 
         instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
         instructions.insertBefore(labelNode, new JumpInsnNode(IFNULL, labelNode));
 
         instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
-        instructions
-                .insertBefore(labelNode, new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "isSuspended", "()Z", false));
+        instructions.insertBefore(labelNode,
+                new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation", "isSuspended",
+                        "()Z", false));
 
         LabelNode labelNode1 = newLabelNode();
 
@@ -172,8 +173,9 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
 
         if (length > 0) {
             instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
-            instructions
-                    .insertBefore(labelNode, new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popInt", "()I", false));
+            instructions.insertBefore(labelNode,
+                    new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation", "popInt", "()I",
+                            false));
             instructions.insertBefore(labelNode, new TableSwitchInsnNode(0, length - 1, defaultLabelNode, labelNodes));
         } else {
             instructions.insertBefore(labelNode, new JumpInsnNode(GOTO, defaultLabelNode));
@@ -206,28 +208,32 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 if (value == INTEGER) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popInt", "()I", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popInt", "()I", false));
                     instructions.insertBefore(labelNode, new VarInsnNode(ISTORE, j));
                     updateMaxStack(1);
                     intCount++;
                 } else if (value == FLOAT) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popFloat", "()F", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popFloat", "()F", false));
                     instructions.insertBefore(labelNode, new VarInsnNode(FSTORE, j));
                     updateMaxStack(1);
                     floatCount++;
                 } else if (value == LONG) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popLong", "()J", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popLong", "()J", false));
                     instructions.insertBefore(labelNode, new VarInsnNode(LSTORE, j));
                     updateMaxStack(2);
                     longCount++;
                 } else if (value == DOUBLE) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popDouble", "()D", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popDouble", "()D", false));
                     instructions.insertBefore(labelNode, new VarInsnNode(DSTORE, j));
                     updateMaxStack(2);
                     doubleCount++;
@@ -238,8 +244,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 } else if (value instanceof String) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popObject", "()Ljava/lang/Object;",
-                                    false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popObject", "()Ljava/lang/Object;", false));
                     instructions.insertBefore(labelNode, new TypeInsnNode(CHECKCAST, (String) value));
                     instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, j));
                     updateMaxStack(1);
@@ -263,25 +269,29 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 if (value == INTEGER) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popInt", "()I", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popInt", "()I", false));
                     stackSize += 1;
                     intCount++;
                 } else if (value == FLOAT) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popFloat", "()F", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popFloat", "()F", false));
                     stackSize += 1;
                     floatCount++;
                 } else if (value == LONG) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popLong", "()J", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popLong", "()J", false));
                     stackSize += 2;
                     longCount++;
                 } else if (value == DOUBLE) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popDouble", "()D", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popDouble", "()D", false));
                     stackSize += 2;
                     doubleCount++;
                 } else if (value == NULL) {
@@ -290,8 +300,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 } else if (value instanceof String) {
                     instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popObject", "()Ljava/lang/Object;",
-                                    false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "popObject", "()Ljava/lang/Object;", false));
                     instructions.insertBefore(labelNode, new TypeInsnNode(CHECKCAST, (String) value));
                     stackSize += 1;
                     objectCount++;
@@ -305,7 +315,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
             if (!invokeStatic) {
                 instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "popObject", "()Ljava/lang/Object;", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation", "popObject",
+                                "()Ljava/lang/Object;", false));
                 instructions.insertBefore(labelNode, new InsnNode(DUP));
                 instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, continuationVarIndex + 1));
                 instructions
@@ -337,16 +348,17 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(node, new JumpInsnNode(IFNULL, labelNode3));
 
                 instructions.insertBefore(node, new VarInsnNode(ALOAD, continuationVarIndex));
-                instructions.insertBefore(node, new LdcInsnNode(Type.getObjectType(node.owner)));
+                instructions.insertBefore(node, new LdcInsnNode(Type.getType('L' + node.owner + ';')));
                 instructions.insertBefore(node, new LdcInsnNode(node.name));
                 instructions.insertBefore(node, new LdcInsnNode(node.desc));
                 instructions.insertBefore(node,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "beforeStaticInvocation",
-                                "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "beforeStaticInvocation", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)V",
+                                false));
 
                 instructions.insertBefore(node, labelNode3);
-                instructions.insert(labelNode3,
-                        newFrameNode(appendValue(ensureSize(locals, continuationVarIndex), CONTINUATION), stack));
+                instructions.insert(labelNode3, newFrameNode(appendValue(ensureSize(locals, continuationVarIndex),
+                        "org/jvnet/zephyr/easyflow/runtime/Continuation"), stack));
             } else {
                 instructions.insertBefore(node, new VarInsnNode(ALOAD, continuationVarIndex));
 
@@ -412,22 +424,23 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(node, new VarInsnNode(ALOAD, targetVarIndex));
                 instructions.insertBefore(node, new LdcInsnNode(node.name));
                 instructions.insertBefore(node, new LdcInsnNode(node.desc));
-                instructions.insertBefore(node, new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "beforeInvocation",
-                        "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V", false));
+                instructions.insertBefore(node,
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "beforeInvocation", "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V",
+                                false));
 
                 instructions.insertBefore(node, new JumpInsnNode(GOTO, labelNode3));
 
                 instructions.insertBefore(node, labelNode4);
-                instructions.insert(labelNode4,
-                        newFrameNode(appendValue(ensureSize(locals, continuationVarIndex), CONTINUATION), stack));
+                instructions.insert(labelNode4, newFrameNode(appendValue(ensureSize(locals, continuationVarIndex),
+                        "org/jvnet/zephyr/easyflow/runtime/Continuation"), stack));
 
                 instructions.insertBefore(node, new InsnNode(ACONST_NULL));
                 instructions.insertBefore(node, new VarInsnNode(ASTORE, targetVarIndex));
 
                 instructions.insertBefore(node, labelNode3);
-                instructions.insert(labelNode3, newFrameNode(
-                        appendValues(ensureSize(locals, continuationVarIndex), CONTINUATION, "java/lang/Object"),
-                        stack));
+                instructions.insert(labelNode3, newFrameNode(appendValues(ensureSize(locals, continuationVarIndex),
+                        "org/jvnet/zephyr/easyflow/runtime/Continuation", "java/lang/Object"), stack));
             }
 
             updateMaxStack(stack.length + 4);
@@ -443,9 +456,9 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
             instructions.insert(node, labelNode4);
 
             if (!isNextFrameNode(labelNode4)) {
-                instructions.insert(labelNode4,
-                        newFrameNode(appendValue(ensureSize(frame1.locals, continuationVarIndex), CONTINUATION),
-                                stack1));
+                instructions.insert(labelNode4, newFrameNode(
+                        appendValue(ensureSize(frame1.locals, continuationVarIndex),
+                                "org/jvnet/zephyr/easyflow/runtime/Continuation"), stack1));
             }
 
             instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
@@ -453,7 +466,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
 
             instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
             instructions.insertBefore(labelNode4,
-                    new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "isSuspending", "()Z", false));
+                    new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation", "isSuspending",
+                            "()Z", false));
             instructions.insertBefore(labelNode4, new JumpInsnNode(IFEQ, labelNode4));
 
             int returnSize = sizes & 0x03;
@@ -469,7 +483,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, newPushNode(intCount));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "ensureIntStackSize", "(I)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "ensureIntStackSize", "(I)V", false));
                 updateMaxStack(stackSize1 + 1);
             }
 
@@ -477,7 +492,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, newPushNode(floatCount));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "ensureFloatStackSize", "(I)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "ensureFloatStackSize", "(I)V", false));
                 updateMaxStack(stackSize1 + 1);
             }
 
@@ -485,7 +501,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, newPushNode(longCount));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "ensureLongStackSize", "(I)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "ensureLongStackSize", "(I)V", false));
                 updateMaxStack(stackSize1 + 1);
             }
 
@@ -493,7 +510,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, newPushNode(doubleCount));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "ensureDoubleStackSize", "(I)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "ensureDoubleStackSize", "(I)V", false));
                 updateMaxStack(stackSize1 + 1);
             }
 
@@ -501,7 +519,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, newPushNode(objectCount));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "ensureObjectStackSize", "(I)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "ensureObjectStackSize", "(I)V", false));
                 updateMaxStack(stackSize1 + 1);
             }
 
@@ -509,7 +528,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, targetVarIndex));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushObject", "(Ljava/lang/Object;)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "pushObject", "(Ljava/lang/Object;)V", false));
                 updateMaxStack(stackSize1 + 2);
             }
 
@@ -519,14 +539,16 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new InsnNode(SWAP));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushInt", "(I)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushInt", "(I)V", false));
                     updateMaxStack(stackSize1 + 1);
                     stackSize1 -= 1;
                 } else if (value == FLOAT) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new InsnNode(SWAP));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushFloat", "(F)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushFloat", "(F)V", false));
                     updateMaxStack(stackSize1 + 1);
                     stackSize1 -= 1;
                 } else if (value == LONG) {
@@ -534,7 +556,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     instructions.insertBefore(labelNode4, new InsnNode(DUP_X2));
                     instructions.insertBefore(labelNode4, new InsnNode(POP));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushLong", "(J)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushLong", "(J)V", false));
                     updateMaxStack(stackSize1 + 2);
                     stackSize1 -= 2;
                 } else if (value == DOUBLE) {
@@ -542,7 +565,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     instructions.insertBefore(labelNode4, new InsnNode(DUP_X2));
                     instructions.insertBefore(labelNode4, new InsnNode(POP));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushDouble", "(D)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushDouble", "(D)V", false));
                     updateMaxStack(stackSize1 + 2);
                     stackSize1 -= 2;
                 } else if (value == NULL) {
@@ -552,8 +576,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new InsnNode(SWAP));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushObject", "(Ljava/lang/Object;)V",
-                                    false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushObject", "(Ljava/lang/Object;)V", false));
                     updateMaxStack(stackSize1 + 1);
                     stackSize1 -= 1;
                 }
@@ -565,32 +589,36 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new VarInsnNode(ILOAD, j));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushInt", "(I)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushInt", "(I)V", false));
                     updateMaxStack(stackSize1 + 2);
                 } else if (value == FLOAT) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new VarInsnNode(FLOAT, j));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushFloat", "(F)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushFloat", "(F)V", false));
                     updateMaxStack(stackSize1 + 2);
                 } else if (value == LONG) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new VarInsnNode(LLOAD, j));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushLong", "(J)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushLong", "(J)V", false));
                     updateMaxStack(stackSize1 + 3);
                 } else if (value == DOUBLE) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new VarInsnNode(DLOAD, j));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushDouble", "(D)V", false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushDouble", "(D)V", false));
                     updateMaxStack(stackSize1 + 3);
                 } else if (value instanceof String) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, j));
                     instructions.insertBefore(labelNode4,
-                            new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushObject", "(Ljava/lang/Object;)V",
-                                    false));
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                    "pushObject", "(Ljava/lang/Object;)V", false));
                     updateMaxStack(stackSize1 + 2);
                 }
             }
@@ -599,7 +627,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode4, newPushNode(i));
                 instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "pushInt", "(I)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation", "pushInt",
+                                "(I)V", false));
                 updateMaxStack(stackSize1 + 2);
             }
 
@@ -647,8 +676,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                         locals.add(TOP);
                     }
                 }
-                Object[] locals1 =
-                        convertValues(appendValue(ensureSize(locals.toArray(), continuationVarIndex), CONTINUATION));
+                Object[] locals1 = convertValues(appendValue(ensureSize(locals.toArray(), continuationVarIndex),
+                        "org/jvnet/zephyr/easyflow/runtime/Continuation"));
                 List<Object> stack = frameNode.stack;
                 instructions.set(node, new FrameNode(F_NEW, locals1.length, locals1, stack.size(), stack.toArray()));
             }
@@ -670,17 +699,18 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 Object[] stack = frame.stack;
 
                 if (!isNextFrameNode(labelNode)) {
-                    instructions.insert(labelNode,
-                            newFrameNode(appendValue(ensureSize(frame.locals, continuationVarIndex), CONTINUATION),
-                                    stack));
+                    instructions.insert(labelNode, newFrameNode(
+                            appendValue(ensureSize(frame.locals, continuationVarIndex),
+                                    "org/jvnet/zephyr/easyflow/runtime/Continuation"), stack));
                 }
 
                 instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode, new JumpInsnNode(IFNULL, labelNode));
 
                 instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
-                instructions.insertBefore(labelNode, new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION,
-                        opcode == MONITORENTER ? "monitorEntered" : "monitorExited", "()V", false));
+                instructions.insertBefore(labelNode,
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                opcode == MONITORENTER ? "monitorEntered" : "monitorExited", "()V", false));
 
                 updateMaxStack(stack.length + 1);
             }
@@ -693,16 +723,18 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
             instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, 0));
             instructions.insertBefore(labelNode, new LdcInsnNode(name));
             instructions.insertBefore(labelNode, new LdcInsnNode(desc));
-            instructions.insertBefore(labelNode, new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "invocationStarted",
-                    "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V", false));
+            instructions.insertBefore(labelNode,
+                    new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                            "invocationStarted", "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V", false));
         } else {
             instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
-            instructions.insertBefore(labelNode, new LdcInsnNode(Type.getObjectType(owner)));
+            instructions.insertBefore(labelNode, new LdcInsnNode(Type.getType('L' + owner + ';')));
             instructions.insertBefore(labelNode, new LdcInsnNode(name));
             instructions.insertBefore(labelNode, new LdcInsnNode(desc));
             instructions.insertBefore(labelNode,
-                    new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "staticInvocationStarted",
-                            "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)V", false));
+                    new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                            "staticInvocationStarted", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)V",
+                            false));
         }
 
         updateMaxStack(4);
@@ -726,14 +758,15 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(next, new JumpInsnNode(IFNULL, labelNode1));
                 instructions.insertBefore(next, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(next,
-                        new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "invocationEnded", "()V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                                "invocationEnded", "()V", false));
 
                 Frame frame = frames.get(next);
                 Object[] stack = frame.stack;
 
                 instructions.insertBefore(next, labelNode1);
-                instructions.insertBefore(next,
-                        newFrameNode(appendValue(ensureSize(frame.locals, continuationVarIndex), CONTINUATION), stack));
+                instructions.insertBefore(next, newFrameNode(appendValue(ensureSize(frame.locals, continuationVarIndex),
+                        "org/jvnet/zephyr/easyflow/runtime/Continuation"), stack));
 
                 addTryCatchBlockNode(startLabelNode, endLabelNode, handlerLabelNode);
 
@@ -753,7 +786,7 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
         for (int i = 0; i < continuationVarIndex; i++) {
             locals[i] = TOP;
         }
-        locals[continuationVarIndex] = CONTINUATION;
+        locals[continuationVarIndex] = "org/jvnet/zephyr/easyflow/runtime/Continuation";
         Object[] stack = { "java/lang/Throwable" };
 
         instructions.add(newFrameNode(locals, stack));
@@ -765,7 +798,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
         instructions.add(new JumpInsnNode(IFNULL, labelNode1));
 
         instructions.add(new VarInsnNode(ALOAD, continuationVarIndex));
-        instructions.add(new MethodInsnNode(INVOKEVIRTUAL, CONTINUATION, "invocationEnded", "()V", false));
+        instructions.add(new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/runtime/Continuation",
+                "invocationEnded", "()V", false));
 
         instructions.add(labelNode1);
         instructions.add(newFrameNode(locals, stack));
