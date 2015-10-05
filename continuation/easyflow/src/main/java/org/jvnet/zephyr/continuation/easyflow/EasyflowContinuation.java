@@ -29,12 +29,12 @@ import org.jvnet.zephyr.continuation.UnsuspendableError;
 
 public final class EasyFlowContinuation extends Continuation {
 
-    private static final long serialVersionUID = -6013208741268527329L;
+    private static final long serialVersionUID = 1546109806072791098L;
 
-    private final org.jvnet.zephyr.easyflow.runtime.Continuation continuation;
+    private final org.jvnet.zephyr.easyflow.Continuation continuation;
 
     private EasyFlowContinuation(Runnable target) {
-        continuation = org.jvnet.zephyr.easyflow.runtime.Continuation.create(target);
+        continuation = org.jvnet.zephyr.easyflow.Continuation.create(target);
     }
 
     public static EasyFlowContinuation create(Runnable target) {
@@ -43,8 +43,8 @@ public final class EasyFlowContinuation extends Continuation {
 
     public static void suspend() {
         try {
-            org.jvnet.zephyr.easyflow.runtime.Continuation.suspend();
-        } catch (org.jvnet.zephyr.easyflow.runtime.UnsuspendableError e) {
+            org.jvnet.zephyr.easyflow.Continuation.suspend();
+        } catch (org.jvnet.zephyr.easyflow.UnsuspendableError e) {
             throw new UnsuspendableError(e);
         }
     }

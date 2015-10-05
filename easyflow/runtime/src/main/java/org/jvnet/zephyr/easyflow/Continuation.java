@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.easyflow.runtime;
+package org.jvnet.zephyr.easyflow;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
