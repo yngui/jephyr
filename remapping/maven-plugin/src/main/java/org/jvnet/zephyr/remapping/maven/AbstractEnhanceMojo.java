@@ -63,26 +63,20 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
     private Collection<MappingEntry> mappingEntries;
 
     protected final void execute(File classesDirectory, File outputDirectory) throws MojoExecutionException {
-        if (classesDirectory.equals(outputDirectory)) {
-            throw new MojoExecutionException(
-                    "Classes directory " + classesDirectory + " and output directory " + outputDirectory +
-                            " are the same");
-        }
-
-        Path outputPath = outputDirectory.toPath();
         Path classesPath = classesDirectory.toPath();
+        Path outputPath = outputDirectory.toPath();
         SimpleRemapper remapper = new SimpleRemapper(createMapping());
 
         if (classesDirectory.isDirectory()) {
-            for (File file : listFiles(classesDirectory, null, true)) {
-                Path relativePath = classesPath.relativize(file.toPath());
-                File destination = outputPath.resolve(relativePath).toFile();
-                if (file.lastModified() > destination.lastModified()) {
+            for (File srcFile : listFiles(classesDirectory, null, true)) {
+                Path relativePath = classesPath.relativize(srcFile.toPath());
+                File destFile = outputPath.resolve(relativePath).toFile();
+                if (srcFile.equals(destFile) || srcFile.lastModified() > destFile.lastModified()) {
                     String name = relativePath.toString();
                     if (isExtension(name, "class") && isIncluded(name)) {
-                        enhance(remapper, file, destination);
+                        enhance(srcFile, destFile, remapper);
                     } else {
-                        copy(file, destination);
+                        copy(srcFile, destFile);
                     }
                 }
             }
@@ -107,12 +101,12 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         return include;
     }
 
-    private static void enhance(Remapper remapper, File file, File destination) throws MojoExecutionException {
+    private static void enhance(File srcFile, File destFile, Remapper remapper) throws MojoExecutionException {
         byte[] original;
         try {
-            original = readFileToByteArray(file);
+            original = readFileToByteArray(srcFile);
         } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while reading " + file, e);
+            throw new MojoExecutionException("An error occurred while reading " + srcFile, e);
         }
 
         ClassWriter writer = new ClassWriter(0);
@@ -121,17 +115,19 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         byte[] enhanced = writer.toByteArray();
 
         try {
-            writeByteArrayToFile(destination, enhanced);
+            writeByteArrayToFile(destFile, enhanced);
         } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while writing " + destination, e);
+            throw new MojoExecutionException("An error occurred while writing " + destFile, e);
         }
     }
 
-    private static void copy(File file, File destination) throws MojoExecutionException {
-        try {
-            copyFile(file, destination);
-        } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while copying " + file + " to " + destination, e);
+    private static void copy(File srcFile, File destFile) throws MojoExecutionException {
+        if (!srcFile.equals(destFile)) {
+            try {
+                copyFile(srcFile, destFile);
+            } catch (IOException e) {
+                throw new MojoExecutionException("An error occurred while copying " + srcFile + " to " + destFile, e);
+            }
         }
     }
 

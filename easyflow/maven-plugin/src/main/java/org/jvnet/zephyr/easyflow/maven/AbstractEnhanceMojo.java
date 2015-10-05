@@ -64,25 +64,19 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
     private Collection<String> excludedMethods;
 
     protected final void execute(File classesDirectory, File outputDirectory) throws MojoExecutionException {
-        if (classesDirectory.equals(outputDirectory)) {
-            throw new MojoExecutionException(
-                    "Classes directory " + classesDirectory + " and output directory " + outputDirectory +
-                            " are the same");
-        }
-
-        Path outputPath = outputDirectory.toPath();
         Path classesPath = classesDirectory.toPath();
+        Path outputPath = outputDirectory.toPath();
 
         if (classesDirectory.isDirectory()) {
-            for (File file : listFiles(classesDirectory, null, true)) {
-                Path relativePath = classesPath.relativize(file.toPath());
-                File destination = outputPath.resolve(relativePath).toFile();
-                if (file.lastModified() > destination.lastModified()) {
+            for (File srcFile : listFiles(classesDirectory, null, true)) {
+                Path relativePath = classesPath.relativize(srcFile.toPath());
+                File destFile = outputPath.resolve(relativePath).toFile();
+                if (srcFile.equals(destFile) || srcFile.lastModified() > destFile.lastModified()) {
                     String name = relativePath.toString();
                     if (isExtension(name, "class") && isIncluded(name)) {
-                        enhance(separatorsToUnix(removeExtension(name)), file, destination);
+                        enhance(srcFile, destFile, separatorsToUnix(removeExtension(name)));
                     } else {
-                        copy(file, destination);
+                        copy(srcFile, destFile);
                     }
                 }
             }
@@ -107,12 +101,12 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         return include;
     }
 
-    private void enhance(final String className, File file, File destination) throws MojoExecutionException {
+    private void enhance(File srcFile, File destFile, final String className) throws MojoExecutionException {
         byte[] original;
         try {
-            original = readFileToByteArray(file);
+            original = readFileToByteArray(srcFile);
         } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while reading " + file, e);
+            throw new MojoExecutionException("An error occurred while reading " + srcFile, e);
         }
 
         Predicate<MethodRef> methodRefPredicate;
@@ -133,17 +127,19 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         byte[] enhanced = writer.toByteArray();
 
         try {
-            writeByteArrayToFile(destination, enhanced);
+            writeByteArrayToFile(destFile, enhanced);
         } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while writing " + destination, e);
+            throw new MojoExecutionException("An error occurred while writing " + destFile, e);
         }
     }
 
-    private static void copy(File file, File destination) throws MojoExecutionException {
-        try {
-            copyFile(file, destination);
-        } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while copying " + file + " to " + destination, e);
+    private static void copy(File srcFile, File destFile) throws MojoExecutionException {
+        if (!srcFile.equals(destFile)) {
+            try {
+                copyFile(srcFile, destFile);
+            } catch (IOException e) {
+                throw new MojoExecutionException("An error occurred while copying " + srcFile + " to " + destFile, e);
+            }
         }
     }
 }

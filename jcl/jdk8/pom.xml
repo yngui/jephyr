@@ -572,13 +572,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>easyflow</id>
+                        <id>enhanced</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>easyflow</classifier>
-                            <classesDirectory>${project.build.directory}/easyflow-classes</classesDirectory>
+                            <classifier>enhanced</classifier>
+                            <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>

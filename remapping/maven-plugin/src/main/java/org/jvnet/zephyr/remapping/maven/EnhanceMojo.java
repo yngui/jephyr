@@ -38,7 +38,7 @@ public final class EnhanceMojo extends AbstractEnhanceMojo {
 
     @Parameter(defaultValue = "${project.build.outputDirectory}", required = true)
     private File classesDirectory;
-    @Parameter(defaultValue = "${project.build.directory}/remapping-classes", required = true)
+    @Parameter(defaultValue = "${project.build.directory}/enhanced-classes", required = true)
     private File outputDirectory;
 
     @Override

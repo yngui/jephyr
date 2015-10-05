@@ -38,7 +38,7 @@ public final class TestEnhanceMojo extends AbstractEnhanceMojo {
 
     @Parameter(defaultValue = "${project.build.testOutputDirectory}", required = true)
     private File testClassesDirectory;
-    @Parameter(defaultValue = "${project.build.directory}/remapping-test-classes", required = true)
+    @Parameter(defaultValue = "${project.build.directory}/enhanced-test-classes", required = true)
     private File testOutputDirectory;
 
     @Override

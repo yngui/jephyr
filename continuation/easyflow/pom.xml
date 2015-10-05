@@ -53,12 +53,13 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>default-jar</id>
+                        <id>enhanced</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classesDirectory>${project.build.directory}/easyflow-classes</classesDirectory>
+                            <classifier>enhanced</classifier>
+                            <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                         </configuration>
                     </execution>
                 </executions>
@@ -70,6 +71,7 @@
         <dependency>
             <groupId>org.jvnet.zephyr.continuation</groupId>
             <artifactId>continuation-api</artifactId>
+            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jvnet.zephyr.easyflow</groupId>
