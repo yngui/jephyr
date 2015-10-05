@@ -33,7 +33,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class Continuation implements Serializable {
 
-    private static final long serialVersionUID = 512625192965071673L;
+    private static final long serialVersionUID = 3809856530567778346L;
 
     private static final int SUSPENDED = 1;
     private static final int RESUMED = 2;

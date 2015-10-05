@@ -26,7 +26,7 @@ package org.jvnet.zephyr.easyflow;
 
 public class UnsuspendableError extends Error {
 
-    private static final long serialVersionUID = 2897126909464416998L;
+    private static final long serialVersionUID = 6753883213205107050L;
 
     public UnsuspendableError() {
     }
