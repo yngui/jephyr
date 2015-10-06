@@ -68,6 +68,10 @@
                     <version>2.6</version>
                 </plugin>
                 <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>2.7</version>
+                </plugin>
+                <plugin>
                     <artifactId>maven-antrun-plugin</artifactId>
                     <version>1.8</version>
                 </plugin>
@@ -128,12 +132,12 @@
         <dependencies>
             <dependency>
                 <groupId>org.jvnet.zephyr.thread</groupId>
-                <artifactId>thread-api</artifactId>
+                <artifactId>thread-spi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-api</artifactId>
+                <artifactId>continuation-spi</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -144,6 +148,11 @@
             <dependency>
                 <groupId>org.jvnet.zephyr.easyflow</groupId>
                 <artifactId>easyflow-instrument</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.zephyr.common</groupId>
+                <artifactId>common-instrument</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

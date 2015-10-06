@@ -38,7 +38,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jvnet.zephyr.common</groupId>
-            <artifactId>common-util</artifactId>
+            <artifactId>common-instrument</artifactId>
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>

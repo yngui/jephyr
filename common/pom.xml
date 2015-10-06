@@ -38,6 +38,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>instrument</module>
         <module>agent</module>
         <module>util</module>
     </modules>
