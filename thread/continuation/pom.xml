@@ -44,11 +44,15 @@
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>org/jvnet/zephyr/continuation/Continuation</oldName>
-                            <newName>org/jvnet/zephyr/easyflow/runtime/Continuation</newName>
+                            <newName>org/jvnet/zephyr/easyflow/Continuation</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>org/jvnet/zephyr/continuation/ContinuationThreadAccess</oldName>
+                            <newName>org/jvnet/zephyr/easyflow/ContinuationThreadAccess</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>org/jvnet/zephyr/continuation/UnsuspendableError</oldName>
-                            <newName>org/jvnet/zephyr/easyflow/runtime/UnsuspendableError</newName>
+                            <newName>org/jvnet/zephyr/easyflow/UnsuspendableError</newName>
                         </mappingEntry>
                     </mappingEntries>
                 </configuration>
@@ -75,6 +79,7 @@
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolProvider$*.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ForkJoinPoolProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/continuation/ForkJoinPoolProvider$*.class</exclude>
                     </excludes>
@@ -104,12 +109,11 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>enhanced</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>enhanced</classifier>
+                            <classifier>easyflow-remapped</classifier>
                             <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                         </configuration>
                     </execution>

@@ -24,22 +24,60 @@
 
 package org.jvnet.zephyr.thread.continuation;
 
+import org.jvnet.zephyr.continuation.Continuation;
+import org.jvnet.zephyr.continuation.ContinuationThreadAccess;
+
 import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
+import java.util.concurrent.ForkJoinWorkerThread;
 
 public final class DefaultForkJoinPoolProvider extends ForkJoinPoolProvider {
 
     private static final String PARALLELISM = DefaultForkJoinPoolProvider.class.getName() + ".parallelism";
+
+    private static final ForkJoinWorkerThreadFactory factory = new DefaultForkJoinWorkerThreadFactory();
 
     private final ForkJoinPool pool;
 
     public DefaultForkJoinPoolProvider() {
         String s = System.getProperty(PARALLELISM);
         int parallelism = s == null ? Runtime.getRuntime().availableProcessors() : Integer.parseInt(s);
-        pool = new ForkJoinPool(parallelism, ForkJoinPool.defaultForkJoinWorkerThreadFactory, null, true);
+        pool = new ForkJoinPool(parallelism, factory, null, true);
     }
 
     @Override
     public ForkJoinPool getPool() {
         return pool;
+    }
+
+    private static final class DefaultForkJoinWorkerThreadFactory implements ForkJoinWorkerThreadFactory {
+
+        DefaultForkJoinWorkerThreadFactory() {
+        }
+
+        @Override
+        public ForkJoinWorkerThread newThread(ForkJoinPool pool) {
+            return new DefaultForkJoinWorkerThread(pool);
+        }
+    }
+
+    private static final class DefaultForkJoinWorkerThread extends ForkJoinWorkerThread
+            implements ContinuationThreadAccess {
+
+        private Continuation continuation;
+
+        DefaultForkJoinWorkerThread(ForkJoinPool pool) {
+            super(pool);
+        }
+
+        @Override
+        public Continuation getContinuation() {
+            return continuation;
+        }
+
+        @Override
+        public void setContinuation(Continuation continuation) {
+            this.continuation = continuation;
+        }
     }
 }

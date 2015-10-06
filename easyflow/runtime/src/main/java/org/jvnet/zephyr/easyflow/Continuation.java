@@ -45,7 +45,7 @@ public final class Continuation implements Serializable {
     private static final double[] EMPTY_DOUBLES = {};
     private static final Object[] EMPTY_OBJECTS = {};
 
-    private static final ThreadLocal<Continuation> currentContinuation = new ThreadLocal<>();
+    private static final ContinuationThreadLocal currentContinuation = new ContinuationThreadLocal();
 
     private final Runnable target;
     private int state;

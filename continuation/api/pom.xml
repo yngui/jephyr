@@ -53,12 +53,11 @@
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>enhanced</id>
                         <goals>
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>enhanced</classifier>
+                            <classifier>easyflow-remapped</classifier>
                             <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                         </configuration>
                     </execution>
