@@ -36,6 +36,7 @@ import java.util.Set;
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FilenameUtils.isExtension;
+import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.codehaus.plexus.util.SelectorUtils.matchPath;
 
 public abstract class AbstractEnhanceMojo extends AbstractMojo {
@@ -59,11 +60,11 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
             Path relativePath = classesPath.relativize(srcFile.toPath());
             File destFile = outputPath.resolve(relativePath).toFile();
             if (srcFile.equals(destFile)) {
-                if (shouldEnhance(relativePath.toString())) {
+                if (shouldEnhance(separatorsToUnix(relativePath.toString()))) {
                     enhance(srcFile, destFile);
                 }
             } else if (srcFile.lastModified() > destFile.lastModified()) {
-                if (shouldEnhance(relativePath.toString())) {
+                if (shouldEnhance(separatorsToUnix(relativePath.toString()))) {
                     enhance(srcFile, destFile);
                 } else {
                     try {
@@ -86,12 +87,12 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         } else {
             include = false;
             for (String pattern : includes) {
-                include |= matchPath(pattern, name);
+                include |= matchPath(pattern, name, "/", true);
             }
         }
         if (include && excludes != null) {
             for (String pattern : excludes) {
-                include &= !matchPath(pattern, name);
+                include &= !matchPath(pattern, name, "/", true);
             }
         }
         return include;
