@@ -50,7 +50,7 @@ public abstract class AbstractEnhanceMojo extends org.jvnet.zephyr.common.maven.
     private Collection<String> excludedMethods;
 
     @Override
-    protected void enhance(File srcFile, File destFile) throws MojoExecutionException {
+    protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
         byte[] original;
         try {
             original = readFileToByteArray(srcFile);

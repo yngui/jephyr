@@ -50,7 +50,7 @@ public abstract class AbstractEnhanceMojo extends org.jvnet.zephyr.common.maven.
     private Remapper remapper;
 
     @Override
-    protected void enhance(File srcFile, File destFile) throws MojoExecutionException {
+    protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
         if (remapper == null) {
             remapper = new SimpleRemapper(createMapping());
         }
