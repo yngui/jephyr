@@ -566,7 +566,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/System.java
      }
 
      /**
-@@ -1096,122 +1099,142 @@
+@@ -1096,122 +1099,144 @@
       * @return     a platform-dependent native library name.
       * @exception  NullPointerException if <code>libname</code> is
       *             <code>null</code>
@@ -656,6 +656,8 @@ diff -r 55f6804b4352 src/share/classes/java/lang/System.java
 -        // wait until the application class loader has been set up.
 -        // IMPORTANT: Ensure that this remains the last initialization action!
 -        sun.misc.VM.booted();
++        props = new Properties();
++        initProperties(props);
 +        setIn0(java.lang.System.in);
 +        setOut0(java.lang.System.out);
 +        setErr0(java.lang.System.err);
