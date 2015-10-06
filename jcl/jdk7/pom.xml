@@ -446,7 +446,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jvnet.zephyr.thread</groupId>
-            <artifactId>thread-api</artifactId>
+            <artifactId>thread-spi</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

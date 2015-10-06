@@ -28,18 +28,28 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.continuation</groupId>
-        <artifactId>continuation-parent</artifactId>
+        <groupId>org.jvnet.zephyr.thread</groupId>
+        <artifactId>thread-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>continuation-api</artifactId>
+    <artifactId>thread-spi</artifactId>
 
     <build>
         <plugins>
             <plugin>
                 <groupId>org.jvnet.zephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
+                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

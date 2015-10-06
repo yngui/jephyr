@@ -38,7 +38,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>api</module>
+        <module>spi</module>
         <module>continuation</module>
     </modules>
 </project>
