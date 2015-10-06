@@ -25,7 +25,7 @@
 package org.jvnet.zephyr.easyflow.agent;
 
 import org.jvnet.zephyr.common.agent.ClassNameAwareClassAdapter;
-import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.common.util.function.Predicate;
 import org.jvnet.zephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
 import org.jvnet.zephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jvnet.zephyr.easyflow.instrument.MethodRef;
@@ -36,7 +36,7 @@ import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.regex.Pattern;
 
-import static org.jvnet.zephyr.common.util.Predicates.alwaysTrue;
+import static org.jvnet.zephyr.common.util.function.Predicates.alwaysTrue;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 final class EasyFlowClassFileTransformer implements ClassFileTransformer {
@@ -52,7 +52,7 @@ final class EasyFlowClassFileTransformer implements ClassFileTransformer {
     }
 
     @Override
-    public byte[] transform(ClassLoader loader, final String className, Class<?> classBeingRedefined,
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined,
             ProtectionDomain protectionDomain, byte[] classfileBuffer) {
         try {
             Predicate<MethodRef> methodRefPredicate;

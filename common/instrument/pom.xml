@@ -47,11 +47,11 @@
                         </goals>
                         <configuration>
                             <outputDirectory>
-                                ${project.build.directory}/generated-sources/common-util/org/jvnet/zephyr/common/util
+                                ${project.build.directory}/generated-sources/common-util/org/jvnet/zephyr/common/util/function
                             </outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../util/src/main/java/org/jvnet/zephyr/common/util</directory>
+                                    <directory>../util/src/main/java/org/jvnet/zephyr/common/util/function</directory>
                                     <includes>
                                         <include>Predicate.java</include>
                                         <include>Predicates.java</include>

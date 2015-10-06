@@ -24,7 +24,7 @@
 
 package org.jvnet.zephyr.easyflow.agent;
 
-import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.common.util.function.Predicate;
 
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
@@ -46,8 +46,8 @@ public final class Main {
                         (excludes == null || !excludes.matcher(t).find());
             }
         };
-        inst.addTransformer(new EasyFlowClassFileTransformer(classNamePredicate,
-                getPattern(props.getProperty("excludeMethods"))));
+        inst.addTransformer(
+                new EasyFlowClassFileTransformer(classNamePredicate, getPattern(props.getProperty("excludeMethods"))));
     }
 
     private static Pattern getPattern(String regex) {

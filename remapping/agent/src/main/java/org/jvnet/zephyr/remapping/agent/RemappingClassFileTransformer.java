@@ -25,7 +25,7 @@
 package org.jvnet.zephyr.remapping.agent;
 
 import org.jvnet.zephyr.common.agent.ClassNameAwareClassAdapter;
-import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.common.util.function.Predicate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.Remapper;

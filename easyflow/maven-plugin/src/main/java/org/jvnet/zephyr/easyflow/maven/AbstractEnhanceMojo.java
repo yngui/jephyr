@@ -28,7 +28,7 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
-import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.common.util.function.Predicate;
 import org.jvnet.zephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
 import org.jvnet.zephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jvnet.zephyr.easyflow.instrument.MethodRef;
@@ -49,7 +49,7 @@ import static org.apache.commons.io.FilenameUtils.isExtension;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
 import static org.codehaus.plexus.util.SelectorUtils.matchPath;
-import static org.jvnet.zephyr.common.util.Predicates.alwaysTrue;
+import static org.jvnet.zephyr.common.util.function.Predicates.alwaysTrue;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 public abstract class AbstractEnhanceMojo extends AbstractMojo {

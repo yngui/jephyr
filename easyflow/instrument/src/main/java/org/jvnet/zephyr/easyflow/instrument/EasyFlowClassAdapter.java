@@ -24,7 +24,7 @@
 
 package org.jvnet.zephyr.easyflow.instrument;
 
-import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.common.util.function.Predicate;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;

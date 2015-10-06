@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.common.util;
+package org.jvnet.zephyr.common.util.function;
 
 public final class Predicates {
 

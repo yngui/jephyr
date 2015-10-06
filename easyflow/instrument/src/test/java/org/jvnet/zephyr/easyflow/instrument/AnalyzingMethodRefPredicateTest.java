@@ -25,7 +25,7 @@
 package org.jvnet.zephyr.easyflow.instrument;
 
 import org.apache.commons.io.IOUtils;
-import org.jvnet.zephyr.common.util.Predicate;
+import org.jvnet.zephyr.common.util.function.Predicate;
 import org.objectweb.asm.Type;
 import org.testng.annotations.Test;
 
