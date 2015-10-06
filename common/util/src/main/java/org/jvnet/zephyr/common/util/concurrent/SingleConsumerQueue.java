@@ -24,6 +24,7 @@
 
 package org.jvnet.zephyr.common.util.concurrent;
 
+import java.io.Serializable;
 import java.util.AbstractQueue;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
@@ -31,7 +32,9 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import static java.util.Objects.requireNonNull;
 
-public final class SingleConsumerQueue<E> extends AbstractQueue<E> {
+public final class SingleConsumerQueue<E> extends AbstractQueue<E> implements Serializable {
+
+    private static final long serialVersionUID = 6123082757231527184L;
 
     private final AtomicReference<Node<E>> head = new AtomicReference<>();
     private Node<E> tail;
@@ -96,7 +99,9 @@ public final class SingleConsumerQueue<E> extends AbstractQueue<E> {
         return next.value;
     }
 
-    private static final class Node<T> {
+    private static final class Node<T> implements Serializable {
+
+        private static final long serialVersionUID = -3507902457722206465L;
 
         T value;
         volatile Node<T> next;
