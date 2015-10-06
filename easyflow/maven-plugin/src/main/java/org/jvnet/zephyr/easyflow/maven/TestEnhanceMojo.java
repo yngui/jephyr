@@ -36,17 +36,17 @@ import java.io.File;
 public final class TestEnhanceMojo extends AbstractEnhanceMojo {
 
     @Parameter(defaultValue = "${project.build.testOutputDirectory}", required = true)
-    private File classesDirectory;
+    private File testClassesDirectory;
     @Parameter(defaultValue = "${project.build.directory}/enhanced-test-classes", required = true)
-    private File outputDirectory;
+    private File testOutputDirectory;
 
     @Override
     protected File getClassesDirectory() {
-        return classesDirectory;
+        return testClassesDirectory;
     }
 
     @Override
     protected File getOutputDirectory() {
-        return outputDirectory;
+        return testOutputDirectory;
     }
 }
