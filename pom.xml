@@ -156,6 +156,11 @@
             </dependency>
             <dependency>
                 <groupId>org.jvnet.zephyr.common</groupId>
+                <artifactId>common-maven-plugin</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jvnet.zephyr.common</groupId>
                 <artifactId>common-agent</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -178,11 +183,6 @@
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
                 <version>${commons-io.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.maven</groupId>
-                <artifactId>maven-project</artifactId>
-                <version>${maven-project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven</groupId>

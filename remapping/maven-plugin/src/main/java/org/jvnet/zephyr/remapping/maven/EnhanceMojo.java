@@ -24,7 +24,6 @@
 
 package org.jvnet.zephyr.remapping.maven;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -42,7 +41,12 @@ public final class EnhanceMojo extends AbstractEnhanceMojo {
     private File outputDirectory;
 
     @Override
-    public void execute() throws MojoExecutionException {
-        execute(classesDirectory, outputDirectory);
+    protected File getClassesDirectory() {
+        return classesDirectory;
+    }
+
+    @Override
+    protected File getOutputDirectory() {
+        return outputDirectory;
     }
 }

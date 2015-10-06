@@ -24,7 +24,6 @@
 
 package org.jvnet.zephyr.easyflow.maven;
 
-import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -37,12 +36,17 @@ import java.io.File;
 public final class TestEnhanceMojo extends AbstractEnhanceMojo {
 
     @Parameter(defaultValue = "${project.build.testOutputDirectory}", required = true)
-    private File testClassesDirectory;
+    private File classesDirectory;
     @Parameter(defaultValue = "${project.build.directory}/enhanced-test-classes", required = true)
-    private File testOutputDirectory;
+    private File outputDirectory;
 
     @Override
-    public void execute() throws MojoExecutionException {
-        execute(testClassesDirectory, testOutputDirectory);
+    protected File getClassesDirectory() {
+        return classesDirectory;
+    }
+
+    @Override
+    protected File getOutputDirectory() {
+        return outputDirectory;
     }
 }

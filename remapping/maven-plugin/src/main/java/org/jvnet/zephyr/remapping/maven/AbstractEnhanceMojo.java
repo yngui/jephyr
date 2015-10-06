@@ -24,10 +24,8 @@
 
 package org.jvnet.zephyr.remapping.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.apache.maven.project.MavenProject;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 import org.objectweb.asm.commons.Remapper;
@@ -36,77 +34,32 @@ import org.objectweb.asm.commons.SimpleRemapper;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import static org.apache.commons.io.FileUtils.copyFile;
-import static org.apache.commons.io.FileUtils.listFiles;
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
-import static org.apache.commons.io.FilenameUtils.isExtension;
-import static org.codehaus.plexus.util.SelectorUtils.matchPath;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
-public abstract class AbstractEnhanceMojo extends AbstractMojo {
+public abstract class AbstractEnhanceMojo extends org.jvnet.zephyr.common.maven.AbstractEnhanceMojo {
 
-    @Parameter(defaultValue = "${project}", readonly = true)
-    private MavenProject project;
-    @Parameter
-    private Set<String> includes;
-    @Parameter
-    private Set<String> excludes;
     @Parameter
     private Collection<MappingEntry> mappingEntries;
+    private Remapper remapper;
 
-    protected final void execute(File classesDirectory, File outputDirectory) throws MojoExecutionException {
-        Path classesPath = classesDirectory.toPath();
-        Path outputPath = outputDirectory.toPath();
-        SimpleRemapper remapper = new SimpleRemapper(createMapping());
-
-        if (classesDirectory.isDirectory()) {
-            for (File srcFile : listFiles(classesDirectory, null, true)) {
-                Path relativePath = classesPath.relativize(srcFile.toPath());
-                File destFile = outputPath.resolve(relativePath).toFile();
-                if (srcFile.equals(destFile) || srcFile.lastModified() > destFile.lastModified()) {
-                    String name = relativePath.toString();
-                    if (isExtension(name, "class") && isIncluded(name)) {
-                        enhance(srcFile, destFile, remapper);
-                    } else {
-                        copy(srcFile, destFile);
-                    }
-                }
-            }
+    @Override
+    protected void enhance(File srcFile, File destFile) throws MojoExecutionException {
+        if (remapper == null) {
+            remapper = new SimpleRemapper(createMapping());
         }
-    }
 
-    private boolean isIncluded(String name) {
-        boolean include;
-        if (includes == null) {
-            include = true;
-        } else {
-            include = false;
-            for (String pattern : includes) {
-                include |= matchPath(pattern, name);
-            }
-        }
-        if (include && excludes != null) {
-            for (String pattern : excludes) {
-                include &= !matchPath(pattern, name);
-            }
-        }
-        return include;
-    }
-
-    private static void enhance(File srcFile, File destFile, Remapper remapper) throws MojoExecutionException {
         byte[] original;
         try {
             original = readFileToByteArray(srcFile);
         } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while reading " + srcFile, e);
+            throw new MojoExecutionException("Failed to read " + srcFile, e);
         }
 
         ClassWriter writer = new ClassWriter(0);
@@ -117,17 +70,7 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         try {
             writeByteArrayToFile(destFile, enhanced);
         } catch (IOException e) {
-            throw new MojoExecutionException("An error occurred while writing " + destFile, e);
-        }
-    }
-
-    private static void copy(File srcFile, File destFile) throws MojoExecutionException {
-        if (!srcFile.equals(destFile)) {
-            try {
-                copyFile(srcFile, destFile);
-            } catch (IOException e) {
-                throw new MojoExecutionException("An error occurred while copying " + srcFile + " to " + destFile, e);
-            }
+            throw new MojoExecutionException("Failed to write " + destFile, e);
         }
     }
 
