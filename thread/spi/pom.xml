@@ -67,7 +67,7 @@
                             <goal>jar</goal>
                         </goals>
                         <configuration>
-                            <classifier>easyflow-remapped</classifier>
+                            <classifier>remapped-easyflow</classifier>
                             <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                         </configuration>
                     </execution>
