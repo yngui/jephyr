@@ -33,7 +33,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>continuation-spi</artifactId>
+    <artifactId>continuation-api</artifactId>
 
     <build>
         <plugins>

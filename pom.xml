@@ -43,10 +43,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.7</java.version>
         <asm.version>5.0.4</asm.version>
         <commons-io.version>2.4</commons-io.version>
-        <maven-plugin-api.version>3.3.3</maven-plugin-api.version>
-        <maven-plugin-plugin.version>3.4</maven-plugin-plugin.version>
+        <maven.version>3.3.3</maven.version>
+        <plugin-tools.version>3.4</plugin-tools.version>
         <testng.version>6.9.6</testng.version>
         <mockito.version>1.10.19</mockito.version>
     </properties>
@@ -58,8 +59,8 @@
                     <artifactId>maven-compiler-plugin</artifactId>
                     <version>3.3</version>
                     <configuration>
-                        <source>1.7</source>
-                        <target>1.7</target>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
                     </configuration>
                 </plugin>
                 <plugin>
@@ -95,7 +96,7 @@
                 </plugin>
                 <plugin>
                     <artifactId>maven-plugin-plugin</artifactId>
-                    <version>${maven-plugin-plugin.version}</version>
+                    <version>3.4</version>
                     <configuration>
                         <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
                     </configuration>
@@ -130,12 +131,12 @@
         <dependencies>
             <dependency>
                 <groupId>org.jvnet.zephyr.thread</groupId>
-                <artifactId>thread-spi</artifactId>
+                <artifactId>thread-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jvnet.zephyr.continuation</groupId>
-                <artifactId>continuation-spi</artifactId>
+                <artifactId>continuation-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -186,12 +187,12 @@
             <dependency>
                 <groupId>org.apache.maven</groupId>
                 <artifactId>maven-plugin-api</artifactId>
-                <version>${maven-plugin-api.version}</version>
+                <version>${maven.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.maven.plugin-tools</groupId>
                 <artifactId>maven-plugin-annotations</artifactId>
-                <version>${maven-plugin-plugin.version}</version>
+                <version>${plugin-tools.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.testng</groupId>

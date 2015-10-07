@@ -586,7 +586,7 @@
     <dependencies>
         <dependency>
             <groupId>org.jvnet.zephyr.thread</groupId>
-            <artifactId>thread-spi</artifactId>
+            <artifactId>thread-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>

@@ -38,7 +38,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>spi</module>
+        <module>api</module>
         <module>easyflow</module>
     </modules>
 </project>
