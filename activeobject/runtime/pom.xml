@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2015 Igor Konev
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jvnet.zephyr.activeobject</groupId>
+        <artifactId>activeobject-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>activeobject-runtime</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jvnet.zephyr.remapping</groupId>
+                <artifactId>remapping-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer$*.class</exclude>
+                    </excludes>
+                    <mappingEntries>
+                        <mappingEntry>
+                            <oldName>java/lang/Thread</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/lang/Thread</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/Queue</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/Queue</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/ArrayBlockingQueue</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/BlockingQueue</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/BlockingQueue</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/LinkedBlockingQueue</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/RunnableFuture</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/RunnableFuture</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/TimeUnit</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/TimeUnit</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/locks/LockSupport</oldName>
+                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport</newName>
+                        </mappingEntry>
+                    </mappingEntries>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
+                    <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
+                    <excludes>
+                        <exclude>org/jvnet/zephyr/activeobject/disposer/Disposer.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/disposer/Disposer$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/BoundedMailboxFactory.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/ReflectiveMailboxFactory.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/SingleConsumerMailboxFactory.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/UnboundedMailboxFactory.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/support/ActiveObjectUtils.class</exclude>
+                    </excludes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>remapped-easyflow</classifier>
+                            <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jvnet.zephyr.common</groupId>
+            <artifactId>common-util</artifactId>
+            <optional>true</optional>
+        </dependency>
+    </dependencies>
+</project>

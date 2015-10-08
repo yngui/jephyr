@@ -38,6 +38,7 @@
         <module>continuation</module>
         <module>easyflow</module>
         <module>remapping</module>
+        <module>activeobject</module>
         <module>common</module>
     </modules>
 
@@ -150,6 +151,11 @@
                 <version>${project.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.jvnet.zephyr.activeobject</groupId>
+                <artifactId>activeobject-instrument</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jvnet.zephyr.common</groupId>
                 <artifactId>common-instrument</artifactId>
                 <version>${project.version}</version>
@@ -172,6 +178,11 @@
             <dependency>
                 <groupId>org.ow2.asm</groupId>
                 <artifactId>asm-debug-all</artifactId>
+                <version>${asm.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.ow2.asm</groupId>
+                <artifactId>asm-tree</artifactId>
                 <version>${asm.version}</version>
             </dependency>
             <dependency>
