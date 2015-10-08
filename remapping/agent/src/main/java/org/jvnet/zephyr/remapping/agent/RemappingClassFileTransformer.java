@@ -38,8 +38,6 @@ import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 final class RemappingClassFileTransformer implements ClassFileTransformer {
 
-    private static final byte[] EMPTY_BYTES = new byte[0];
-
     private final Predicate<String> classNamePredicate;
     private final Remapper remapper;
 
@@ -60,7 +58,7 @@ final class RemappingClassFileTransformer implements ClassFileTransformer {
             return writer.toByteArray();
         } catch (Throwable e) {
             System.err.println(e.getMessage());
-            return EMPTY_BYTES;
+            return new byte[1];
         }
     }
 }

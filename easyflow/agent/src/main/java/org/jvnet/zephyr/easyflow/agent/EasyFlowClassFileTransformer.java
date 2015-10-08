@@ -41,8 +41,6 @@ import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 final class EasyFlowClassFileTransformer implements ClassFileTransformer {
 
-    private static final byte[] EMPTY_BYTES = new byte[0];
-
     private final Predicate<String> classNamePredicate;
     private final Pattern methodRefPattern;
 
@@ -69,7 +67,7 @@ final class EasyFlowClassFileTransformer implements ClassFileTransformer {
             return writer.toByteArray();
         } catch (Throwable e) {
             System.err.println(e.getMessage());
-            return EMPTY_BYTES;
+            return new byte[1];
         }
     }
 
