@@ -27,18 +27,18 @@ package org.jvnet.zephyr.continuation.easyflow;
 import org.jvnet.zephyr.continuation.Continuation;
 import org.jvnet.zephyr.continuation.UnsuspendableError;
 
-public final class EasyFlowContinuation2 extends Continuation {
+public final class EasyFlowContinuation extends Continuation {
 
     private static final long serialVersionUID = 1546109806072791098L;
 
     private final org.jvnet.zephyr.easyflow.Continuation continuation;
 
-    private EasyFlowContinuation2(Runnable target) {
+    private EasyFlowContinuation(Runnable target) {
         continuation = org.jvnet.zephyr.easyflow.Continuation.create(target);
     }
 
-    public static EasyFlowContinuation2 create(Runnable target) {
-        return new EasyFlowContinuation2(target);
+    public static EasyFlowContinuation create(Runnable target) {
+        return new EasyFlowContinuation(target);
     }
 
     public static void suspend() {

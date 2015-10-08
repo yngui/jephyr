@@ -27,15 +27,15 @@ package org.jvnet.zephyr.continuation.easyflow;
 import org.jvnet.zephyr.continuation.Continuation;
 import org.jvnet.zephyr.continuation.ContinuationProvider;
 
-public final class EasyFlowContinuationProvider2 extends ContinuationProvider {
+public final class EasyFlowContinuationProvider extends ContinuationProvider {
 
     @Override
     public Continuation createContinuation(Runnable target) {
-        return EasyFlowContinuation2.create(target);
+        return EasyFlowContinuation.create(target);
     }
 
     @Override
     public void suspendContinuation() {
-        EasyFlowContinuation2.suspend();
+        EasyFlowContinuation.suspend();
     }
 }
