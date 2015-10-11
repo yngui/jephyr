@@ -59,7 +59,6 @@ import static org.objectweb.asm.Opcodes.DLOAD;
 import static org.objectweb.asm.Opcodes.DOUBLE;
 import static org.objectweb.asm.Opcodes.DRETURN;
 import static org.objectweb.asm.Opcodes.DSTORE;
-import static org.objectweb.asm.Opcodes.DUP;
 import static org.objectweb.asm.Opcodes.DUP_X2;
 import static org.objectweb.asm.Opcodes.FCONST_0;
 import static org.objectweb.asm.Opcodes.FLOAD;
@@ -191,7 +190,7 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
             Object[] locals = frame.locals;
             Object[] stack = frame.stack;
 
-            // resumption
+            // resume
 
             LabelNode labelNode2 = i < length ? labelNodes[i] : defaultLabelNode;
             instructions.insertBefore(labelNode, labelNode2);
@@ -312,23 +311,109 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
 
             updateMaxStack(stackSize);
 
-            if (!invokeStatic) {
+            int targetVarIndex;
+            int objVarIndex;
+            int argsVarIndex;
+
+            if (invokeStatic) {
+                targetVarIndex = -1;
+                objVarIndex = -1;
+                argsVarIndex = -1;
+
+                for (Type type : Type.getArgumentTypes(node.desc)) {
+                    instructions.insertBefore(labelNode, newPushDefaultNode(type));
+                    stackSize += type.getSize();
+                }
+            } else if (node.owner.equals("java/lang/reflect/Method") && node.name.equals("invoke") &&
+                    node.desc.equals("(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;")) {
+                int varIndex = continuationVarIndex + 1;
+
+                if (stack[stack.length - 3] == NULL) {
+                    targetVarIndex = -1;
+                } else {
+                    targetVarIndex = varIndex;
+                    varIndex++;
+                }
+
+                if (stack[stack.length - 2] == NULL) {
+                    objVarIndex = -1;
+                } else {
+                    objVarIndex = varIndex;
+                    varIndex++;
+                }
+
+                if (stack[stack.length - 1] == NULL) {
+                    argsVarIndex = -1;
+                } else {
+                    argsVarIndex = varIndex;
+                    varIndex++;
+                }
+
+                if (maxLocals < varIndex) {
+                    maxLocals = varIndex;
+                }
+
+                if (targetVarIndex == -1) {
+                    instructions.insertBefore(labelNode, new InsnNode(ACONST_NULL));
+                } else {
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
+                    instructions.insertBefore(labelNode,
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation", "popObject",
+                                    "()Ljava/lang/Object;", false));
+                    instructions.insertBefore(labelNode, new TypeInsnNode(CHECKCAST, "java/lang/reflect/Method"));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, targetVarIndex));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, targetVarIndex));
+                    objectCount++;
+                }
+
+                if (objVarIndex == -1) {
+                    instructions.insertBefore(labelNode, new InsnNode(ACONST_NULL));
+                } else {
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
+                    instructions.insertBefore(labelNode,
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation", "popObject",
+                                    "()Ljava/lang/Object;", false));
+                    instructions.insertBefore(labelNode, new TypeInsnNode(CHECKCAST, (String) stack[stack.length - 2]));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, objVarIndex));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, objVarIndex));
+                    objectCount++;
+                }
+
+                if (targetVarIndex == -1) {
+                    instructions.insertBefore(labelNode, new InsnNode(ACONST_NULL));
+                } else {
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, targetVarIndex));
+                }
+
+                instructions.insertBefore(labelNode,
+                        new MethodInsnNode(INVOKEVIRTUAL, "java/lang/reflect/Method", "getParameterTypes",
+                                "()[Ljava/lang/Class;", false));
+
+                instructions.insertBefore(labelNode,
+                        new MethodInsnNode(INVOKESTATIC, "org/jvnet/zephyr/easyflow/ContinuationUtils",
+                                "getDefaultArguments", "([Ljava/lang/Class;)[Ljava/lang/Object;", false));
+                stackSize += 3;
+            } else {
+                targetVarIndex = -1;
+                objVarIndex = -1;
+                argsVarIndex = -1;
+
                 instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(labelNode,
                         new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation", "popObject",
                                 "()Ljava/lang/Object;", false));
-                instructions.insertBefore(labelNode, new InsnNode(DUP));
                 instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, continuationVarIndex + 1));
+                instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, continuationVarIndex + 1));
                 instructions
                         .insertBefore(labelNode, new TypeInsnNode(CHECKCAST, (String) stack[stack.length - argSize]));
                 stackSize += 1;
-                updateMaxStack(stackSize + 1);
-                objectCount++;
-            }
 
-            for (Type type : Type.getArgumentTypes(node.desc)) {
-                instructions.insertBefore(labelNode, newPushDefaultNode(type));
-                stackSize += type.getSize();
+                for (Type type : Type.getArgumentTypes(node.desc)) {
+                    instructions.insertBefore(labelNode, newPushDefaultNode(type));
+                    stackSize += type.getSize();
+                }
+
+                objectCount++;
             }
 
             updateMaxStack(stackSize);
@@ -337,13 +422,9 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
 
             instructions.insertBefore(labelNode, new JumpInsnNode(GOTO, labelNode3));
 
-            // before invocation
-
-            int targetVarIndex;
+            // invocation starting
 
             if (invokeStatic) {
-                targetVarIndex = 0;
-
                 instructions.insertBefore(node, new VarInsnNode(ALOAD, continuationVarIndex));
                 instructions.insertBefore(node, new JumpInsnNode(IFNULL, labelNode3));
 
@@ -353,13 +434,76 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(node, new LdcInsnNode(node.desc));
                 instructions.insertBefore(node,
                         new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation",
-                                "beforeStaticInvocation", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)V",
+                                "staticInvocationStarting", "(Ljava/lang/Class;Ljava/lang/String;Ljava/lang/String;)V",
                                 false));
 
                 instructions.insertBefore(node, labelNode3);
                 instructions.insert(labelNode3, newFrameNode(
                         appendValue(ensureSize(locals, continuationVarIndex), "org/jvnet/zephyr/easyflow/Continuation"),
                         stack));
+            } else if (node.owner.equals("java/lang/reflect/Method") && node.name.equals("invoke") &&
+                    node.desc.equals("(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;")) {
+                instructions.insertBefore(node, new VarInsnNode(ALOAD, continuationVarIndex));
+
+                LabelNode labelNode4 = newLabelNode();
+
+                instructions.insertBefore(node, new JumpInsnNode(IFNULL, labelNode4));
+
+                instructions.insertBefore(node,
+                        argsVarIndex == -1 ? new InsnNode(POP) : new VarInsnNode(ASTORE, argsVarIndex));
+                instructions.insertBefore(node,
+                        objVarIndex == -1 ? new InsnNode(POP) : new VarInsnNode(ASTORE, objVarIndex));
+                instructions.insertBefore(node,
+                        targetVarIndex == -1 ? new InsnNode(POP) : new VarInsnNode(ASTORE, targetVarIndex));
+
+                instructions.insertBefore(node, new VarInsnNode(ALOAD, continuationVarIndex));
+                instructions.insertBefore(node,
+                        targetVarIndex == -1 ? new InsnNode(ACONST_NULL) : new VarInsnNode(ALOAD, targetVarIndex));
+                instructions.insertBefore(node,
+                        objVarIndex == -1 ? new InsnNode(ACONST_NULL) : new VarInsnNode(ALOAD, objVarIndex));
+                instructions.insertBefore(node,
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation",
+                                "reflectiveInvocationStarting", "(Ljava/lang/reflect/Method;Ljava/lang/Object;)V",
+                                false));
+
+                instructions.insertBefore(node,
+                        targetVarIndex == -1 ? new InsnNode(ACONST_NULL) : new VarInsnNode(ALOAD, targetVarIndex));
+                instructions.insertBefore(node,
+                        objVarIndex == -1 ? new InsnNode(ACONST_NULL) : new VarInsnNode(ALOAD, objVarIndex));
+                instructions.insertBefore(node,
+                        argsVarIndex == -1 ? new InsnNode(ACONST_NULL) : new VarInsnNode(ALOAD, argsVarIndex));
+
+                instructions.insertBefore(node, new JumpInsnNode(GOTO, labelNode3));
+
+                instructions.insertBefore(node, labelNode4);
+                instructions.insert(labelNode4, newFrameNode(
+                        appendValue(ensureSize(locals, continuationVarIndex), "org/jvnet/zephyr/easyflow/Continuation"),
+                        stack));
+
+                if (targetVarIndex != -1) {
+                    instructions.insertBefore(node, new InsnNode(ACONST_NULL));
+                    instructions.insertBefore(node, new VarInsnNode(ASTORE, targetVarIndex));
+                }
+
+                if (objVarIndex != -1) {
+                    instructions.insertBefore(node, new InsnNode(ACONST_NULL));
+                    instructions.insertBefore(node, new VarInsnNode(ASTORE, objVarIndex));
+                }
+
+                instructions.insertBefore(node, labelNode3);
+
+                Object[] locals1 =
+                        appendValue(ensureSize(locals, continuationVarIndex), "org/jvnet/zephyr/easyflow/Continuation");
+
+                if (targetVarIndex != -1) {
+                    locals1 = appendValue(locals1, "java/lang/reflect/Method");
+                }
+
+                if (objVarIndex != -1) {
+                    locals1 = appendValue(locals1, "java/lang/Object");
+                }
+
+                instructions.insert(labelNode3, newFrameNode(locals1, stack));
             } else {
                 instructions.insertBefore(node, new VarInsnNode(ALOAD, continuationVarIndex));
 
@@ -396,8 +540,8 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     maxLocals = varIndex;
                 }
 
-                instructions.insertBefore(node, new InsnNode(DUP));
                 instructions.insertBefore(node, new VarInsnNode(ASTORE, targetVarIndex));
+                instructions.insertBefore(node, new VarInsnNode(ALOAD, targetVarIndex));
 
                 for (int j = stack.length - argSize + 1, n = stack.length; j < n; j++) {
                     Object value = stack[j];
@@ -426,8 +570,9 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 instructions.insertBefore(node, new LdcInsnNode(node.name));
                 instructions.insertBefore(node, new LdcInsnNode(node.desc));
                 instructions.insertBefore(node,
-                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation", "beforeInvocation",
-                                "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V", false));
+                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation",
+                                "invocationStarting", "(Ljava/lang/Object;Ljava/lang/String;Ljava/lang/String;)V",
+                                false));
 
                 instructions.insertBefore(node, new JumpInsnNode(GOTO, labelNode3));
 
@@ -447,7 +592,7 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
 
             updateMaxStack(stack.length + 4);
 
-            // suspension
+            // suspend
 
             Frame frame1 = findNextFrame(frames, node);
             Object[] stack1 = frame1.stack;
@@ -527,12 +672,32 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
             }
 
             if (!invokeStatic) {
-                instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
-                instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, targetVarIndex));
-                instructions.insertBefore(labelNode4,
-                        new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation", "pushObject",
-                                "(Ljava/lang/Object;)V", false));
-                updateMaxStack(stackSize1 + 2);
+                if (node.owner.equals("java/lang/reflect/Method") && node.name.equals("invoke") &&
+                        node.desc.equals("(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;")) {
+                    if (objVarIndex != -1) {
+                        instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
+                        instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, objVarIndex));
+                        instructions.insertBefore(labelNode4,
+                                new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation",
+                                        "pushObject", "(Ljava/lang/Object;)V", false));
+                        updateMaxStack(stackSize1 + 2);
+                    }
+                    if (targetVarIndex != -1) {
+                        instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
+                        instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, targetVarIndex));
+                        instructions.insertBefore(labelNode4,
+                                new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation",
+                                        "pushObject", "(Ljava/lang/Object;)V", false));
+                        updateMaxStack(stackSize1 + 2);
+                    }
+                } else {
+                    instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, continuationVarIndex));
+                    instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, targetVarIndex));
+                    instructions.insertBefore(labelNode4,
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/easyflow/Continuation", "pushObject",
+                                    "(Ljava/lang/Object;)V", false));
+                    updateMaxStack(stackSize1 + 2);
+                }
             }
 
             for (int j = stack.length - argSize - 1; j >= 0; j--) {

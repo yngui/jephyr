@@ -28,6 +28,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 
 import static java.util.Objects.requireNonNull;
 
@@ -68,7 +70,7 @@ public final class Continuation implements Serializable {
 
     private Continuation(Runnable target) {
         this.target = requireNonNull(target);
-        beforeInvocation(target, "run", "()V");
+        invocationStarting(target, "run", "()V");
     }
 
     public static Continuation create(Runnable target) {
@@ -122,18 +124,81 @@ public final class Continuation implements Serializable {
         return state == SUSPENDED;
     }
 
-    public void beforeInvocation(Object obj, String name, String desc) {
+    public void invocationStarting(Object obj, String name, String desc) {
         this.obj = obj;
         cls = null;
         this.name = name;
         this.desc = desc;
     }
 
-    public void beforeStaticInvocation(Class<?> cls, String name, String desc) {
+    public void staticInvocationStarting(Class<?> cls, String name, String desc) {
         obj = null;
         this.cls = cls;
         this.name = name;
         this.desc = desc;
+    }
+
+    public void reflectiveInvocationStarting(Method method, Object obj) {
+        if ((method.getModifiers() & Modifier.STATIC) == 0) {
+            this.obj = obj;
+            cls = null;
+        } else {
+            this.obj = null;
+            cls = method.getDeclaringClass();
+        }
+        name = method.getName();
+        desc = getDescriptor(method);
+    }
+
+    private static String getDescriptor(Method method) {
+        StringBuffer sb = new StringBuffer().append('(');
+        for (Class<?> parameter : method.getParameterTypes()) {
+            appendDescriptor(sb, parameter);
+        }
+        sb.append(')');
+        appendDescriptor(sb, method.getReturnType());
+        return sb.toString();
+    }
+
+    private static void appendDescriptor(StringBuffer sb, Class<?> type) {
+        while (true) {
+            if (type.isPrimitive()) {
+                char c;
+                if (type == Void.TYPE) {
+                    c = 'V';
+                } else if (type == Boolean.TYPE) {
+                    c = 'Z';
+                } else if (type == Character.TYPE) {
+                    c = 'C';
+                } else if (type == Byte.TYPE) {
+                    c = 'B';
+                } else if (type == Short.TYPE) {
+                    c = 'S';
+                } else if (type == Integer.TYPE) {
+                    c = 'I';
+                } else if (type == Float.TYPE) {
+                    c = 'F';
+                } else if (type == Long.TYPE) {
+                    c = 'J';
+                } else {
+                    c = 'D';
+                }
+                sb.append(c);
+                return;
+            } else if (type.isArray()) {
+                sb.append('[');
+                type = type.getComponentType();
+            } else {
+                sb.append('L');
+                String name = type.getName();
+                for (int i = 0, n = name.length(); i < n; i++) {
+                    char c = name.charAt(i);
+                    sb.append(c == '.' ? '/' : c);
+                }
+                sb.append(';');
+                return;
+            }
+        }
     }
 
     public void invocationStarted(Object obj, String name, String desc) {
