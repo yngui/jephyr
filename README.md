@@ -30,13 +30,13 @@ mkdir -p jdk8
 wget -O - http://hg.openjdk.java.net/jdk8u/jdk8u/jdk/archive/57336c319de8.tar.gz | tar -zxf - -C jdk8 --strip-components=1
 ```
 
-Clone Zephyr repository
+Clone zephyr repository
 
 ```
 git clone https://github.com/yngui/zephyr.git
 ```
 
-Build Zephyr
+Build the project
 
 ```
 cd zephyr
