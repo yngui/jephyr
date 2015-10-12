@@ -14,6 +14,12 @@ Zephyr amends the standard Java Thread, LockSupport and other classes to support
 
 ## Building Zephyr
 
+Prerequisites
+
+* JDK 7 & 8
+* Maven 3.3.3 or later
+* Mercurial
+
 Clone OpenJDK repositories and check out required revisions
 
 ```
