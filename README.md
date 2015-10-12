@@ -3,8 +3,9 @@ Continuations and lightweight threads for the JVM
 
 ## Features
 * EasyFlow is a fast and safe continuations library that is able to detect uninstrumented and synchronized code and supports reflection
-* SPI for thread implementations pluggable into standard Java threads
-* Pluggable implementation for lightweight threads based on EasyFlow
+* SPI for thread implementations pluggable into regular Java threads
+* Pluggable implementation of lightweight threads based on continuations
+* Support for pluggable thread implementations (and hence lightweight threads) in collections, concurrency utilities, NIO
 * No external dependencies
 * No API
 
