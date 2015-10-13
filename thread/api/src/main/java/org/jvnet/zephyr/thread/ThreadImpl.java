@@ -26,7 +26,7 @@ package org.jvnet.zephyr.thread;
 
 import java.util.concurrent.TimeUnit;
 
-public abstract class ThreadImpl<T extends Runnable> {
+public abstract class ThreadImpl {
 
     public static final int NEW = 0;
     public static final int RUNNABLE = 1;
@@ -37,7 +37,7 @@ public abstract class ThreadImpl<T extends Runnable> {
     protected ThreadImpl() {
     }
 
-    public static <T extends Runnable> ThreadImpl<T> create(T thread, ThreadAccess<T, ?> threadAccess) {
+    public static <T extends Runnable> ThreadImpl create(T thread, ThreadAccess<T, ?> threadAccess) {
         return ThreadImplProvider.provider().createThreadImpl(thread, threadAccess);
     }
 

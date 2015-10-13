@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
 
-final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
+final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
 
     private static final int PARK = 0;
     private static final int TIMED_PARK = 1;
@@ -217,7 +217,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
     @Override
     public void join() throws InterruptedException {
         T thread = threadAccess.currentThread();
-        ThreadImpl<T> impl = threadAccess.getImpl(thread);
+        ThreadImpl impl = threadAccess.getImpl(thread);
 
         Node<T> node;
         Node<T> next;
@@ -244,7 +244,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl<T> {
 
         long start = System.currentTimeMillis();
         T thread = threadAccess.currentThread();
-        ThreadImpl<T> impl = threadAccess.getImpl(thread);
+        ThreadImpl impl = threadAccess.getImpl(thread);
 
         Node<T> node;
         Node<T> next;

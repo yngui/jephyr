@@ -53,7 +53,7 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
     }
 
     @Override
-    public <T extends Runnable> ThreadImpl<T> createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess) {
+    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess) {
         requireNonNull(thread);
         requireNonNull(threadAccess);
         return new ContinuationThreadImpl<>(thread, threadAccess, ForkJoinPoolProvider.provider().getPool(), scheduler);

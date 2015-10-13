@@ -29,7 +29,7 @@ import java.util.concurrent.locks.LockSupport;
 
 import static java.util.Objects.requireNonNull;
 
-public final class JavaThreadImpl<T extends Runnable> extends ThreadImpl<T> {
+public final class JavaThreadImpl extends ThreadImpl {
 
     private final Thread javaThread;
 

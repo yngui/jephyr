@@ -30,7 +30,7 @@ public interface ThreadAccess<T extends Runnable, U> {
 
     void setCurrentThread(T thread);
 
-    ThreadImpl<T> getImpl(T thread);
+    ThreadImpl getImpl(T thread);
 
     void dispatchUncaughtException(T thread, Throwable e);
 

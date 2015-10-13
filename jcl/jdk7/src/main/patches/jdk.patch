@@ -875,7 +875,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 +        SharedSecrets.setThreadAccess(threadAccess);
 +    }
 +
-+    final ThreadImpl<Thread> impl;
++    final ThreadImpl impl;
 
      private char        name[];
      private int         priority;
@@ -1392,7 +1392,7 @@ diff -r 55f6804b4352 src/share/classes/java/lang/Thread.java
 +        }
 +
 +        @Override
-+        public ThreadImpl<Thread> getImpl(Thread thread) {
++        public ThreadImpl getImpl(Thread thread) {
 +            return thread.impl;
 +        }
 +
