@@ -25,16 +25,18 @@
 package org.jvnet.zephyr.continuation.easyflow;
 
 import org.jvnet.zephyr.continuation.Continuation;
-import org.jvnet.zephyr.continuation.UnsuspendableError;
+import org.jvnet.zephyr.continuation.ContinuationHolder;
 
 public final class EasyFlowContinuation extends Continuation {
 
-    private static final long serialVersionUID = 1546109806072791098L;
+    private static final long serialVersionUID = 7643072361724561136L;
 
-    private final org.jvnet.zephyr.easyflow.Continuation continuation;
+    private static final ContinuationThreadLocal currentContinuation = new ContinuationThreadLocal();
+
+    private final ContinuationImpl impl;
 
     private EasyFlowContinuation(Runnable target) {
-        continuation = org.jvnet.zephyr.easyflow.Continuation.create(target);
+        impl = new ContinuationImpl(target);
     }
 
     public static EasyFlowContinuation create(Runnable target) {
@@ -42,15 +44,55 @@ public final class EasyFlowContinuation extends Continuation {
     }
 
     public static void suspend() {
-        try {
-            org.jvnet.zephyr.easyflow.Continuation.suspend();
-        } catch (org.jvnet.zephyr.easyflow.UnsuspendableError e) {
-            throw new UnsuspendableError(e);
+        EasyFlowContinuation continuation = currentContinuation.get();
+        if (continuation == null) {
+            throw new IllegalStateException();
         }
+        continuation.impl.suspend();
     }
 
     @Override
     public boolean resume() {
-        return continuation.resume();
+        EasyFlowContinuation continuation = currentContinuation.get();
+        currentContinuation.set(this);
+        try {
+            return impl.resume();
+        } finally {
+            currentContinuation.set(continuation);
+        }
+    }
+
+    static ContinuationImpl currentImpl() {
+        EasyFlowContinuation continuation = currentContinuation.get();
+        if (continuation == null) {
+            return null;
+        }
+        return continuation.impl;
+    }
+
+    private static final class ContinuationThreadLocal {
+
+        private static final ThreadLocal<EasyFlowContinuation> continuation = new ThreadLocal<>();
+
+        ContinuationThreadLocal() {
+        }
+
+        EasyFlowContinuation get() {
+            Thread thread = Thread.currentThread();
+            if (thread instanceof ContinuationHolder) {
+                return (EasyFlowContinuation) ((ContinuationHolder) thread).getContinuation();
+            } else {
+                return continuation.get();
+            }
+        }
+
+        void set(EasyFlowContinuation continuation) {
+            Thread thread = Thread.currentThread();
+            if (thread instanceof ContinuationHolder) {
+                ((ContinuationHolder) thread).setContinuation(continuation);
+            } else {
+                ContinuationThreadLocal.continuation.set(continuation);
+            }
+        }
     }
 }

@@ -142,11 +142,6 @@
             </dependency>
             <dependency>
                 <groupId>org.jvnet.zephyr.easyflow</groupId>
-                <artifactId>easyflow-runtime</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
                 <artifactId>easyflow-instrument</artifactId>
                 <version>${project.version}</version>
             </dependency>

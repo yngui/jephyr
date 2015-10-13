@@ -96,14 +96,20 @@
                     <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                     <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/activeobject/disposer/Disposer.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/disposer/Disposer$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/BoundedMailboxFactory.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/ReflectiveMailboxFactory.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/SingleConsumerMailboxFactory.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/UnboundedMailboxFactory.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/support/ActiveObjectUtils.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/BoundedMailboxSupplier.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/ReflectiveMailboxSupplier.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/SingleConsumerMailboxSupplier.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/mailbox/UnboundedMailboxSupplier.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer.class</exclude>
+                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer$*.class</exclude>
                     </excludes>
+                    <excludedMethods>
+                        <excludedMethod>
+                            org/jvnet/zephyr/activeobject/support/ActiveObjectThread.getMailbox()Lorg/jvnet/zephyr/activeobject/mailbox/Mailbox;
+                        </excludedMethod>
+                        <excludedMethod>org/jvnet/zephyr/activeobject/support/ActiveObjectThread.dispose()V
+                        </excludedMethod>
+                    </excludedMethods>
                 </configuration>
                 <executions>
                     <execution>

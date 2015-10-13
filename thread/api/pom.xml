@@ -49,6 +49,11 @@
                         <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
                         <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
                     </excludes>
+                    <excludedMethods>
+                        <excludedMethod>
+                            org/jvnet/zephyr/thread/ThreadImpl.create(Ljava/lang/Runnable;Lorg/jvnet/zephyr/thread/ThreadAccess;)Lorg/jvnet/zephyr/thread/ThreadImpl;
+                        </excludedMethod>
+                    </excludedMethods>
                 </configuration>
                 <executions>
                     <execution>

@@ -22,9 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.easyflow;
+package org.jvnet.zephyr.continuation;
 
-public interface ContinuationThreadAccess {
+public interface ContinuationHolder {
 
     Continuation getContinuation();
 

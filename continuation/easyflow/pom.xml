@@ -40,6 +40,18 @@
             <plugin>
                 <groupId>org.jvnet.zephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/jvnet/zephyr/continuation/easyflow/ContinuationImpl.class</exclude>
+                        <exclude>org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuation.class</exclude>
+                        <exclude>org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuation$*.class</exclude>
+                    </excludes>
+                    <excludedMethods>
+                        <excludedMethod>
+                            org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuationProvider.createContinuation(Ljava/lang/Runnable;)Lorg/jvnet/zephyr/continuation/Continuation;
+                        </excludedMethod>
+                    </excludedMethods>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -71,10 +83,6 @@
             <groupId>org.jvnet.zephyr.continuation</groupId>
             <artifactId>continuation-api</artifactId>
             <optional>true</optional>
-        </dependency>
-        <dependency>
-            <groupId>org.jvnet.zephyr.easyflow</groupId>
-            <artifactId>easyflow-runtime</artifactId>
         </dependency>
     </dependencies>
 </project>

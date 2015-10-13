@@ -25,7 +25,7 @@
 package org.jvnet.zephyr.thread.continuation;
 
 import org.jvnet.zephyr.continuation.Continuation;
-import org.jvnet.zephyr.continuation.ContinuationThreadAccess;
+import org.jvnet.zephyr.continuation.ContinuationHolder;
 
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
@@ -61,8 +61,7 @@ public final class DefaultForkJoinPoolProvider extends ForkJoinPoolProvider {
         }
     }
 
-    private static final class DefaultForkJoinWorkerThread extends ForkJoinWorkerThread
-            implements ContinuationThreadAccess {
+    private static final class DefaultForkJoinWorkerThread extends ForkJoinWorkerThread implements ContinuationHolder {
 
         private Continuation continuation;
 

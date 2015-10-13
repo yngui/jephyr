@@ -38,7 +38,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>runtime</module>
         <module>instrument</module>
         <module>maven-plugin</module>
         <module>agent</module>

@@ -22,7 +22,9 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.easyflow;
+package org.jvnet.zephyr.continuation.easyflow;
+
+import org.jvnet.zephyr.continuation.UnsuspendableError;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -31,11 +33,9 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 
-import static java.util.Objects.requireNonNull;
+public final class ContinuationImpl implements Serializable {
 
-public final class Continuation implements Serializable {
-
-    private static final long serialVersionUID = 3809856530567778346L;
+    private static final long serialVersionUID = -1464502970408391110L;
 
     private static final int SUSPENDED = 1;
     private static final int RESUMED = 2;
@@ -46,8 +46,6 @@ public final class Continuation implements Serializable {
     private static final long[] EMPTY_LONGS = {};
     private static final double[] EMPTY_DOUBLES = {};
     private static final Object[] EMPTY_OBJECTS = {};
-
-    private static final ContinuationThreadLocal currentContinuation = new ContinuationThreadLocal();
 
     private final Runnable target;
     private int state;
@@ -68,44 +66,31 @@ public final class Continuation implements Serializable {
     private transient Object[] objectStack = EMPTY_OBJECTS;
     private transient int objectTop;
 
-    private Continuation(Runnable target) {
-        this.target = requireNonNull(target);
+    ContinuationImpl(Runnable target) {
+        this.target = target;
         invocationStarting(target, "run", "()V");
     }
 
-    public static Continuation create(Runnable target) {
-        return new Continuation(target);
+    public static ContinuationImpl currentImpl() {
+        return EasyFlowContinuation.currentImpl();
     }
 
-    public static Continuation currentContinuation() {
-        return currentContinuation.get();
-    }
-
-    public static void suspend() {
-        Continuation continuation = currentContinuation.get();
-        if (continuation == null) {
-            throw new IllegalStateException();
-        }
-        if (continuation.unsuspendable ||
-                !continuation.isStaticInvocationExpected(Continuation.class, "suspend", "()V")) {
+    void suspend() {
+        if (unsuspendable || !isStaticInvocationExpected(EasyFlowContinuation.class, "suspend", "()V")) {
             throw new UnsuspendableError("not allowed");
         }
-        continuation.state = continuation.state == SUSPENDED ? RESUMED : SUSPENDING;
+        state = state == SUSPENDED ? RESUMED : SUSPENDING;
     }
 
-    public boolean resume() {
+    boolean resume() {
         if (state == DONE) {
             throw new IllegalStateException();
         }
-        Continuation continuation = currentContinuation.get();
-        currentContinuation.set(this);
         try {
             target.run();
         } catch (Throwable e) {
             state = DONE;
             throw e;
-        } finally {
-            currentContinuation.set(continuation);
         }
         if (state == SUSPENDING) {
             state = SUSPENDED;
@@ -340,6 +325,40 @@ public final class Continuation implements Serializable {
         Object value = objectStack[index];
         objectStack[index] = null;
         return value;
+    }
+
+    public static Object[] getDefaultArguments(Class<?>[] types) {
+        int n = types.length;
+        Object[] args = new Object[n];
+        for (int i = 0; i < n; i++) {
+            Class<?> type = types[i];
+            if (type.isPrimitive()) {
+                Object arg;
+                if (type == Void.TYPE) {
+                    arg = null;
+                } else if (type == Boolean.TYPE) {
+                    arg = false;
+                } else if (type == Character.TYPE) {
+                    arg = '\0';
+                } else if (type == Byte.TYPE) {
+                    arg = (byte) 0;
+                } else if (type == Short.TYPE) {
+                    arg = (short) 0;
+                } else if (type == Integer.TYPE) {
+                    arg = 0;
+                } else if (type == Float.TYPE) {
+                    arg = 0.0F;
+                } else if (type == Long.TYPE) {
+                    arg = 0L;
+                } else {
+                    arg = 0.0;
+                }
+                args[i] = arg;
+            } else if (type.isArray()) {
+                args[i] = null;
+            }
+        }
+        return args;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {

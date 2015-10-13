@@ -41,18 +41,13 @@
                 <groupId>org.jvnet.zephyr.remapping</groupId>
                 <artifactId>remapping-maven-plugin</artifactId>
                 <configuration>
+                    <includes>
+                        <include>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.class</include>
+                    </includes>
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>org/jvnet/zephyr/continuation/Continuation</oldName>
-                            <newName>org/jvnet/zephyr/easyflow/Continuation</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>org/jvnet/zephyr/continuation/ContinuationThreadAccess</oldName>
-                            <newName>org/jvnet/zephyr/easyflow/ContinuationThreadAccess</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>org/jvnet/zephyr/continuation/UnsuspendableError</oldName>
-                            <newName>org/jvnet/zephyr/easyflow/UnsuspendableError</newName>
+                            <newName>org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuation</newName>
                         </mappingEntry>
                     </mappingEntries>
                 </configuration>
