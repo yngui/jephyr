@@ -7,7 +7,7 @@ Continuations and lightweight threads for the JVM
 * Pluggable implementation of lightweight threads based on continuations
 * Support for pluggable thread implementations (and hence lightweight threads) in collections, concurrency utilities, NIO
 * No external dependencies
-* No API
+* No additional API besides the standard one
 
 ## Basics
 
