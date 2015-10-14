@@ -34,12 +34,13 @@ import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.ACC_NATIVE;
 import static org.objectweb.asm.Opcodes.ACC_SYNCHRONIZED;
 import static org.objectweb.asm.Opcodes.ASM5;
+import static org.objectweb.asm.Opcodes.V1_7;
 
 public final class EasyFlowClassAdapter extends ClassVisitor {
 
     private final Predicate<MethodRef> methodRefPredicate;
     private String name;
-    private boolean instrument = true;
+    private boolean instrument;
 
     public EasyFlowClassAdapter(Predicate<MethodRef> methodRefPredicate, ClassVisitor cv) {
         super(ASM5, cv);
@@ -49,6 +50,7 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
     @Override
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         this.name = name;
+        instrument = (version & 0xFF) >= V1_7;
         super.visit(version, access, name, signature, superName, interfaces);
         super.visitAnnotation("Lorg/jvnet/zephyr/easyflow/instrument/Instrumented;", false);
     }
