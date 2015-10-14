@@ -755,7 +755,7 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                     updateMaxStack(stackSize1 + 2);
                 } else if (value == FLOAT) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, implVarIndex));
-                    instructions.insertBefore(labelNode4, new VarInsnNode(FLOAT, j));
+                    instructions.insertBefore(labelNode4, new VarInsnNode(FLOAD, j));
                     instructions.insertBefore(labelNode4,
                             new MethodInsnNode(INVOKEVIRTUAL, "org/jvnet/zephyr/continuation/easyflow/ContinuationImpl",
                                     "pushFloat", "(F)V", false));
