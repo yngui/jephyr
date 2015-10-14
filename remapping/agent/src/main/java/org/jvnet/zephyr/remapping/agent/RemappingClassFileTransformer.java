@@ -57,8 +57,9 @@ final class RemappingClassFileTransformer implements ClassFileTransformer {
                             writer), EXPAND_FRAMES);
             return writer.toByteArray();
         } catch (Throwable e) {
-            System.err.println(e.getMessage());
-            return new byte[1];
+            System.err.println("Failed to transform class " + className);
+            e.printStackTrace(System.err);
+            return null;
         }
     }
 }

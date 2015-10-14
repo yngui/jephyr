@@ -104,7 +104,8 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
                 Continuation.suspend();
             } catch (UnsuspendableError e) {
                 if (debug) {
-                    System.err.println("Cannot suspend: " + e.getMessage());
+                    System.err.println("Failed to suspend");
+                    e.printStackTrace(System.err);
                 }
                 javaThread = Thread.currentThread();
                 state.set(WAITING);
@@ -132,7 +133,8 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
                 Continuation.suspend();
             } catch (UnsuspendableError e) {
                 if (debug) {
-                    System.err.println("Cannot suspend: " + e.getMessage());
+                    System.err.println("Failed to suspend");
+                    e.printStackTrace(System.err);
                 }
                 javaThread = Thread.currentThread();
                 state.set(TIMED_WAITING);
@@ -293,7 +295,8 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
             Continuation.suspend();
         } catch (UnsuspendableError e) {
             if (debug) {
-                System.err.println("Cannot suspend: " + e.getMessage());
+                System.err.println("Failed to suspend");
+                e.printStackTrace(System.err);
             }
             Thread.yield();
         }
