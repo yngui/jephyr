@@ -104,7 +104,7 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
     private int version;
     private String name;
     private String superName;
-    private boolean alreadyInstrumented;
+    private boolean instrument = true;
     private boolean activeObject;
     private Type mailbox = Type.getType("Lorg/jvnet/zephyr/activeobject/mailbox/SingleConsumerMailboxSupplier;");
     private boolean clinit;
@@ -125,11 +125,11 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
         AnnotationVisitor av = super.visitAnnotation(desc, visible);
-        if (!alreadyInstrumented) {
-            if (desc.equals("Lorg/jvnet/zephyr/activeobject/instrument/AlreadyInstrumented;")) {
-                alreadyInstrumented = true;
+        if (instrument) {
+            if (desc.equals("Lorg/jvnet/zephyr/activeobject/instrument/Instrumented;")) {
+                instrument = false;
             } else if (desc.equals("Lorg/jvnet/zephyr/activeobject/annotation/ActiveObject;")) {
-                super.visitAnnotation("Lorg/jvnet/zephyr/activeobject/instrument/AlreadyInstrumented;", false);
+                super.visitAnnotation("Lorg/jvnet/zephyr/activeobject/instrument/Instrumented;", false);
                 activeObject = true;
                 classEntries = new ArrayList<>();
                 methodNodes = new ArrayList<>();

@@ -39,7 +39,7 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
 
     private final Predicate<MethodRef> methodRefPredicate;
     private String name;
-    private boolean alreadyInstrumented;
+    private boolean instrument = true;
 
     public EasyFlowClassAdapter(Predicate<MethodRef> methodRefPredicate, ClassVisitor cv) {
         super(ASM5, cv);
@@ -50,13 +50,13 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
     public void visit(int version, int access, String name, String signature, String superName, String[] interfaces) {
         this.name = name;
         super.visit(version, access, name, signature, superName, interfaces);
-        super.visitAnnotation("Lorg/jvnet/zephyr/easyflow/instrument/AlreadyInstrumented;", false);
+        super.visitAnnotation("Lorg/jvnet/zephyr/easyflow/instrument/Instrumented;", false);
     }
 
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        if (desc.equals("Lorg/jvnet/zephyr/easyflow/instrument/AlreadyInstrumented;")) {
-            alreadyInstrumented = true;
+        if (desc.equals("Lorg/jvnet/zephyr/easyflow/instrument/Instrumented;")) {
+            instrument = false;
             return null;
         }
         return super.visitAnnotation(desc, visible);
@@ -65,8 +65,8 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
     @Override
     public MethodVisitor visitMethod(int access, String name, String desc, String signature, String[] exceptions) {
         MethodVisitor mv = super.visitMethod(access, name, desc, signature, exceptions);
-        if (!alreadyInstrumented && (access & (ACC_SYNCHRONIZED | ACC_NATIVE | ACC_ABSTRACT)) == 0 &&
-                name.charAt(0) != '<' && methodRefPredicate.test(new MethodRef(name, desc))) {
+        if (instrument && (access & (ACC_SYNCHRONIZED | ACC_NATIVE | ACC_ABSTRACT)) == 0 && name.charAt(0) != '<' &&
+                methodRefPredicate.test(new MethodRef(name, desc))) {
             return NewRelocatorMethodAdapter.create(this.name, access, name, desc, signature, exceptions,
                     ContinuationMethodAdapter.create(this.name, access, name, desc, signature, exceptions, mv));
         }
