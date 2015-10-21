@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.thread</groupId>
+        <groupId>org.jephyr.thread</groupId>
         <artifactId>thread-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -38,20 +38,20 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImpl$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/JavaThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/ThreadImplProvider$*.class</exclude>
+                        <exclude>org/jephyr/thread/JavaThreadImpl.class</exclude>
+                        <exclude>org/jephyr/thread/JavaThreadImpl$*.class</exclude>
+                        <exclude>org/jephyr/thread/JavaThreadImplProvider.class</exclude>
+                        <exclude>org/jephyr/thread/JavaThreadImplProvider$*.class</exclude>
+                        <exclude>org/jephyr/thread/ThreadImplProvider.class</exclude>
+                        <exclude>org/jephyr/thread/ThreadImplProvider$*.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>
-                            org/jvnet/zephyr/thread/ThreadImpl.create(Ljava/lang/Runnable;Lorg/jvnet/zephyr/thread/ThreadAccess;)Lorg/jvnet/zephyr/thread/ThreadImpl;
+                            org/jephyr/thread/ThreadImpl.create(Ljava/lang/Runnable;Lorg/jephyr/thread/ThreadAccess;)Lorg/jephyr/thread/ThreadImpl;
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>

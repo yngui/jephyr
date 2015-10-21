@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.continuation</groupId>
+        <groupId>org.jephyr.continuation</groupId>
         <artifactId>continuation-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -38,17 +38,17 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/continuation/easyflow/ContinuationImpl.class</exclude>
-                        <exclude>org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuation.class</exclude>
-                        <exclude>org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuation$*.class</exclude>
+                        <exclude>org/jephyr/continuation/easyflow/ContinuationImpl.class</exclude>
+                        <exclude>org/jephyr/continuation/easyflow/EasyFlowContinuation.class</exclude>
+                        <exclude>org/jephyr/continuation/easyflow/EasyFlowContinuation$*.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>
-                            org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuationProvider.createContinuation(Ljava/lang/Runnable;)Lorg/jvnet/zephyr/continuation/Continuation;
+                            org/jephyr/continuation/easyflow/EasyFlowContinuationProvider.createContinuation(Ljava/lang/Runnable;)Lorg/jephyr/continuation/Continuation;
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>
@@ -80,7 +80,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jvnet.zephyr.continuation</groupId>
+            <groupId>org.jephyr.continuation</groupId>
             <artifactId>continuation-api</artifactId>
             <optional>true</optional>
         </dependency>

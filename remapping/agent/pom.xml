@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.remapping</groupId>
+        <groupId>org.jephyr.remapping</groupId>
         <artifactId>remapping-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -46,7 +46,7 @@
                     </descriptorRefs>
                     <archive>
                         <manifestEntries>
-                            <Premain-Class>org.jvnet.zephyr.remapping.agent.Main</Premain-Class>
+                            <Premain-Class>org.jephyr.remapping.agent.Main</Premain-Class>
                         </manifestEntries>
                     </archive>
                 </configuration>
@@ -64,7 +64,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jvnet.zephyr.common</groupId>
+            <groupId>org.jephyr.common</groupId>
             <artifactId>common-agent</artifactId>
         </dependency>
         <dependency>

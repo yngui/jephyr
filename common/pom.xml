@@ -28,12 +28,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr</groupId>
-        <artifactId>zephyr-parent</artifactId>
+        <groupId>org.jephyr</groupId>
+        <artifactId>jephyr-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jvnet.zephyr.common</groupId>
+    <groupId>org.jephyr.common</groupId>
     <artifactId>common-parent</artifactId>
     <packaging>pom</packaging>
 

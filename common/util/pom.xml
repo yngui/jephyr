@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.common</groupId>
+        <groupId>org.jephyr.common</groupId>
         <artifactId>common-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -38,30 +38,30 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.remapping</groupId>
+                <groupId>org.jephyr.remapping</groupId>
                 <artifactId>remapping-maven-plugin</artifactId>
                 <configuration>
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>java/util/AbstractQueue</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/AbstractQueue</newName>
+                            <newName>org/jephyr/integration/javase/java/util/AbstractQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/Iterator</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/Iterator</newName>
+                            <newName>org/jephyr/integration/javase/java/util/Iterator</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/RunnableFuture</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/TimeUnit</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/AbstractQueuedSynchronizer</oldName>
                             <newName>
-                                org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/AbstractQueuedSynchronizer
+                                org/jephyr/integration/javase/java/util/concurrent/locks/AbstractQueuedSynchronizer
                             </newName>
                         </mappingEntry>
                     </mappingEntries>
@@ -76,16 +76,16 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                     <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/common/util/concurrent/SingleConsumerQueue.class</exclude>
-                        <exclude>org/jvnet/zephyr/common/util/concurrent/SingleConsumerQueue$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/common/util/function/Predicates.class</exclude>
-                        <exclude>org/jvnet/zephyr/common/util/function/Predicates$*.class</exclude>
+                        <exclude>org/jephyr/common/util/concurrent/SingleConsumerQueue.class</exclude>
+                        <exclude>org/jephyr/common/util/concurrent/SingleConsumerQueue$*.class</exclude>
+                        <exclude>org/jephyr/common/util/function/Predicates.class</exclude>
+                        <exclude>org/jephyr/common/util/function/Predicates$*.class</exclude>
                     </excludes>
                 </configuration>
                 <executions>

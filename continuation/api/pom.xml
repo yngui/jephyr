@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.continuation</groupId>
+        <groupId>org.jephyr.continuation</groupId>
         <artifactId>continuation-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -38,18 +38,18 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/continuation/ContinuationProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/continuation/ContinuationProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/continuation/DefaultContinuation.class</exclude>
-                        <exclude>org/jvnet/zephyr/continuation/DefaultContinuationProvider.class</exclude>
+                        <exclude>org/jephyr/continuation/ContinuationProvider.class</exclude>
+                        <exclude>org/jephyr/continuation/ContinuationProvider$*.class</exclude>
+                        <exclude>org/jephyr/continuation/DefaultContinuation.class</exclude>
+                        <exclude>org/jephyr/continuation/DefaultContinuationProvider.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>
-                            org/jvnet/zephyr/continuation/Continuation.create(Ljava/lang/Runnable;)Lorg/jvnet/zephyr/continuation/Continuation;
+                            org/jephyr/continuation/Continuation.create(Ljava/lang/Runnable;)Lorg/jephyr/continuation/Continuation;
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>

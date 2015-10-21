@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.activeobject</groupId>
+        <groupId>org.jephyr.activeobject</groupId>
         <artifactId>activeobject-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -38,47 +38,47 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.remapping</groupId>
+                <groupId>org.jephyr.remapping</groupId>
                 <artifactId>remapping-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer$*.class</exclude>
+                        <exclude>org/jephyr/activeobject/support/Disposer.class</exclude>
+                        <exclude>org/jephyr/activeobject/support/Disposer$*.class</exclude>
                     </excludes>
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>java/lang/Thread</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/lang/Thread</newName>
+                            <newName>org/jephyr/integration/javase/java/lang/Thread</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/Queue</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/Queue</newName>
+                            <newName>org/jephyr/integration/javase/java/util/Queue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/ArrayBlockingQueue</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/ArrayBlockingQueue
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/ArrayBlockingQueue
                             </newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/BlockingQueue</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/BlockingQueue</newName>
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/BlockingQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/LinkedBlockingQueue</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/LinkedBlockingQueue
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/LinkedBlockingQueue
                             </newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/RunnableFuture</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/TimeUnit</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/LockSupport</oldName>
-                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/LockSupport
+                            <newName>org/jephyr/integration/javase/java/util/concurrent/locks/LockSupport
                             </newName>
                         </mappingEntry>
                     </mappingEntries>
@@ -93,24 +93,24 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                     <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/BoundedMailboxSupplier.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/ReflectiveMailboxSupplier.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/SingleConsumerMailboxSupplier.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/mailbox/UnboundedMailboxSupplier.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer.class</exclude>
-                        <exclude>org/jvnet/zephyr/activeobject/support/Disposer$*.class</exclude>
+                        <exclude>org/jephyr/activeobject/mailbox/BoundedMailboxSupplier.class</exclude>
+                        <exclude>org/jephyr/activeobject/mailbox/ReflectiveMailboxSupplier.class</exclude>
+                        <exclude>org/jephyr/activeobject/mailbox/SingleConsumerMailboxSupplier.class</exclude>
+                        <exclude>org/jephyr/activeobject/mailbox/UnboundedMailboxSupplier.class</exclude>
+                        <exclude>org/jephyr/activeobject/support/Disposer.class</exclude>
+                        <exclude>org/jephyr/activeobject/support/Disposer$*.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>
-                            org/jvnet/zephyr/activeobject/support/ActiveObjectThread.getMailbox()Lorg/jvnet/zephyr/activeobject/mailbox/Mailbox;
+                            org/jephyr/activeobject/support/ActiveObjectThread.getMailbox()Lorg/jephyr/activeobject/mailbox/Mailbox;
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/activeobject/support/ActiveObjectThread.dispose()V
+                        <excludedMethod>org/jephyr/activeobject/support/ActiveObjectThread.dispose()V
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>
@@ -142,7 +142,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jvnet.zephyr.common</groupId>
+            <groupId>org.jephyr.common</groupId>
             <artifactId>common-util</artifactId>
             <optional>true</optional>
         </dependency>

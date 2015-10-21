@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.common</groupId>
+        <groupId>org.jephyr.common</groupId>
         <artifactId>common-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -47,11 +47,11 @@
                         </goals>
                         <configuration>
                             <outputDirectory>
-                                ${project.build.directory}/generated-sources/common-util/org/jvnet/zephyr/common/util/function
+                                ${project.build.directory}/generated-sources/common-util/org/jephyr/common/util/function
                             </outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>../util/src/main/java/org/jvnet/zephyr/common/util/function</directory>
+                                    <directory>../util/src/main/java/org/jephyr/common/util/function</directory>
                                     <includes>
                                         <include>Predicate.java</include>
                                         <include>Predicates.java</include>

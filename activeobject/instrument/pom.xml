@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.activeobject</groupId>
+        <groupId>org.jephyr.activeobject</groupId>
         <artifactId>activeobject-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>

@@ -27,8 +27,8 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.jvnet.zephyr</groupId>
-    <artifactId>zephyr-parent</artifactId>
+    <groupId>org.jephyr</groupId>
+    <artifactId>jephyr-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
@@ -86,12 +86,12 @@
                     <version>1.9.1</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.easyflow</groupId>
+                    <groupId>org.jephyr.easyflow</groupId>
                     <artifactId>easyflow-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.jvnet.zephyr.remapping</groupId>
+                    <groupId>org.jephyr.remapping</groupId>
                     <artifactId>remapping-maven-plugin</artifactId>
                     <version>${project.version}</version>
                 </plugin>
@@ -131,42 +131,42 @@
     <dependencyManagement>
         <dependencies>
             <dependency>
-                <groupId>org.jvnet.zephyr.thread</groupId>
+                <groupId>org.jephyr.thread</groupId>
                 <artifactId>thread-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.continuation</groupId>
+                <groupId>org.jephyr.continuation</groupId>
                 <artifactId>continuation-api</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-instrument</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.activeobject</groupId>
+                <groupId>org.jephyr.activeobject</groupId>
                 <artifactId>activeobject-instrument</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.common</groupId>
+                <groupId>org.jephyr.common</groupId>
                 <artifactId>common-instrument</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.common</groupId>
+                <groupId>org.jephyr.common</groupId>
                 <artifactId>common-maven-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.common</groupId>
+                <groupId>org.jephyr.common</groupId>
                 <artifactId>common-agent</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.jvnet.zephyr.common</groupId>
+                <groupId>org.jephyr.common</groupId>
                 <artifactId>common-util</artifactId>
                 <version>${project.version}</version>
             </dependency>

@@ -28,7 +28,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr.thread</groupId>
+        <groupId>org.jephyr.thread</groupId>
         <artifactId>thread-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
@@ -38,16 +38,16 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.jvnet.zephyr.remapping</groupId>
+                <groupId>org.jephyr.remapping</groupId>
                 <artifactId>remapping-maven-plugin</artifactId>
                 <configuration>
                     <includes>
-                        <include>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.class</include>
+                        <include>org/jephyr/thread/continuation/ContinuationThreadImpl.class</include>
                     </includes>
                     <mappingEntries>
                         <mappingEntry>
-                            <oldName>org/jvnet/zephyr/continuation/Continuation</oldName>
-                            <newName>org/jvnet/zephyr/continuation/easyflow/EasyFlowContinuation</newName>
+                            <oldName>org/jephyr/continuation/Continuation</oldName>
+                            <newName>org/jephyr/continuation/easyflow/EasyFlowContinuation</newName>
                         </mappingEntry>
                     </mappingEntries>
                 </configuration>
@@ -61,33 +61,33 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
                     <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
                     <excludes>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ExecuteTask.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$Node.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$ParkBlocker.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl$UnparkTask.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ContinuationThreadImplProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/DefaultForkJoinPoolProvider$*.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ForkJoinPoolProvider.class</exclude>
-                        <exclude>org/jvnet/zephyr/thread/continuation/ForkJoinPoolProvider$*.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ContinuationThreadImpl$ExecuteTask.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ContinuationThreadImpl$Node.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ContinuationThreadImpl$ParkBlocker.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ContinuationThreadImpl$UnparkTask.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ContinuationThreadImplProvider.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ContinuationThreadImplProvider$*.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/DefaultForkJoinPoolProvider.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/DefaultForkJoinPoolProvider$*.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ForkJoinPoolProvider.class</exclude>
+                        <exclude>org/jephyr/thread/continuation/ForkJoinPoolProvider$*.class</exclude>
                     </excludes>
                     <excludedMethods>
-                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.getState()I
+                        <excludedMethod>org/jephyr/thread/continuation/ContinuationThreadImpl.getState()I
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.isAlive()Z
+                        <excludedMethod>org/jephyr/thread/continuation/ContinuationThreadImpl.isAlive()Z
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.start()V
+                        <excludedMethod>org/jephyr/thread/continuation/ContinuationThreadImpl.start()V
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.unpark()V
+                        <excludedMethod>org/jephyr/thread/continuation/ContinuationThreadImpl.unpark()V
                         </excludedMethod>
-                        <excludedMethod>org/jvnet/zephyr/thread/continuation/ContinuationThreadImpl.execute()V
+                        <excludedMethod>org/jephyr/thread/continuation/ContinuationThreadImpl.execute()V
                         </excludedMethod>
                     </excludedMethods>
                 </configuration>
@@ -119,12 +119,12 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jvnet.zephyr.thread</groupId>
+            <groupId>org.jephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
             <optional>true</optional>
         </dependency>
         <dependency>
-            <groupId>org.jvnet.zephyr.continuation</groupId>
+            <groupId>org.jephyr.continuation</groupId>
             <artifactId>continuation-api</artifactId>
             <optional>true</optional>
         </dependency>
