@@ -22,24 +22,30 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.impl.misc;
+package org.jvnet.zephyr.integration.javase.impl.misc;
 
-import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
-import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.thread.ThreadAccess;
+import sun.misc.Unsafe;
 
-public final class SharedSecrets {
+import java.lang.reflect.Field;
 
-    private static ThreadAccess<Thread, Interruptible> threadAccess;
+public final class UnsafeHolder {
 
-    private SharedSecrets() {
+    private static final Unsafe unsafe;
+
+    static {
+        try {
+            Field field = Unsafe.class.getDeclaredField("theUnsafe");
+            field.setAccessible(true);
+            unsafe = (Unsafe) field.get(null);
+        } catch (Exception e) {
+            throw new Error(e);
+        }
     }
 
-    public static ThreadAccess<Thread, Interruptible> getThreadAccess() {
-        return threadAccess;
+    private UnsafeHolder() {
     }
 
-    public static void setThreadAccess(ThreadAccess<Thread, Interruptible> threadAccess) {
-        SharedSecrets.threadAccess = threadAccess;
+    public static Unsafe getUnsafe() {
+        return unsafe;
     }
 }

@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.impl.nio.ch;
+package org.jvnet.zephyr.integration.javase.impl.nio.ch;
 
-import org.jvnet.zephyr.jcl.java.lang.Thread;
-import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
+import org.jvnet.zephyr.integration.javase.java.lang.Thread;
+import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport;
 
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;

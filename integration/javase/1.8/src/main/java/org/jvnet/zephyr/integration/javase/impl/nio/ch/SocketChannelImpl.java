@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.impl.nio.ch;
+package org.jvnet.zephyr.integration.javase.impl.nio.ch;
 
-import org.jvnet.zephyr.jcl.java.nio.channels.SocketChannel;
-import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
+import org.jvnet.zephyr.integration.javase.java.nio.channels.SocketChannel;
+import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
 
 import java.io.IOException;
 import java.net.Socket;

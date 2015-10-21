@@ -28,17 +28,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jvnet.zephyr</groupId>
-        <artifactId>zephyr-parent</artifactId>
+        <groupId>org.jvnet.zephyr.integration</groupId>
+        <artifactId>integration-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jvnet.zephyr.jcl</groupId>
-    <artifactId>jcl-parent</artifactId>
+    <groupId>org.jvnet.zephyr.integration.javase</groupId>
+    <artifactId>javase-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>jdk7</module>
-        <module>jdk8</module>
+        <module>1.8</module>
     </modules>
 </project>

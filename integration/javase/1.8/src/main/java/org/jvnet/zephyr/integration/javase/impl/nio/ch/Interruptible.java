@@ -22,30 +22,11 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.impl.misc;
+package org.jvnet.zephyr.integration.javase.impl.nio.ch;
 
-import sun.misc.Unsafe;
+import org.jvnet.zephyr.integration.javase.java.lang.Thread;
 
-import java.lang.reflect.Field;
+public interface Interruptible {
 
-public final class UnsafeHolder {
-
-    private static final Unsafe unsafe;
-
-    static {
-        try {
-            Field field = Unsafe.class.getDeclaredField("theUnsafe");
-            field.setAccessible(true);
-            unsafe = (Unsafe) field.get(null);
-        } catch (Exception e) {
-            throw new Error(e);
-        }
-    }
-
-    private UnsafeHolder() {
-    }
-
-    public static Unsafe getUnsafe() {
-        return unsafe;
-    }
+    void interrupt(Thread thread);
 }

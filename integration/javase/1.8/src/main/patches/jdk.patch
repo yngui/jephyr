@@ -6,18 +6,18 @@ diff -r 57336c319de8 src/share/classes/java/lang/Iterable.java
   * questions.
   */
 -package java.lang;
-+package org.jvnet.zephyr.jcl.java.lang;
++package org.jvnet.zephyr.integration.javase.java.lang;
 
 -import java.util.Iterator;
 -import java.util.Objects;
 -import java.util.Spliterator;
 -import java.util.Spliterators;
 -import java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 
  /**
   * Implementing this interface allows an object to be the target of
@@ -39,10 +39,10 @@ diff -r 57336c319de8 src/share/classes/java/lang/SecurityManager.java
   */
 
 -package java.lang;
-+package org.jvnet.zephyr.jcl.java.lang;
++package org.jvnet.zephyr.integration.javase.java.lang;
 
 -import java.security.*;
-+import org.jvnet.zephyr.jcl.impl.misc.ReflectionUtils;
++import org.jvnet.zephyr.integration.javase.impl.misc.ReflectionUtils;
 +import sun.security.util.SecurityConstants;
 +
 +import java.io.File;
@@ -281,7 +281,7 @@ diff -r 57336c319de8 src/share/classes/java/lang/System.java
   * questions.
   */
 -package java.lang;
-+package org.jvnet.zephyr.jcl.java.lang;
++package org.jvnet.zephyr.integration.javase.java.lang;
 
 -import java.io.*;
 -import java.lang.reflect.Executable;
@@ -291,14 +291,14 @@ diff -r 57336c319de8 src/share/classes/java/lang/System.java
 -import java.util.PropertyPermission;
 -import java.util.StringTokenizer;
 -import java.util.Map;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
-+import org.jvnet.zephyr.jcl.java.util.AbstractMap;
-+import org.jvnet.zephyr.jcl.java.util.AbstractSet;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.Properties;
-+import org.jvnet.zephyr.jcl.java.util.Set;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractMap;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractSet;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.Properties;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
 +import sun.misc.Unsafe;
 +import sun.security.util.SecurityConstants;
 +
@@ -869,15 +869,15 @@ diff -r 57336c319de8 src/share/classes/java/lang/Thread.java
   */
 
 -package java.lang;
-+package org.jvnet.zephyr.jcl.java.lang;
++package org.jvnet.zephyr.integration.javase.java.lang;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.ReflectionUtils;
-+import org.jvnet.zephyr.jcl.impl.misc.SharedSecrets;
-+import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
-+import org.jvnet.zephyr.jcl.java.nio.channels.Selector;
-+import org.jvnet.zephyr.jcl.java.util.HashMap;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
++import org.jvnet.zephyr.integration.javase.impl.misc.ReflectionUtils;
++import org.jvnet.zephyr.integration.javase.impl.misc.SharedSecrets;
++import org.jvnet.zephyr.integration.javase.impl.nio.ch.Interruptible;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.Selector;
++import org.jvnet.zephyr.integration.javase.java.util.HashMap;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport;
 +import org.jvnet.zephyr.thread.JavaThreadImpl;
 +import org.jvnet.zephyr.thread.ThreadAccess;
 +import org.jvnet.zephyr.thread.ThreadImpl;
@@ -976,9 +976,9 @@ diff -r 57336c319de8 src/share/classes/java/lang/Thread.java
 -     * java.util.concurrent.locks.LockSupport.park.
 -     * Set by (private) java.util.concurrent.locks.LockSupport.setBlocker
 -     * Accessed using java.util.concurrent.locks.LockSupport.getBlocker
-+     * org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport.park.
-+     * Set by (private) org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport.setBlocker
-+     * Accessed using org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport.getBlocker
++     * org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport.park.
++     * Set by (private) org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport.setBlocker
++     * Accessed using org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport.getBlocker
       */
      volatile Object parkBlocker;
 
@@ -987,7 +987,7 @@ diff -r 57336c319de8 src/share/classes/java/lang/Thread.java
      private final Object blockerLock = new Object();
 
 -    /* Set the blocker field; invoked via sun.misc.SharedSecrets from java.nio code
-+    /* Set the blocker field; invoked via sun.misc.SharedSecrets from org.jvnet.zephyr.jcl.java.nio code
++    /* Set the blocker field; invoked via sun.misc.SharedSecrets from org.jvnet.zephyr.integration.javase.java.nio code
       */
      void blockedOn(Interruptible b) {
          synchronized (blockerLock) {
@@ -1007,7 +1007,7 @@ diff -r 57336c319de8 src/share/classes/java/lang/Thread.java
       * bugs due to race conditions. It may also be useful when designing
       * concurrency control constructs such as the ones in the
 -     * {@link java.util.concurrent.locks} package.
-+     * {@link org.jvnet.zephyr.jcl.java.util.concurrent.locks} package.
++     * {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.locks} package.
       */
 -    public static native void yield();
 +    public static void yield() {
@@ -1423,7 +1423,7 @@ diff -r 57336c319de8 src/share/classes/java/lang/Thread.java
 
      // The following three initially uninitialized fields are exclusively
 -    // managed by class java.util.concurrent.ThreadLocalRandom. These
-+    // managed by class org.jvnet.zephyr.jcl.java.util.concurrent.ThreadLocalRandom. These
++    // managed by class org.jvnet.zephyr.integration.javase.java.util.concurrent.ThreadLocalRandom. These
      // fields are used to build the high-performance PRNGs in the
      // concurrent code, and we can not risk accidental false sharing.
      // Hence, the fields are isolated with @Contended.
@@ -1492,7 +1492,7 @@ diff -r 57336c319de8 src/share/classes/java/lang/ThreadGroup.java
   */
 
 -package java.lang;
-+package org.jvnet.zephyr.jcl.java.lang;
++package org.jvnet.zephyr.integration.javase.java.lang;
 +
 +import sun.misc.VM;
 
@@ -1632,10 +1632,10 @@ diff -r 57336c319de8 src/share/classes/java/lang/ThreadLocal.java
 -import java.lang.ref.*;
 -import java.util.Objects;
 -import java.util.concurrent.atomic.AtomicInteger;
-+package org.jvnet.zephyr.jcl.java.lang;
++package org.jvnet.zephyr.integration.javase.java.lang;
 +
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicInteger;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicInteger;
 +
 +import java.lang.ref.WeakReference;
  import java.util.function.Supplier;
@@ -1658,11 +1658,11 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/DatagramChannel.java
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 +
-+import org.jvnet.zephyr.jcl.java.lang.SecurityManager;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.AbstractSelectableChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.lang.SecurityManager;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.AbstractSelectableChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
 
  import java.io.IOException;
 +import java.net.DatagramSocket;
@@ -1750,10 +1750,10 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/Pipe.java
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 +
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.AbstractSelectableChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.AbstractSelectableChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
 
  import java.io.IOException;
 -import java.nio.channels.spi.*;
@@ -1783,10 +1783,10 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/SelectableChannel.java
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 +
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.AbstractInterruptibleChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.AbstractInterruptibleChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
 
  import java.io.IOException;
 -import java.nio.channels.spi.AbstractInterruptibleChannel;
@@ -1817,11 +1817,11 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/SelectionKey.java
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 
 -import java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 -import java.io.IOException;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicReferenceFieldUpdater;
 +
 +import java.nio.channels.CancelledKeyException;
 
@@ -1835,12 +1835,12 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/Selector.java
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
 
  import java.io.Closeable;
  import java.io.IOException;
@@ -1916,11 +1916,11 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/ServerSocketChannel.jav
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 +
-+import org.jvnet.zephyr.jcl.java.lang.SecurityManager;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.AbstractSelectableChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.lang.SecurityManager;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.AbstractSelectableChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
 
  import java.io.IOException;
  import java.net.ServerSocket;
@@ -1968,11 +1968,11 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/SocketChannel.java
   */
 
 -package java.nio.channels;
-+package org.jvnet.zephyr.jcl.java.nio.channels;
++package org.jvnet.zephyr.integration.javase.java.nio.channels;
 +
-+import org.jvnet.zephyr.jcl.java.lang.SecurityManager;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.AbstractSelectableChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.lang.SecurityManager;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.AbstractSelectableChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
 
  import java.io.IOException;
  import java.net.Socket;
@@ -2029,11 +2029,11 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/AbstractInterruptib
   */
 
 -package java.nio.channels.spi;
-+package org.jvnet.zephyr.jcl.java.nio.channels.spi;
++package org.jvnet.zephyr.integration.javase.java.nio.channels.spi;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.SharedSecrets;
-+import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.impl.misc.SharedSecrets;
++import org.jvnet.zephyr.integration.javase.impl.nio.ch.Interruptible;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
 
  import java.io.IOException;
 -import java.lang.reflect.Method;
@@ -2066,12 +2066,12 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/AbstractSelectableC
   */
 
 -package java.nio.channels.spi;
-+package org.jvnet.zephyr.jcl.java.nio.channels.spi;
++package org.jvnet.zephyr.integration.javase.java.nio.channels.spi;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.nio.channels.SelectableChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.SelectionKey;
-+import org.jvnet.zephyr.jcl.java.nio.channels.Selector;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.SelectableChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.SelectionKey;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.Selector;
 
  import java.io.IOException;
 -import java.nio.channels.*;
@@ -2100,10 +2100,10 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/AbstractSelectionKe
   */
 
 -package java.nio.channels.spi;
-+package org.jvnet.zephyr.jcl.java.nio.channels.spi;
++package org.jvnet.zephyr.integration.javase.java.nio.channels.spi;
 
 -import java.nio.channels.*;
-+import org.jvnet.zephyr.jcl.java.nio.channels.SelectionKey;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.SelectionKey;
 
 
  /**
@@ -2115,14 +2115,14 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/AbstractSelector.ja
   */
 
 -package java.nio.channels.spi;
-+package org.jvnet.zephyr.jcl.java.nio.channels.spi;
++package org.jvnet.zephyr.integration.javase.java.nio.channels.spi;
 +
-+import org.jvnet.zephyr.jcl.impl.nio.ch.Interruptible;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.nio.channels.SelectionKey;
-+import org.jvnet.zephyr.jcl.java.nio.channels.Selector;
-+import org.jvnet.zephyr.jcl.java.util.HashSet;
-+import org.jvnet.zephyr.jcl.java.util.Set;
++import org.jvnet.zephyr.integration.javase.impl.nio.ch.Interruptible;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.SelectionKey;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.Selector;
++import org.jvnet.zephyr.integration.javase.java.util.HashSet;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
 
  import java.io.IOException;
 -import java.nio.channels.SelectionKey;
@@ -2150,18 +2150,18 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/SelectorProvider.ja
   */
 
 -package java.nio.channels.spi;
-+package org.jvnet.zephyr.jcl.java.nio.channels.spi;
++package org.jvnet.zephyr.integration.javase.java.nio.channels.spi;
 +
-+import org.jvnet.zephyr.jcl.impl.nio.ch.DefaultSelectorProvider;
-+import org.jvnet.zephyr.jcl.java.lang.SecurityManager;
-+import org.jvnet.zephyr.jcl.java.lang.System;
-+import org.jvnet.zephyr.jcl.java.nio.channels.DatagramChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.Pipe;
-+import org.jvnet.zephyr.jcl.java.nio.channels.Selector;
-+import org.jvnet.zephyr.jcl.java.nio.channels.ServerSocketChannel;
-+import org.jvnet.zephyr.jcl.java.nio.channels.SocketChannel;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.ServiceLoader;
++import org.jvnet.zephyr.integration.javase.impl.nio.ch.DefaultSelectorProvider;
++import org.jvnet.zephyr.integration.javase.java.lang.SecurityManager;
++import org.jvnet.zephyr.integration.javase.java.lang.System;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.DatagramChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.Pipe;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.Selector;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.ServerSocketChannel;
++import org.jvnet.zephyr.integration.javase.java.nio.channels.SocketChannel;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.ServiceLoader;
 
  import java.io.IOException;
  import java.net.ProtocolFamily;
@@ -2200,7 +2200,7 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/SelectorProvider.ja
 
      private static boolean loadProviderFromProperty() {
 -        String cn = System.getProperty("java.nio.channels.spi.SelectorProvider");
-+        String cn = System.getProperty("org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider");
++        String cn = System.getProperty("org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider");
          if (cn == null)
              return false;
          try {
@@ -2209,7 +2209,7 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/SelectorProvider.ja
       *
       *   <li><p> If the system property
 -     *   <tt>java.nio.channels.spi.SelectorProvider</tt> is defined then it is
-+     *   <tt>org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider</tt> is defined then it is
++     *   <tt>org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider</tt> is defined then it is
       *   taken to be the fully-qualified name of a concrete provider class.
       *   The class is loaded and instantiated; if this process fails then an
       *   unspecified error is thrown.  </p></li>
@@ -2218,7 +2218,7 @@ diff -r 57336c319de8 src/share/classes/java/nio/channels/spi/SelectorProvider.ja
       *   visible to the system class loader, and that jar file contains a
       *   provider-configuration file named
 -     *   <tt>java.nio.channels.spi.SelectorProvider</tt> in the resource
-+     *   <tt>org.jvnet.zephyr.jcl.java.nio.channels.spi.SelectorProvider</tt> in the resource
++     *   <tt>org.jvnet.zephyr.integration.javase.java.nio.channels.spi.SelectorProvider</tt> in the resource
       *   directory <tt>META-INF/services</tt>, then the first class name
       *   specified in that file is taken.  The class is loaded and
       *   instantiated; if this process fails then an unspecified error is
@@ -2262,7 +2262,7 @@ diff -r 57336c319de8 src/share/classes/java/util/AbstractCollection.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * This class provides a skeletal implementation of the <tt>Collection</tt>
@@ -2300,7 +2300,7 @@ diff -r 57336c319de8 src/share/classes/java/util/AbstractList.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.ConcurrentModificationException;
 +import java.util.NoSuchElementException;
@@ -2339,7 +2339,7 @@ diff -r 57336c319de8 src/share/classes/java/util/AbstractMap.java
 
 -package java.util;
 -import java.util.Map.Entry;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * This class provides a skeletal implementation of the <tt>Map</tt>
@@ -2364,7 +2364,7 @@ diff -r 57336c319de8 src/share/classes/java/util/AbstractQueue.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.NoSuchElementException;
 
@@ -2391,7 +2391,7 @@ diff -r 57336c319de8 src/share/classes/java/util/AbstractSequentialList.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.NoSuchElementException;
 
@@ -2405,7 +2405,7 @@ diff -r 57336c319de8 src/share/classes/java/util/AbstractSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * This class provides a skeletal implementation of the <tt>Set</tt>
@@ -2417,9 +2417,9 @@ diff -r 57336c319de8 src/share/classes/java/util/ArrayDeque.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 
  import java.io.Serializable;
 -import java.util.function.Consumer;
@@ -2436,14 +2436,14 @@ diff -r 57336c319de8 src/share/classes/java/util/ArrayList.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.Predicate;
 -import java.util.function.UnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
 +
 +import java.util.BitSet;
 +import java.util.ConcurrentModificationException;
@@ -2460,7 +2460,7 @@ diff -r 57336c319de8 src/share/classes/java/util/ArrayPrefixHelpers.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /*
   * Written by Doug Lea with assistance from members of JCP JSR-166
@@ -2468,7 +2468,7 @@ diff -r 57336c319de8 src/share/classes/java/util/ArrayPrefixHelpers.java
   * http://creativecommons.org/publicdomain/zero/1.0/
   */
 
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
 +
 +import java.util.concurrent.CountedCompleter;
  import java.util.concurrent.ForkJoinPool;
@@ -2489,17 +2489,17 @@ diff -r 57336c319de8 src/share/classes/java/util/Arrays.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntUnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.stream.DoubleStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.IntStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.LongStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
-+import org.jvnet.zephyr.jcl.java.util.stream.StreamSupport;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.stream.DoubleStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.IntStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.LongStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.StreamSupport;
 
  import java.lang.reflect.Array;
 +import java.util.RandomAccess;
@@ -2539,7 +2539,7 @@ diff -r 57336c319de8 src/share/classes/java/util/ArraysParallelSortHelpers.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.concurrent.RecursiveAction;
  import java.util.concurrent.CountedCompleter;
@@ -2553,15 +2553,15 @@ diff -r 57336c319de8 src/share/classes/java/util/Collection.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Predicate;
 -import java.util.stream.Stream;
 -import java.util.stream.StreamSupport;
-+import org.jvnet.zephyr.jcl.java.lang.Iterable;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
-+import org.jvnet.zephyr.jcl.java.util.stream.StreamSupport;
++import org.jvnet.zephyr.integration.javase.java.lang.Iterable;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.StreamSupport;
 
  /**
   * The root interface in the <i>collection hierarchy</i>.  A collection
@@ -2573,17 +2573,17 @@ diff -r 57336c319de8 src/share/classes/java/util/Collections.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.stream.IntStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
-+import org.jvnet.zephyr.jcl.java.util.stream.StreamSupport;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.stream.IntStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.StreamSupport;
 +
 +import java.io.IOException;
 +import java.io.ObjectOutputStream;
@@ -2679,7 +2679,7 @@ diff -r 57336c319de8 src/share/classes/java/util/ComparableTimSort.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * This is a near duplicate of {@link TimSort}, modified for use with
@@ -2691,9 +2691,9 @@ diff -r 57336c319de8 src/share/classes/java/util/Comparator.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 
  import java.io.Serializable;
 -import java.util.function.Function;
@@ -2713,7 +2713,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Comparators.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  import java.io.Serializable;
 -import java.util.function.BinaryOperator;
@@ -2732,7 +2732,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Deque.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.NoSuchElementException;
 
@@ -2780,14 +2780,14 @@ diff -r 57336c319de8 src/share/classes/java/util/DoubleSummaryStatistics.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.DoubleConsumer;
 -import java.util.stream.Collector;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.stream.Collector;
-+import org.jvnet.zephyr.jcl.java.util.stream.Collectors;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Collector;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Collectors;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
 
  /**
   * A state object for collecting statistics such as count, min, max, sum, and
@@ -2795,7 +2795,7 @@ diff -r 57336c319de8 src/share/classes/java/util/DoubleSummaryStatistics.java
   *
   * <p>This class is designed to work with (though does not require)
 - * {@linkplain java.util.stream streams}. For example, you can compute
-+ * {@linkplain org.jvnet.zephyr.jcl.java.util.stream streams}. For example, you can compute
++ * {@linkplain org.jvnet.zephyr.integration.javase.java.util.stream streams}. For example, you can compute
   * summary statistics on a stream of doubles with:
   * <pre> {@code
   * DoubleSummaryStatistics stats = doubleStream.collect(DoubleSummaryStatistics::new,
@@ -2830,7 +2830,7 @@ diff -r 57336c319de8 src/share/classes/java/util/DualPivotQuicksort.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * This class implements the Dual-Pivot Quicksort algorithm by
@@ -2842,7 +2842,7 @@ diff -r 57336c319de8 src/share/classes/java/util/EnumMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.Map.Entry;
  import sun.misc.SharedSecrets;
@@ -2861,7 +2861,7 @@ diff -r 57336c319de8 src/share/classes/java/util/EnumSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  import sun.misc.SharedSecrets;
 
@@ -2878,12 +2878,12 @@ diff -r 57336c319de8 src/share/classes/java/util/HashMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 
  import java.io.IOException;
  import java.io.InvalidObjectException;
@@ -2904,7 +2904,7 @@ diff -r 57336c319de8 src/share/classes/java/util/HashMap.java
       * when bins get too large, they are transformed into bins of
       * TreeNodes, each structured similarly to those in
 -     * java.util.TreeMap. Most methods try to use normal bins, but
-+     * org.jvnet.zephyr.jcl.java.util.TreeMap. Most methods try to use normal bins, but
++     * org.jvnet.zephyr.integration.javase.java.util.TreeMap. Most methods try to use normal bins, but
       * relay to TreeNode methods when applicable (simply by checking
       * instanceof a node).  Bins of TreeNodes may be traversed and
       * used like any others, but additionally support faster lookup
@@ -2927,7 +2927,7 @@ diff -r 57336c319de8 src/share/classes/java/util/HashSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  import java.io.InvalidObjectException;
 +import java.util.ConcurrentModificationException;
@@ -2954,17 +2954,17 @@ diff -r 57336c319de8 src/share/classes/java/util/Hashtable.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.io.*;
 -import java.util.concurrent.ThreadLocalRandom;
 -import java.util.function.BiConsumer;
 -import java.util.function.Function;
 -import java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentHashMap;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentHashMap;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 +
 +import java.io.IOException;
 +import java.io.StreamCorruptedException;
@@ -3005,11 +3005,11 @@ diff -r 57336c319de8 src/share/classes/java/util/IdentityHashMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 
  import java.lang.reflect.Array;
 -import java.util.function.BiConsumer;
@@ -3053,14 +3053,14 @@ diff -r 57336c319de8 src/share/classes/java/util/IntSummaryStatistics.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.IntConsumer;
 -import java.util.stream.Collector;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.stream.Collector;
-+import org.jvnet.zephyr.jcl.java.util.stream.Collectors;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Collector;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Collectors;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
 
  /**
   * A state object for collecting statistics such as count, min, max, sum, and
@@ -3068,7 +3068,7 @@ diff -r 57336c319de8 src/share/classes/java/util/IntSummaryStatistics.java
   *
   * <p>This class is designed to work with (though does not require)
 - * {@linkplain java.util.stream streams}. For example, you can compute
-+ * {@linkplain org.jvnet.zephyr.jcl.java.util.stream streams}. For example, you can compute
++ * {@linkplain org.jvnet.zephyr.integration.javase.java.util.stream streams}. For example, you can compute
   * summary statistics on a stream of ints with:
   * <pre> {@code
   * IntSummaryStatistics stats = intStream.collect(IntSummaryStatistics::new,
@@ -3103,11 +3103,11 @@ diff -r 57336c319de8 src/share/classes/java/util/Iterator.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.lang.Iterable;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.lang.Iterable;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
 +import java.util.Enumeration;
 +import java.util.NoSuchElementException;
@@ -3122,7 +3122,7 @@ diff -r 57336c319de8 src/share/classes/java/util/JumboEnumSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.ConcurrentModificationException;
 +import java.util.NoSuchElementException;
@@ -3137,14 +3137,14 @@ diff -r 57336c319de8 src/share/classes/java/util/LinkedHashMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.BiConsumer;
 -import java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.io.IOException;
 +import java.util.ConcurrentModificationException;
@@ -3160,7 +3160,7 @@ diff -r 57336c319de8 src/share/classes/java/util/LinkedHashSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.ConcurrentModificationException;
 
@@ -3174,10 +3174,10 @@ diff -r 57336c319de8 src/share/classes/java/util/LinkedList.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
 +import java.util.ConcurrentModificationException;
 +import java.util.NoSuchElementException;
@@ -3192,10 +3192,10 @@ diff -r 57336c319de8 src/share/classes/java/util/List.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.UnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
 
  /**
   * An ordered collection (also known as a <i>sequence</i>).  The user of this
@@ -3207,7 +3207,7 @@ diff -r 57336c319de8 src/share/classes/java/util/ListIterator.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.Enumeration;
 +import java.util.NoSuchElementException;
@@ -3222,16 +3222,16 @@ diff -r 57336c319de8 src/share/classes/java/util/LongSummaryStatistics.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.IntConsumer;
 -import java.util.function.LongConsumer;
 -import java.util.stream.Collector;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.stream.Collector;
-+import org.jvnet.zephyr.jcl.java.util.stream.Collectors;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Collector;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Collectors;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
 
  /**
   * A state object for collecting statistics such as count, min, max, sum, and
@@ -3239,7 +3239,7 @@ diff -r 57336c319de8 src/share/classes/java/util/LongSummaryStatistics.java
   *
   * <p>This class is designed to work with (though does not require)
 - * {@linkplain java.util.stream streams}. For example, you can compute
-+ * {@linkplain org.jvnet.zephyr.jcl.java.util.stream streams}. For example, you can compute
++ * {@linkplain org.jvnet.zephyr.integration.javase.java.util.stream streams}. For example, you can compute
   * summary statistics on a stream of longs with:
   * <pre> {@code
   * LongSummaryStatistics stats = longStream.collect(LongSummaryStatistics::new,
@@ -3274,15 +3274,15 @@ diff -r 57336c319de8 src/share/classes/java/util/Map.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.BiConsumer;
 -import java.util.function.BiFunction;
 -import java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentMap;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentMap;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 +
  import java.io.Serializable;
 +import java.util.ConcurrentModificationException;
@@ -3353,7 +3353,7 @@ diff -r 57336c319de8 src/share/classes/java/util/NavigableMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * A {@link SortedMap} extended with navigation methods returning the
@@ -3365,7 +3365,7 @@ diff -r 57336c319de8 src/share/classes/java/util/NavigableSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * A {@link SortedSet} extended with navigation methods reporting
@@ -3377,9 +3377,9 @@ diff -r 57336c319de8 src/share/classes/java/util/Objects.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 
  import java.util.function.Supplier;
 
@@ -3423,14 +3423,14 @@ diff -r 57336c319de8 src/share/classes/java/util/Optional.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.Function;
 -import java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 +
 +import java.util.NoSuchElementException;
  import java.util.function.Supplier;
@@ -3453,10 +3453,10 @@ diff -r 57336c319de8 src/share/classes/java/util/OptionalDouble.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
 +
 +import java.util.NoSuchElementException;
  import java.util.function.DoubleSupplier;
@@ -3479,10 +3479,10 @@ diff -r 57336c319de8 src/share/classes/java/util/OptionalInt.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
 +
 +import java.util.NoSuchElementException;
  import java.util.function.IntSupplier;
@@ -3505,10 +3505,10 @@ diff -r 57336c319de8 src/share/classes/java/util/OptionalLong.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
 +import java.util.NoSuchElementException;
  import java.util.function.LongSupplier;
@@ -3531,16 +3531,16 @@ diff -r 57336c319de8 src/share/classes/java/util/PrimitiveIterator.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
 -import java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
 +import java.util.NoSuchElementException;
 
@@ -3588,11 +3588,11 @@ diff -r 57336c319de8 src/share/classes/java/util/PriorityQueue.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.PriorityBlockingQueue;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.PriorityBlockingQueue;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
 +import java.util.ConcurrentModificationException;
 +import java.util.NoSuchElementException;
@@ -3616,10 +3616,10 @@ diff -r 57336c319de8 src/share/classes/java/util/Properties.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
-+import org.jvnet.zephyr.jcl.jdk.internal.util.xml.BasicXmlPropertiesProvider;
-+import org.jvnet.zephyr.jcl.sun.util.spi.XmlPropertiesProvider;
++import org.jvnet.zephyr.integration.javase.jdk.internal.util.xml.BasicXmlPropertiesProvider;
++import org.jvnet.zephyr.integration.javase.sun.util.spi.XmlPropertiesProvider;
 +
 +import java.io.BufferedWriter;
  import java.io.IOException;
@@ -3662,12 +3662,12 @@ diff -r 57336c319de8 src/share/classes/java/util/Queue.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ArrayBlockingQueue;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.BlockingQueue;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.LinkedBlockingQueue;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.PriorityBlockingQueue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ArrayBlockingQueue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.BlockingQueue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.LinkedBlockingQueue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.PriorityBlockingQueue;
 +
 +import java.util.NoSuchElementException;
 
@@ -3734,20 +3734,20 @@ diff -r 57336c319de8 src/share/classes/java/util/Random.java
 -import java.util.stream.IntStream;
 -import java.util.stream.LongStream;
 -import java.util.stream.StreamSupport;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ThreadLocalRandom;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicLong;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Lock;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.stream.DoubleStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.IntStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.LongStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.StreamSupport;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ThreadLocalRandom;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicLong;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Lock;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.stream.DoubleStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.IntStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.LongStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.StreamSupport;
  import sun.misc.Unsafe;
 
 +import java.io.IOException;
@@ -3895,7 +3895,7 @@ diff -r 57336c319de8 src/share/classes/java/util/RegularEnumSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.ConcurrentModificationException;
 +import java.util.NoSuchElementException;
@@ -3910,10 +3910,10 @@ diff -r 57336c319de8 src/share/classes/java/util/ServiceLoader.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Iterable;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.lang.Iterable;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
 
  import java.io.BufferedReader;
  import java.io.IOException;
@@ -3967,7 +3967,7 @@ diff -r 57336c319de8 src/share/classes/java/util/ServiceLoader.java
       */
      public String toString() {
 -        return "java.util.ServiceLoader[" + service.getName() + "]";
-+        return "org.jvnet.zephyr.jcl.java.util.ServiceLoader[" + service.getName() + "]";
++        return "org.jvnet.zephyr.integration.javase.java.util.ServiceLoader[" + service.getName() + "]";
      }
 
  }
@@ -3979,7 +3979,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Set.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * A collection that contains no duplicate elements.  More formally, sets
@@ -3991,7 +3991,7 @@ diff -r 57336c319de8 src/share/classes/java/util/SortedMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.NoSuchElementException;
 
@@ -4005,7 +4005,7 @@ diff -r 57336c319de8 src/share/classes/java/util/SortedSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.NoSuchElementException;
 
@@ -4028,18 +4028,18 @@ diff -r 57336c319de8 src/share/classes/java/util/Spliterator.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
 -import java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentHashMap;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.CopyOnWriteArrayList;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentHashMap;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.CopyOnWriteArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
 +import java.util.ConcurrentModificationException;
 
@@ -4078,7 +4078,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Spliterator.java
   * removed) between the time that the Spliterator binds to its data source and
   * the end of traversal.  For example, such interference will produce arbitrary,
 - * non-deterministic results when using the {@code java.util.stream} framework.
-+ * non-deterministic results when using the {@code org.jvnet.zephyr.jcl.java.util.stream} framework.
++ * non-deterministic results when using the {@code org.jvnet.zephyr.integration.javase.java.util.stream} framework.
   *
   * <p>Structural interference of a source can be managed in the following ways
   * (in approximate order of decreasing desirability):
@@ -4100,7 +4100,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Spliterator.java
   *
   * <p>As an example how a parallel computation framework, such as the
 - * {@code java.util.stream} package, would use Spliterator in a parallel
-+ * {@code org.jvnet.zephyr.jcl.java.util.stream} package, would use Spliterator in a parallel
++ * {@code org.jvnet.zephyr.integration.javase.java.util.stream} package, would use Spliterator in a parallel
   * computation, here is one way to implement an associated parallel forEach,
   * that illustrates the primary usage idiom of splitting off subtasks until
   * the estimated amount of work is small enough to perform
@@ -4202,16 +4202,16 @@ diff -r 57336c319de8 src/share/classes/java/util/Spliterators.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
 -import java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
 +import java.util.NoSuchElementException;
 
@@ -4376,7 +4376,7 @@ diff -r 57336c319de8 src/share/classes/java/util/SplittableRandom.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.concurrent.atomic.AtomicLong;
 -import java.util.function.IntConsumer;
@@ -4386,14 +4386,14 @@ diff -r 57336c319de8 src/share/classes/java/util/SplittableRandom.java
 -import java.util.stream.IntStream;
 -import java.util.stream.LongStream;
 -import java.util.stream.DoubleStream;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicLong;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.stream.DoubleStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.IntStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.LongStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.StreamSupport;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicLong;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.stream.DoubleStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.IntStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.LongStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.StreamSupport;
 
  /**
   * A generator of uniform pseudorandom values applicable for use in
@@ -4414,7 +4414,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Stack.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.EmptyStackException;
 
@@ -4437,7 +4437,7 @@ diff -r 57336c319de8 src/share/classes/java/util/TimSort.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  /**
   * A stable, adaptive, iterative mergesort that requires far fewer than
@@ -4449,11 +4449,11 @@ diff -r 57336c319de8 src/share/classes/java/util/TreeMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 
  import java.io.Serializable;
 -import java.util.function.BiConsumer;
@@ -4481,7 +4481,7 @@ diff -r 57336c319de8 src/share/classes/java/util/TreeSet.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 +
 +import java.util.ConcurrentModificationException;
 +import java.util.NoSuchElementException;
@@ -4517,7 +4517,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Tripwire.java
   * questions.
   */
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
  import sun.util.logging.PlatformLogger;
 
@@ -4526,7 +4526,7 @@ diff -r 57336c319de8 src/share/classes/java/util/Tripwire.java
  /**
   * Utility class for detecting inadvertent uses of boxing in
 - * {@code java.util} classes.  The detection is turned on or off based on
-+ * {@code org.jvnet.zephyr.jcl.java.util} classes.  The detection is turned on or off based on
++ * {@code org.jvnet.zephyr.integration.javase.java.util} classes.  The detection is turned on or off based on
   * whether the system property {@code org.openjdk.java.util.stream.tripwire} is
   * considered {@code true} according to {@link Boolean#getBoolean(String)}.
   * This should normally be turned off for production use.
@@ -4538,14 +4538,14 @@ diff -r 57336c319de8 src/share/classes/java/util/Vector.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
 -import java.util.function.Consumer;
 -import java.util.function.Predicate;
 -import java.util.function.UnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
 +
 +import java.util.BitSet;
 +import java.util.ConcurrentModificationException;
@@ -4563,11 +4563,11 @@ diff -r 57336c319de8 src/share/classes/java/util/WeakHashMap.java
   */
 
 -package java.util;
-+package org.jvnet.zephyr.jcl.java.util;
++package org.jvnet.zephyr.integration.javase.java.util;
 
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
 +import java.lang.ref.ReferenceQueue;
  import java.lang.ref.WeakReference;
@@ -4629,15 +4629,15 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ArrayBlockingQueue.j
 -import java.util.AbstractQueue;
 -import java.util.Collection;
 -import java.util.Iterator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Condition;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Condition;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
 +
 +import java.lang.ref.WeakReference;
  import java.util.NoSuchElementException;
@@ -4666,10 +4666,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/BlockingDeque.java
 
 -package java.util.concurrent;
 -import java.util.*;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.util.Deque;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Deque;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
 +
 +import java.util.NoSuchElementException;
 
@@ -4683,12 +4683,12 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/BlockingQueue.java
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.Collection;
 -import java.util.Queue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Queue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Queue;
 
  /**
 - * A {@link java.util.Queue} that additionally supports operations
@@ -4713,27 +4713,27 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentHashMap.ja
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.AbstractMap;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.HashMap;
-+import org.jvnet.zephyr.jcl.java.util.Hashtable;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicReference;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.stream.Stream;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractMap;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.HashMap;
++import org.jvnet.zephyr.integration.javase.java.util.Hashtable;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicReference;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.stream.Stream;
 
  import java.io.ObjectStreamField;
  import java.io.Serializable;
@@ -4794,7 +4794,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentHashMap.ja
       * iterators and related methods) while minimizing update
       * contention. Secondary goals are to keep space consumption about
 -     * the same or better than java.util.HashMap, and to support high
-+     * the same or better than org.jvnet.zephyr.jcl.java.util.HashMap, and to support high
++     * the same or better than org.jvnet.zephyr.integration.javase.java.util.HashMap, and to support high
       * initial insertion rates on an empty table by many threads.
       *
       * This map usually acts as a binned (bucketed) hash table.  Each
@@ -4918,23 +4918,23 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentLinkedDequ
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.AbstractCollection;
 -import java.util.ArrayList;
 -import java.util.Collection;
 -import java.util.Deque;
 -import java.util.Iterator;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.AbstractCollection;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Deque;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Queue;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractCollection;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Deque;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Queue;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.util.NoSuchElementException;
 -import java.util.Queue;
@@ -4990,21 +4990,21 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentLinkedQueu
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.AbstractQueue;
 -import java.util.ArrayList;
 -import java.util.Collection;
 -import java.util.Iterator;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Queue;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Queue;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.util.NoSuchElementException;
 -import java.util.Queue;
@@ -5065,14 +5065,14 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentMap.java
 -import java.util.function.BiConsumer;
 -import java.util.function.BiFunction;
 -import java.util.function.Function;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 
  /**
 - * A {@link java.util.Map} providing thread safety and atomicity
@@ -5099,12 +5099,12 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentNavigableM
 
 -package java.util.concurrent;
 -import java.util.*;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.util.Collections;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.NavigableMap;
-+import org.jvnet.zephyr.jcl.java.util.NavigableSet;
++import org.jvnet.zephyr.integration.javase.java.util.Collections;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.NavigableMap;
++import org.jvnet.zephyr.integration.javase.java.util.NavigableSet;
 
  /**
   * A {@link ConcurrentMap} supporting {@link NavigableMap} operations,
@@ -5116,28 +5116,28 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentSkipListMa
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.AbstractCollection;
-+import org.jvnet.zephyr.jcl.java.util.AbstractMap;
-+import org.jvnet.zephyr.jcl.java.util.AbstractSet;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Collections;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.List;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.NavigableSet;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.SortedMap;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractCollection;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractMap;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractSet;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Collections;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.List;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.NavigableSet;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.SortedMap;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 +
  import java.io.Serializable;
 -import java.util.AbstractCollection;
@@ -5171,7 +5171,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentSkipListMa
       * Pugh's Skip List Cookbook, sec 3.4).  The expected total space
       * requirement for a map is slightly less than for the current
 -     * implementation of java.util.TreeMap.
-+     * implementation of org.jvnet.zephyr.jcl.java.util.TreeMap.
++     * implementation of org.jvnet.zephyr.integration.javase.java.util.TreeMap.
       *
       * Changing the level of the index (i.e, the height of the
       * tree-like structure) also uses CAS. The head index has initial
@@ -5258,19 +5258,19 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ConcurrentSkipListSe
 -import java.util.Set;
 -import java.util.SortedSet;
 -import java.util.Spliterator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.AbstractSet;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Collections;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.NavigableSet;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.SortedSet;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractSet;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Collections;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.NavigableSet;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.SortedSet;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 
  /**
   * A scalable concurrent {@link NavigableSet} implementation based on
@@ -5317,24 +5317,24 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/CopyOnWriteArrayList
 -import java.util.Arrays;
 -import java.util.Collection;
 -import java.util.Comparator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.AbstractList;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.List;
-+import org.jvnet.zephyr.jcl.java.util.ListIterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractList;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.List;
++import org.jvnet.zephyr.integration.javase.java.util.ListIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
 +
  import java.util.ConcurrentModificationException;
 -import java.util.Iterator;
@@ -5391,16 +5391,16 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/CopyOnWriteArraySet.
 -import java.util.Spliterators;
 -import java.util.function.Predicate;
 -import java.util.function.Consumer;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.util.AbstractSet;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractSet;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 
  /**
 - * A {@link java.util.Set} that uses an internal {@link CopyOnWriteArrayList}
@@ -5417,10 +5417,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/CountDownLatch.java
 
 -package java.util.concurrent;
 -import java.util.concurrent.locks.AbstractQueuedSynchronizer;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.AbstractQueuedSynchronizer;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.AbstractQueuedSynchronizer;
 
  /**
   * A synchronization aid that allows one or more threads to wait until
@@ -5434,11 +5434,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/CyclicBarrier.java
 -package java.util.concurrent;
 -import java.util.concurrent.locks.Condition;
 -import java.util.concurrent.locks.ReentrantLock;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Condition;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Condition;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
 +
 +import java.util.concurrent.BrokenBarrierException;
 +import java.util.concurrent.TimeoutException;
@@ -5457,19 +5457,19 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/DelayQueue.java
 -import java.util.concurrent.locks.Condition;
 -import java.util.concurrent.locks.ReentrantLock;
 -import java.util.*;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.PriorityQueue;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Condition;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.PriorityQueue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Condition;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
 +
 +import java.util.NoSuchElementException;
 +
-+import static org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit.NANOSECONDS;
++import static org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit.NANOSECONDS;
 
  /**
   * An unbounded {@linkplain BlockingQueue blocking queue} of
@@ -5481,7 +5481,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/Delayed.java
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
  /**
   * A mix-in style interface for marking objects that should be
@@ -5496,11 +5496,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/Exchanger.java
 -import java.util.concurrent.atomic.AtomicInteger;
 -import java.util.concurrent.atomic.AtomicReference;
 -import java.util.concurrent.locks.LockSupport;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.lang.ThreadLocal;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.lang.ThreadLocal;
 +
 +import java.util.concurrent.TimeoutException;
 
@@ -5564,7 +5564,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/Future.java
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
 +import java.util.concurrent.CancellationException;
 +import java.util.concurrent.ExecutionException;
@@ -5582,12 +5582,12 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/FutureTask.java
 
 -package java.util.concurrent;
 -import java.util.concurrent.locks.LockSupport;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport;
 +
 +import java.util.concurrent.Callable;
 +import java.util.concurrent.CancellationException;
@@ -5645,19 +5645,19 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/LinkedBlockingDeque.
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.AbstractQueue;
 -import java.util.Collection;
 -import java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Condition;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Condition;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.util.NoSuchElementException;
 -import java.util.concurrent.locks.Condition;
@@ -5686,7 +5686,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/LinkedBlockingQueue.
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.concurrent.atomic.AtomicInteger;
 -import java.util.concurrent.locks.Condition;
@@ -5694,15 +5694,15 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/LinkedBlockingQueue.
 -import java.util.AbstractQueue;
 -import java.util.Collection;
 -import java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicInteger;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Condition;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicInteger;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Condition;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.util.NoSuchElementException;
 -import java.util.Spliterator;
@@ -5729,21 +5729,21 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/LinkedTransferQueue.
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.AbstractQueue;
 -import java.util.Collection;
 -import java.util.Iterator;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Queue;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Queue;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.util.NoSuchElementException;
 -import java.util.Queue;
@@ -5811,7 +5811,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/PriorityBlockingQueu
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
 -import java.util.concurrent.locks.Condition;
 -import java.util.concurrent.locks.ReentrantLock;
@@ -5820,20 +5820,20 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/PriorityBlockingQueu
 -import java.util.Collection;
 -import java.util.Comparator;
 -import java.util.Iterator;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.PriorityQueue;
-+import org.jvnet.zephyr.jcl.java.util.Queue;
-+import org.jvnet.zephyr.jcl.java.util.SortedSet;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Condition;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.PriorityQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Queue;
++import org.jvnet.zephyr.integration.javase.java.util.SortedSet;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Condition;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
 +
  import java.util.NoSuchElementException;
 -import java.util.PriorityQueue;
@@ -5849,7 +5849,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/PriorityBlockingQueu
       * build-up. The need to back away from lock during allocation
       * makes it impossible to simply wrap delegated
 -     * java.util.PriorityQueue operations within a lock, as was done
-+     * org.jvnet.zephyr.jcl.java.util.PriorityQueue operations within a lock, as was done
++     * org.jvnet.zephyr.integration.javase.java.util.PriorityQueue operations within a lock, as was done
       * in a previous version of this class. To maintain
       * interoperability, a plain PriorityQueue is still used during
       * serialization, which maintains compatibility at the expense of
@@ -5858,7 +5858,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/PriorityBlockingQueu
       *
       * For compatibility with previous version of this class, elements
 -     * are first copied to a java.util.PriorityQueue, which is then
-+     * are first copied to a org.jvnet.zephyr.jcl.java.util.PriorityQueue, which is then
++     * are first copied to a org.jvnet.zephyr.integration.javase.java.util.PriorityQueue, which is then
       * serialized.
       *
       * @param s the stream
@@ -5879,7 +5879,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/RunnableFuture.java
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
 +import java.util.concurrent.Executor;
 
@@ -5895,12 +5895,12 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/Semaphore.java
 -package java.util.concurrent;
 -import java.util.Collection;
 -import java.util.concurrent.locks.AbstractQueuedSynchronizer;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.AbstractQueuedSynchronizer;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Lock;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.AbstractQueuedSynchronizer;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Lock;
 
  /**
   * A counting semaphore.  Conceptually, a semaphore maintains a set of
@@ -5926,18 +5926,18 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/SynchronousQueue.jav
 -import java.util.*;
 -import java.util.Spliterator;
 -import java.util.Spliterators;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.AbstractQueue;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Collections;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.LockSupport;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.ReentrantLock;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractQueue;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Collections;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.LockSupport;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.ReentrantLock;
 
  /**
   * A {@linkplain BlockingQueue blocking queue} in which each insert
@@ -5994,22 +5994,22 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ThreadLocalRandom.ja
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.lang.ThreadLocal;
-+import org.jvnet.zephyr.jcl.java.util.Random;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicInteger;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicLong;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.stream.DoubleStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.IntStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.LongStream;
-+import org.jvnet.zephyr.jcl.java.util.stream.StreamSupport;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.lang.ThreadLocal;
++import org.jvnet.zephyr.integration.javase.java.util.Random;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicInteger;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicLong;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.stream.DoubleStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.IntStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.LongStream;
++import org.jvnet.zephyr.integration.javase.java.util.stream.StreamSupport;
 
  import java.io.ObjectStreamField;
 -import java.util.Random;
@@ -6037,7 +6037,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ThreadLocalRandom.ja
  public class ThreadLocalRandom extends Random {
      /*
 -     * This class implements the java.util.Random API (and subclasses
-+     * This class implements the org.jvnet.zephyr.jcl.java.util.Random API (and subclasses
++     * This class implements the org.jvnet.zephyr.integration.javase.java.util.Random API (and subclasses
       * Random) using a single static instance that accesses random
       * number state held in class Thread (primarily, field
       * threadLocalRandomSeed). In doing so, it also provides a home
@@ -6047,8 +6047,8 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/ThreadLocalRandom.ja
       *
 -     * Even though this class subclasses java.util.Random, it uses the
 -     * same basic algorithm as java.util.SplittableRandom.  (See its
-+     * Even though this class subclasses org.jvnet.zephyr.jcl.java.util.Random, it uses the
-+     * same basic algorithm as org.jvnet.zephyr.jcl.java.util.SplittableRandom.  (See its
++     * Even though this class subclasses org.jvnet.zephyr.integration.javase.java.util.Random, it uses the
++     * same basic algorithm as org.jvnet.zephyr.integration.javase.java.util.SplittableRandom.  (See its
       * internal documentation for explanations, which are not repeated
       * here.)  Because ThreadLocalRandoms are not splittable
       * though, we use only a single 64bit gamma.
@@ -6069,10 +6069,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/TimeUnit.java
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.locks.Lock;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.locks.Lock;
 
  /**
   * A {@code TimeUnit} represents time durations at a given unit of
@@ -6093,7 +6093,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/TransferQueue.java
   */
 
 -package java.util.concurrent;
-+package org.jvnet.zephyr.jcl.java.util.concurrent;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent;
 
  /**
   * A {@link BlockingQueue} in which producers may wait for consumers
@@ -6106,10 +6106,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicInteger
 
 -package java.util.concurrent.atomic;
 -import java.util.function.IntUnaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.IntUnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntUnaryOperator;
 +import sun.misc.Unsafe;
 +
  import java.util.function.IntBinaryOperator;
@@ -6118,7 +6118,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicInteger
  /**
   * An {@code int} value that may be updated atomically.  See the
 - * {@link java.util.concurrent.atomic} package specification for
-+ * {@link org.jvnet.zephyr.jcl.java.util.concurrent.atomic} package specification for
++ * {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic} package specification for
   * description of the properties of atomic variables. An
   * {@code AtomicInteger} is used in applications such as atomically
   * incremented counters, and cannot be used as a replacement for an
@@ -6140,10 +6140,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicInteger
 
 -package java.util.concurrent.atomic;
 -import java.util.function.IntUnaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.IntUnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntUnaryOperator;
 +import sun.misc.Unsafe;
 +
  import java.util.function.IntBinaryOperator;
@@ -6152,7 +6152,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicInteger
  /**
   * An {@code int} array in which elements may be updated atomically.
 - * See the {@link java.util.concurrent.atomic} package
-+ * See the {@link org.jvnet.zephyr.jcl.java.util.concurrent.atomic} package
++ * See the {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic} package
   * specification for description of the properties of atomic
   * variables.
   * @since 1.5
@@ -6175,11 +6175,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicInteger
 -package java.util.concurrent.atomic;
 -import java.util.function.IntUnaryOperator;
 -import java.util.function.IntBinaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.ReflectionUtils;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.IntUnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.ReflectionUtils;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntUnaryOperator;
  import sun.misc.Unsafe;
 +
  import java.lang.reflect.Field;
@@ -6225,10 +6225,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicLong.ja
 
 -package java.util.concurrent.atomic;
 -import java.util.function.LongUnaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.LongUnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongUnaryOperator;
 +import sun.misc.Unsafe;
 +
 +import java.lang.reflect.Field;
@@ -6238,7 +6238,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicLong.ja
  /**
   * A {@code long} value that may be updated atomically.  See the
 - * {@link java.util.concurrent.atomic} package specification for
-+ * {@link org.jvnet.zephyr.jcl.java.util.concurrent.atomic} package specification for
++ * {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic} package specification for
   * description of the properties of atomic variables. An
   * {@code AtomicLong} is used in applications such as atomically
   * incremented sequence numbers, and cannot be used as a replacement
@@ -6284,10 +6284,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicLongArr
 
 -package java.util.concurrent.atomic;
 -import java.util.function.LongUnaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.LongUnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongUnaryOperator;
 +import sun.misc.Unsafe;
 +
  import java.util.function.LongBinaryOperator;
@@ -6296,7 +6296,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicLongArr
  /**
   * A {@code long} array in which elements may be updated atomically.
 - * See the {@link java.util.concurrent.atomic} package specification
-+ * See the {@link org.jvnet.zephyr.jcl.java.util.concurrent.atomic} package specification
++ * See the {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic} package specification
   * for description of the properties of atomic variables.
   * @since 1.5
   * @author Doug Lea
@@ -6319,11 +6319,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicLongFie
 -package java.util.concurrent.atomic;
 -import java.util.function.LongUnaryOperator;
 -import java.util.function.LongBinaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.ReflectionUtils;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.LongUnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.ReflectionUtils;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongUnaryOperator;
  import sun.misc.Unsafe;
 +
  import java.lang.reflect.Field;
@@ -6378,17 +6378,17 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicReferen
 -package java.util.concurrent.atomic;
 -import java.util.function.UnaryOperator;
 -import java.util.function.BinaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
  import sun.misc.Unsafe;
 
  /**
   * An object reference that may be updated atomically. See the {@link
 - * java.util.concurrent.atomic} package specification for description
-+ * org.jvnet.zephyr.jcl.java.util.concurrent.atomic} package specification for description
++ * org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic} package specification for description
   * of the properties of atomic variables.
   * @since 1.5
   * @author Doug Lea
@@ -6412,12 +6412,12 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicReferen
 -import java.util.function.UnaryOperator;
 -import java.util.function.BinaryOperator;
 -import java.util.Arrays;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
 +import sun.misc.Unsafe;
 +
  import java.lang.reflect.Array;
@@ -6426,7 +6426,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicReferen
  /**
   * An array of object references in which elements may be updated
 - * atomically.  See the {@link java.util.concurrent.atomic} package
-+ * atomically.  See the {@link org.jvnet.zephyr.jcl.java.util.concurrent.atomic} package
++ * atomically.  See the {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic} package
   * specification for description of the properties of atomic
   * variables.
   * @since 1.5
@@ -6449,12 +6449,12 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/AtomicReferen
 -package java.util.concurrent.atomic;
 -import java.util.function.UnaryOperator;
 -import java.util.function.BinaryOperator;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.ReflectionUtils;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.impl.misc.ReflectionUtils;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
  import sun.misc.Unsafe;
 +
  import java.lang.reflect.Field;
@@ -6499,11 +6499,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/atomic/Striped64.jav
   */
 
 -package java.util.concurrent.atomic;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.atomic;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ThreadLocalRandom;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ThreadLocalRandom;
 +
 +import java.util.function.DoubleBinaryOperator;
  import java.util.function.LongBinaryOperator;
@@ -6538,9 +6538,9 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/AbstractOwnabl
   */
 
 -package java.util.concurrent.locks;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
 
  /**
   * A synchronizer that may be exclusively owned by a thread.  This
@@ -6555,13 +6555,13 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/AbstractQueued
 -import java.util.concurrent.TimeUnit;
 -import java.util.ArrayList;
 -import java.util.Collection;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 +import sun.misc.Unsafe;
 +
  import java.util.Date;
@@ -6589,15 +6589,15 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/AbstractQueued
 -import java.util.concurrent.TimeUnit;
 -import java.util.ArrayList;
 -import java.util.Collection;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Queue;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.CountDownLatch;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Queue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.CountDownLatch;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 +import sun.misc.Unsafe;
 +
  import java.util.Date;
@@ -6611,7 +6611,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/AbstractQueued
   * not suffice, you can build synchronizers from a lower level using
 - * {@link java.util.concurrent.atomic atomic} classes, your own custom
 - * {@link java.util.Queue} classes, and {@link LockSupport} blocking
-+ * {@link org.jvnet.zephyr.jcl.java.util.concurrent.atomic atomic} classes, your own custom
++ * {@link org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic atomic} classes, your own custom
 + * {@link Queue} classes, and {@link LockSupport} blocking
   * support.
   *
@@ -6643,11 +6643,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/Condition.java
 
 -package java.util.concurrent.locks;
 -import java.util.concurrent.TimeUnit;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ArrayBlockingQueue;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ArrayBlockingQueue;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 +
  import java.util.Date;
 
@@ -6670,10 +6670,10 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/Lock.java
 
 -package java.util.concurrent.locks;
 -import java.util.concurrent.TimeUnit;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 
  /**
   * {@code Lock} implementations provide more extensive locking
@@ -6686,13 +6686,13 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/LockSupport.ja
 
 -package java.util.concurrent.locks;
 -import sun.misc.Unsafe;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.SharedSecrets;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.Semaphore;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ThreadLocalRandom;
++import org.jvnet.zephyr.integration.javase.impl.misc.SharedSecrets;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.Semaphore;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ThreadLocalRandom;
 +
 +import java.util.concurrent.TimeUnit;
 
@@ -6795,7 +6795,7 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/ReadWriteLock.
   */
 
 -package java.util.concurrent.locks;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 
  /**
   * A {@code ReadWriteLock} maintains a pair of associated {@link
@@ -6809,11 +6809,11 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/ReentrantLock.
 -package java.util.concurrent.locks;
 -import java.util.concurrent.TimeUnit;
 -import java.util.Collection;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 
  /**
   * A reentrant mutual exclusion {@link Lock} with the same basic
@@ -6827,13 +6827,13 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/ReentrantReadW
 -package java.util.concurrent.locks;
 -import java.util.concurrent.TimeUnit;
 -import java.util.Collection;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 +
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.lang.ThreadLocal;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.lang.ThreadLocal;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 
  /**
   * An implementation of {@link ReadWriteLock} supporting similar
@@ -6854,16 +6854,16 @@ diff -r 57336c319de8 src/share/classes/java/util/concurrent/locks/StampedLock.ja
   */
 
 -package java.util.concurrent.locks;
-+package org.jvnet.zephyr.jcl.java.util.concurrent.locks;
++package org.jvnet.zephyr.integration.javase.java.util.concurrent.locks;
 
 -import java.util.concurrent.TimeUnit;
 -import java.util.concurrent.locks.Lock;
 -import java.util.concurrent.locks.Condition;
 -import java.util.concurrent.locks.ReadWriteLock;
 -import java.util.concurrent.locks.LockSupport;
-+import org.jvnet.zephyr.jcl.impl.misc.UnsafeHolder;
-+import org.jvnet.zephyr.jcl.java.lang.Thread;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.TimeUnit;
++import org.jvnet.zephyr.integration.javase.impl.misc.UnsafeHolder;
++import org.jvnet.zephyr.integration.javase.java.lang.Thread;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.TimeUnit;
 
  /**
   * A capability-based lock with three modes for controlling read/write
@@ -6884,10 +6884,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/BiConsumer.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation that accepts two input arguments and returns no
@@ -6899,10 +6899,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/BiFunction.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a function that accepts two arguments and produces a result.
@@ -6914,10 +6914,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/BiPredicate.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a predicate (boolean-valued function) of two arguments.  This is
@@ -6929,12 +6929,12 @@ diff -r 57336c319de8 src/share/classes/java/util/function/BinaryOperator.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
 -import java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation upon two operands of the same type, producing a result
@@ -6946,10 +6946,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/Consumer.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation that accepts a single input argument and returns no
@@ -6961,10 +6961,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/DoubleConsumer.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation that accepts a single {@code double}-valued argument and
@@ -6976,10 +6976,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/DoublePredicate.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a predicate (boolean-valued function) of one {@code double}-valued
@@ -6991,10 +6991,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/DoubleUnaryOperator.ja
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation on a single {@code double}-valued operand that produces
@@ -7006,10 +7006,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/Function.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a function that accepts one argument and produces a result.
@@ -7021,10 +7021,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/IntConsumer.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation that accepts a single {@code int}-valued argument and
@@ -7036,10 +7036,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/IntPredicate.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a predicate (boolean-valued function) of one {@code int}-valued
@@ -7051,10 +7051,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/IntUnaryOperator.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation on a single {@code int}-valued operand that produces
@@ -7066,10 +7066,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/LongConsumer.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation that accepts a single {@code long}-valued argument and
@@ -7081,10 +7081,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/LongPredicate.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a predicate (boolean-valued function) of one {@code long}-valued
@@ -7096,10 +7096,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/LongUnaryOperator.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents an operation on a single {@code long}-valued operand that produces
@@ -7111,10 +7111,10 @@ diff -r 57336c319de8 src/share/classes/java/util/function/Predicate.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
 -import java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
 
  /**
   * Represents a predicate (boolean-valued function) of one argument.
@@ -7126,7 +7126,7 @@ diff -r 57336c319de8 src/share/classes/java/util/function/UnaryOperator.java
   * questions.
   */
 -package java.util.function;
-+package org.jvnet.zephyr.jcl.java.util.function;
++package org.jvnet.zephyr.integration.javase.java.util.function;
 
  /**
   * Represents an operation on a single operand that produces a result of the
@@ -7138,12 +7138,12 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/AbstractPipeline.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Objects;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 +
  import java.util.function.IntFunction;
  import java.util.function.Supplier;
@@ -7165,12 +7165,12 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/AbstractShortCircuitTask
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Spliterator;
 -import java.util.concurrent.atomic.AtomicReference;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicReference;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicReference;
 
  /**
   * Abstract class for fork-join tasks used to implement short-circuiting
@@ -7182,7 +7182,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/AbstractSpinedBuffer.jav
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
  /**
   * Base class for a data structure for gathering elements into a buffer and then
@@ -7194,10 +7194,10 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/AbstractTask.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 +
  import java.util.concurrent.CountedCompleter;
  import java.util.concurrent.ForkJoinPool;
@@ -7210,7 +7210,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/BaseStream.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.nio.charset.Charset;
 -import java.nio.file.Files;
@@ -7221,8 +7221,8 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/BaseStream.java
 -import java.util.concurrent.ConcurrentHashMap;
 -import java.util.function.IntConsumer;
 -import java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 
  /**
   * Base interface for streams, which are sequences of elements supporting
@@ -7231,7 +7231,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/BaseStream.java
   *
   * See the class documentation for {@link Stream} and the package documentation
 - * for <a href="package-summary.html">java.util.stream</a> for additional
-+ * for <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a> for additional
++ * for <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a> for additional
   * specification of streams, stream operations, stream pipelines, and
   * parallelism, which governs the behavior of all stream types.
   *
@@ -7240,7 +7240,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/BaseStream.java
   * @see LongStream
   * @see DoubleStream
 - * @see <a href="package-summary.html">java.util.stream</a>
-+ * @see <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a>
++ * @see <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a>
   */
  public interface BaseStream<T, S extends BaseStream<T, S>>
          extends AutoCloseable {
@@ -7252,7 +7252,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Collector.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Collections;
 -import java.util.EnumSet;
@@ -7261,13 +7261,13 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Collector.java
 -import java.util.function.BiConsumer;
 -import java.util.function.BinaryOperator;
 -import java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.Collections;
-+import org.jvnet.zephyr.jcl.java.util.EnumSet;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.Collections;
++import org.jvnet.zephyr.integration.javase.java.util.EnumSet;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 +
  import java.util.function.Supplier;
 
@@ -7280,7 +7280,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Collectors.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.AbstractMap;
 -import java.util.AbstractSet;
@@ -7301,33 +7301,33 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Collectors.java
 -import java.util.Objects;
 -import java.util.Optional;
 -import java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.AbstractMap;
-+import org.jvnet.zephyr.jcl.java.util.AbstractSet;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Collections;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.DoubleSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.EnumSet;
-+import org.jvnet.zephyr.jcl.java.util.HashMap;
-+import org.jvnet.zephyr.jcl.java.util.HashSet;
-+import org.jvnet.zephyr.jcl.java.util.IntSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.List;
-+import org.jvnet.zephyr.jcl.java.util.LongSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Optional;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentHashMap;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentMap;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractMap;
++import org.jvnet.zephyr.integration.javase.java.util.AbstractSet;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Collections;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.DoubleSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.EnumSet;
++import org.jvnet.zephyr.integration.javase.java.util.HashMap;
++import org.jvnet.zephyr.integration.javase.java.util.HashSet;
++import org.jvnet.zephyr.integration.javase.java.util.IntSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.List;
++import org.jvnet.zephyr.integration.javase.java.util.LongSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Optional;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentHashMap;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentMap;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 +
  import java.util.StringJoiner;
 -import java.util.concurrent.ConcurrentHashMap;
@@ -7380,7 +7380,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DistinctOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.HashSet;
 -import java.util.LinkedHashSet;
@@ -7388,12 +7388,12 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DistinctOps.java
 -import java.util.Set;
 -import java.util.Spliterator;
 -import java.util.concurrent.ConcurrentHashMap;
-+import org.jvnet.zephyr.jcl.java.util.HashSet;
-+import org.jvnet.zephyr.jcl.java.util.LinkedHashSet;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Set;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentHashMap;
++import org.jvnet.zephyr.integration.javase.java.util.HashSet;
++import org.jvnet.zephyr.integration.javase.java.util.LinkedHashSet;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Set;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentHashMap;
 +
  import java.util.concurrent.atomic.AtomicBoolean;
  import java.util.function.IntFunction;
@@ -7406,7 +7406,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DoublePipeline.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.DoubleSummaryStatistics;
 -import java.util.Objects;
@@ -7416,17 +7416,17 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DoublePipeline.java
 -import java.util.Spliterators;
 -import java.util.function.BiConsumer;
 -import java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.DoubleSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoublePredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.DoubleSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoublePredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleUnaryOperator;
 +
  import java.util.function.DoubleBinaryOperator;
 -import java.util.function.DoubleConsumer;
@@ -7446,7 +7446,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DoubleStream.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.nio.charset.Charset;
 -import java.nio.file.Files;
@@ -7461,18 +7461,18 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DoubleStream.java
 -import java.util.Spliterators;
 -import java.util.concurrent.ConcurrentHashMap;
 -import java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.DoubleSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoublePredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleUnaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.DoubleSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoublePredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
 +
  import java.util.function.DoubleBinaryOperator;
 -import java.util.function.DoubleConsumer;
@@ -7491,14 +7491,14 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/DoubleStream.java
   *
   * See the class documentation for {@link Stream} and the package documentation
 - * for <a href="package-summary.html">java.util.stream</a> for additional
-+ * for <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a> for additional
++ * for <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a> for additional
   * specification of streams, stream operations, stream pipelines, and
   * parallelism.
   *
   * @since 1.8
   * @see Stream
 - * @see <a href="package-summary.html">java.util.stream</a>
-+ * @see <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a>
++ * @see <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a>
   */
  public interface DoubleStream extends BaseStream<Double, DoubleStream> {
 
@@ -7519,19 +7519,19 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/FindOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Optional;
 -import java.util.OptionalDouble;
 -import java.util.OptionalInt;
 -import java.util.OptionalLong;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Optional;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.OptionalInt;
-+import org.jvnet.zephyr.jcl.java.util.OptionalLong;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.Optional;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalInt;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalLong;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 +
  import java.util.concurrent.CountedCompleter;
 -import java.util.function.Predicate;
@@ -7546,16 +7546,16 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/ForEachOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Objects;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
  import java.util.concurrent.ConcurrentHashMap;
  import java.util.concurrent.CountedCompleter;
@@ -7576,7 +7576,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/IntPipeline.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.IntSummaryStatistics;
 -import java.util.Objects;
@@ -7587,18 +7587,18 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/IntPipeline.java
 -import java.util.Spliterators;
 -import java.util.function.BiConsumer;
 -import java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.IntSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.OptionalInt;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntPredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.IntUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.IntSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalInt;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntPredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntUnaryOperator;
 +
  import java.util.function.IntBinaryOperator;
 -import java.util.function.IntConsumer;
@@ -7618,7 +7618,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/IntStream.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Arrays;
 -import java.util.IntSummaryStatistics;
@@ -7630,19 +7630,19 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/IntStream.java
 -import java.util.Spliterators;
 -import java.util.function.BiConsumer;
 -import java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.IntSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.OptionalInt;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntPredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.IntUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.IntSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalInt;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntPredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntUnaryOperator;
 +
  import java.util.function.IntBinaryOperator;
 -import java.util.function.IntConsumer;
@@ -7660,14 +7660,14 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/IntStream.java
   *
   * See the class documentation for {@link Stream} and the package documentation
 - * for <a href="package-summary.html">java.util.stream</a> for additional
-+ * for <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a> for additional
++ * for <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a> for additional
   * specification of streams, stream operations, stream pipelines, and
   * parallelism.
   *
   * @since 1.8
   * @see Stream
 - * @see <a href="package-summary.html">java.util.stream</a>
-+ * @see <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a>
++ * @see <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a>
   */
  public interface IntStream extends BaseStream<Integer, IntStream> {
 
@@ -7688,7 +7688,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/LongPipeline.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.LongSummaryStatistics;
 -import java.util.Objects;
@@ -7699,18 +7699,18 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/LongPipeline.java
 -import java.util.Spliterators;
 -import java.util.function.BiConsumer;
 -import java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.LongSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.OptionalLong;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongPredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.LongUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.LongSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalLong;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongPredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongUnaryOperator;
 +
  import java.util.function.IntFunction;
  import java.util.function.LongBinaryOperator;
@@ -7731,7 +7731,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/LongStream.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.nio.charset.Charset;
 -import java.nio.file.Files;
@@ -7748,19 +7748,19 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/LongStream.java
 -import java.util.concurrent.ConcurrentHashMap;
 -import java.util.function.BiConsumer;
 -import java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.LongSummaryStatistics;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.OptionalLong;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongPredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.LongUnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.LongSummaryStatistics;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalLong;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongPredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongUnaryOperator;
 +
  import java.util.function.LongBinaryOperator;
 -import java.util.function.LongConsumer;
@@ -7778,14 +7778,14 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/LongStream.java
   *
   * See the class documentation for {@link Stream} and the package documentation
 - * for <a href="package-summary.html">java.util.stream</a> for additional
-+ * for <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a> for additional
++ * for <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a> for additional
   * specification of streams, stream operations, stream pipelines, and
   * parallelism.
   *
   * @since 1.8
   * @see Stream
 - * @see <a href="package-summary.html">java.util.stream</a>
-+ * @see <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a>
++ * @see <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a>
   */
  public interface LongStream extends BaseStream<Long, LongStream> {
 
@@ -7806,7 +7806,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/MatchOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Objects;
 -import java.util.Spliterator;
@@ -7814,12 +7814,12 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/MatchOps.java
 -import java.util.function.IntPredicate;
 -import java.util.function.LongPredicate;
 -import java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.DoublePredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.IntPredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.LongPredicate;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoublePredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntPredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongPredicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 +
  import java.util.function.Supplier;
 
@@ -7832,17 +7832,17 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Node.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Spliterator;
 -import java.util.function.Consumer;
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
  import java.util.function.IntFunction;
 -import java.util.function.LongConsumer;
@@ -7868,7 +7868,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Nodes.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.ArrayDeque;
 -import java.util.Arrays;
@@ -7878,19 +7878,19 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Nodes.java
 -import java.util.Objects;
 -import java.util.Spliterator;
 -import java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.ArrayDeque;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Deque;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayDeque;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Deque;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
  import java.util.concurrent.CountedCompleter;
 -import java.util.function.BinaryOperator;
@@ -7922,10 +7922,10 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/PipelineHelper.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 +
  import java.util.function.IntFunction;
 
@@ -7951,7 +7951,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/ReduceOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Objects;
 -import java.util.Optional;
@@ -7959,15 +7959,15 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/ReduceOps.java
 -import java.util.OptionalInt;
 -import java.util.OptionalLong;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Optional;
-+import org.jvnet.zephyr.jcl.java.util.OptionalDouble;
-+import org.jvnet.zephyr.jcl.java.util.OptionalInt;
-+import org.jvnet.zephyr.jcl.java.util.OptionalLong;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Optional;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalDouble;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalInt;
++import org.jvnet.zephyr.integration.javase.java.util.OptionalLong;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
 +
  import java.util.concurrent.CountedCompleter;
 -import java.util.function.BiConsumer;
@@ -7984,7 +7984,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/ReferencePipeline.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Comparator;
 -import java.util.Iterator;
@@ -7999,21 +7999,21 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/ReferencePipeline.java
 -import java.util.function.DoubleConsumer;
 -import java.util.function.Function;
 -import java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Optional;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Optional;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
 +
  import java.util.function.IntFunction;
 -import java.util.function.LongConsumer;
@@ -8029,18 +8029,18 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Sink.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Objects;
 -import java.util.function.Consumer;
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
 -import java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 
  /**
   * An extension of {@link Consumer} used to conduct values through the stages of
@@ -8052,10 +8052,10 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/SliceOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 +
  import java.util.concurrent.CountedCompleter;
  import java.util.function.IntFunction;
@@ -8068,19 +8068,19 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/SortedOps.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.ArrayList;
 -import java.util.Arrays;
 -import java.util.Comparator;
 -import java.util.Objects;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 +
  import java.util.function.IntFunction;
 
@@ -8103,7 +8103,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/SpinedBuffer.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.ArrayList;
 -import java.util.Arrays;
@@ -8116,19 +8116,19 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/SpinedBuffer.java
 -import java.util.function.Consumer;
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.lang.Iterable;
-+import org.jvnet.zephyr.jcl.java.util.ArrayList;
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.List;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.PrimitiveIterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.lang.Iterable;
++import org.jvnet.zephyr.integration.javase.java.util.ArrayList;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.List;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.PrimitiveIterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
  import java.util.function.IntFunction;
 -import java.util.function.LongConsumer;
@@ -8143,24 +8143,24 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Stream.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 +
-+import org.jvnet.zephyr.jcl.java.util.Arrays;
-+import org.jvnet.zephyr.jcl.java.util.Collection;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Optional;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterators;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentHashMap;
-+import org.jvnet.zephyr.jcl.java.util.function.BiConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.BiFunction;
-+import org.jvnet.zephyr.jcl.java.util.function.BinaryOperator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.Function;
-+import org.jvnet.zephyr.jcl.java.util.function.Predicate;
-+import org.jvnet.zephyr.jcl.java.util.function.UnaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.Arrays;
++import org.jvnet.zephyr.integration.javase.java.util.Collection;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Optional;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterators;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentHashMap;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.BiFunction;
++import org.jvnet.zephyr.integration.javase.java.util.function.BinaryOperator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.Function;
++import org.jvnet.zephyr.integration.javase.java.util.function.Predicate;
++import org.jvnet.zephyr.integration.javase.java.util.function.UnaryOperator;
 
  import java.nio.charset.Charset;
  import java.nio.file.Files;
@@ -8203,7 +8203,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Stream.java
   * @see LongStream
   * @see DoubleStream
 - * @see <a href="package-summary.html">java.util.stream</a>
-+ * @see <a href="package-summary.html">org.jvnet.zephyr.jcl.java.util.stream</a>
++ * @see <a href="package-summary.html">org.jvnet.zephyr.integration.javase.java.util.stream</a>
   */
  public interface Stream<T> extends BaseStream<T, Stream<T>> {
 
@@ -8251,14 +8251,14 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/StreamOpFlag.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.EnumMap;
 -import java.util.Map;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.EnumMap;
-+import org.jvnet.zephyr.jcl.java.util.Map;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.EnumMap;
++import org.jvnet.zephyr.integration.javase.java.util.Map;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 
  /**
   * Flags corresponding to characteristics of streams and operations. Flags are
@@ -8306,7 +8306,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/StreamShape.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
  /**
   * An enum describing the known shape specializations for stream abstractions.
@@ -8318,22 +8318,22 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/StreamSpliterators.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Comparator;
 -import java.util.Objects;
 -import java.util.Spliterator;
 -import java.util.concurrent.ConcurrentHashMap;
 -import java.util.concurrent.atomic.AtomicLong;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.ConcurrentHashMap;
-+import org.jvnet.zephyr.jcl.java.util.concurrent.atomic.AtomicLong;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.ConcurrentHashMap;
++import org.jvnet.zephyr.integration.javase.java.util.concurrent.atomic.AtomicLong;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 +
  import java.util.function.BooleanSupplier;
 -import java.util.function.Consumer;
@@ -8353,12 +8353,12 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/StreamSupport.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Objects;
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 +
  import java.util.function.Supplier;
 
@@ -8443,7 +8443,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Streams.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Comparator;
 -import java.util.Objects;
@@ -8452,13 +8452,13 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Streams.java
 -import java.util.function.DoubleConsumer;
 -import java.util.function.IntConsumer;
 -import java.util.function.LongConsumer;
-+import org.jvnet.zephyr.jcl.java.util.Comparator;
-+import org.jvnet.zephyr.jcl.java.util.Objects;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.function.Consumer;
-+import org.jvnet.zephyr.jcl.java.util.function.DoubleConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.IntConsumer;
-+import org.jvnet.zephyr.jcl.java.util.function.LongConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.Comparator;
++import org.jvnet.zephyr.integration.javase.java.util.Objects;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.function.Consumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.DoubleConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.IntConsumer;
++import org.jvnet.zephyr.integration.javase.java.util.function.LongConsumer;
 
  /**
   * Utility methods for operating on and creating streams.
@@ -8470,10 +8470,10 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/TerminalOp.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
 -import java.util.Spliterator;
-+import org.jvnet.zephyr.jcl.java.util.Spliterator;
++import org.jvnet.zephyr.integration.javase.java.util.Spliterator;
 
  /**
   * An operation in a stream pipeline that takes a stream as input and produces
@@ -8485,7 +8485,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/TerminalSink.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 
  import java.util.function.Supplier;
 
@@ -8497,7 +8497,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Tripwire.java
   * questions.
   */
 -package java.util.stream;
-+package org.jvnet.zephyr.jcl.java.util.stream;
++package org.jvnet.zephyr.integration.javase.java.util.stream;
 +
 +import sun.util.logging.PlatformLogger;
 
@@ -8509,7 +8509,7 @@ diff -r 57336c319de8 src/share/classes/java/util/stream/Tripwire.java
  /**
   * Utility class for detecting inadvertent uses of boxing in
 - * {@code java.util.stream} classes.  The detection is turned on or off based on
-+ * {@code org.jvnet.zephyr.jcl.java.util.stream} classes.  The detection is turned on or off based on
++ * {@code org.jvnet.zephyr.integration.javase.java.util.stream} classes.  The detection is turned on or off based on
   * whether the system property {@code org.openjdk.java.util.stream.tripwire} is
   * considered {@code true} according to {@link Boolean#getBoolean(String)}.
   * This should normally be turned off for production use.
@@ -8521,12 +8521,12 @@ diff -r 57336c319de8 src/share/classes/jdk/internal/util/xml/BasicXmlPropertiesP
   * questions.
   */
 -package jdk.internal.util.xml;
-+package org.jvnet.zephyr.jcl.jdk.internal.util.xml;
++package org.jvnet.zephyr.integration.javase.jdk.internal.util.xml;
 
 -import java.util.Properties;
 -import java.util.InvalidPropertiesFormatException;
-+import org.jvnet.zephyr.jcl.java.util.Properties;
-+import org.jvnet.zephyr.jcl.sun.util.spi.XmlPropertiesProvider;
++import org.jvnet.zephyr.integration.javase.java.util.Properties;
++import org.jvnet.zephyr.integration.javase.sun.util.spi.XmlPropertiesProvider;
 +
 +import java.io.IOException;
  import java.io.InputStream;
@@ -8546,7 +8546,7 @@ diff -r 57336c319de8 src/share/classes/jdk/internal/util/xml/PropertiesDefaultHa
   */
 
 -package jdk.internal.util.xml;
-+package org.jvnet.zephyr.jcl.jdk.internal.util.xml;
++package org.jvnet.zephyr.integration.javase.jdk.internal.util.xml;
 
 -import java.io.*;
 -import java.util.InvalidPropertiesFormatException;
@@ -8562,9 +8562,9 @@ diff -r 57336c319de8 src/share/classes/jdk/internal/util/xml/PropertiesDefaultHa
 +import jdk.internal.util.xml.XMLStreamWriter;
  import jdk.internal.util.xml.impl.SAXParserImpl;
  import jdk.internal.util.xml.impl.XMLStreamWriterImpl;
-+import org.jvnet.zephyr.jcl.java.util.Iterator;
-+import org.jvnet.zephyr.jcl.java.util.Map.Entry;
-+import org.jvnet.zephyr.jcl.java.util.Properties;
++import org.jvnet.zephyr.integration.javase.java.util.Iterator;
++import org.jvnet.zephyr.integration.javase.java.util.Map.Entry;
++import org.jvnet.zephyr.integration.javase.java.util.Properties;
 +
 +import java.io.IOException;
 +import java.io.InputStream;
@@ -8590,7 +8590,7 @@ diff -r 57336c319de8 src/share/classes/jdk/internal/util/xml/PropertiesDefaultHa
          if (rootElm == null) {
              fatalError(new SAXParseException("An XML properties document must contain"
 -                    + " the DOCTYPE declaration as defined by java.util.Properties.", null));
-+                    + " the DOCTYPE declaration as defined by org.jvnet.zephyr.jcl.java.util.Properties.", null));
++                    + " the DOCTYPE declaration as defined by org.jvnet.zephyr.integration.javase.java.util.Properties.", null));
          }
 
          if (rootElem == 1 && !rootElm.equals(qName)) {
@@ -8602,11 +8602,11 @@ diff -r 57336c319de8 src/share/classes/sun/util/spi/XmlPropertiesProvider.java
   */
 
 -package sun.util.spi;
-+package org.jvnet.zephyr.jcl.sun.util.spi;
++package org.jvnet.zephyr.integration.javase.sun.util.spi;
 
 -import java.util.Properties;
 -import java.util.InvalidPropertiesFormatException;
-+import org.jvnet.zephyr.jcl.java.util.Properties;
++import org.jvnet.zephyr.integration.javase.java.util.Properties;
 +
 +import java.io.IOException;
  import java.io.InputStream;

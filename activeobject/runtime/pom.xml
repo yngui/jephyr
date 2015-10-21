@@ -48,35 +48,38 @@
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>java/lang/Thread</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/lang/Thread</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/lang/Thread</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/Queue</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/Queue</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/Queue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/ArrayBlockingQueue</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/ArrayBlockingQueue</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/ArrayBlockingQueue
+                            </newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/BlockingQueue</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/BlockingQueue</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/BlockingQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/LinkedBlockingQueue</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/LinkedBlockingQueue</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/LinkedBlockingQueue
+                            </newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/RunnableFuture</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/RunnableFuture</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/TimeUnit</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/TimeUnit</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/LockSupport</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/locks/LockSupport</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/LockSupport
+                            </newName>
                         </mappingEntry>
                     </mappingEntries>
                 </configuration>

@@ -34,7 +34,7 @@
 
     <modules>
         <module>thread</module>
-        <module>jcl</module>
+        <module>integration</module>
         <module>continuation</module>
         <module>easyflow</module>
         <module>remapping</module>
@@ -44,7 +44,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <java.version>1.7</java.version>
+        <java.version>1.8</java.version>
         <asm.version>5.0.4</asm.version>
         <commons-io.version>2.4</commons-io.version>
         <maven.version>3.3.3</maven.version>

@@ -1,0 +1,602 @@
+<?xml version="1.0" encoding="UTF-8"?><!--
+  ~ The MIT License (MIT)
+  ~
+  ~ Copyright (c) 2015 Igor Konev
+  ~
+  ~ Permission is hereby granted, free of charge, to any person obtaining a copy
+  ~ of this software and associated documentation files (the "Software"), to deal
+  ~ in the Software without restriction, including without limitation the rights
+  ~ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+  ~ copies of the Software, and to permit persons to whom the Software is
+  ~ furnished to do so, subject to the following conditions:
+  ~
+  ~ The above copyright notice and this permission notice shall be included in
+  ~ all copies or substantial portions of the Software.
+  ~
+  ~ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+  ~ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+  ~ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+  ~ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+  ~ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+  ~ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+  ~ THE SOFTWARE.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jvnet.zephyr.integration.javase</groupId>
+        <artifactId>javase-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>javase-1.8</artifactId>
+
+    <build>
+        <plugins>
+            <plugin>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                    <compilerArgs>
+                        <arg>-XDignore.symbol.file</arg>
+                    </compilerArgs>
+                    <fork>true</fork>
+                    <executable>${jdk8.compilerExecutable}</executable>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <copy file="${jdk8.sourceDirectory}/java/lang/Iterable.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/lang"/>
+                                <copy file="${jdk8.sourceDirectory}/java/lang/SecurityManager.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/lang"/>
+                                <copy file="${jdk8.sourceDirectory}/java/lang/System.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/lang"/>
+                                <copy file="${jdk8.sourceDirectory}/java/lang/Thread.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/lang"/>
+                                <copy file="${jdk8.sourceDirectory}/java/lang/ThreadGroup.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/lang"/>
+                                <copy file="${jdk8.sourceDirectory}/java/lang/ThreadLocal.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/lang"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/DatagramChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/Pipe.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/SelectableChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/SelectionKey.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/Selector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/ServerSocketChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/SocketChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/spi/AbstractInterruptibleChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels/spi"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/spi/AbstractSelectableChannel.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels/spi"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/spi/AbstractSelectionKey.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels/spi"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/spi/AbstractSelector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels/spi"/>
+                                <copy file="${jdk8.sourceDirectory}/java/nio/channels/spi/SelectorProvider.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/nio/channels/spi"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/AbstractCollection.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/AbstractList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/AbstractMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/AbstractQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/AbstractSequentialList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/AbstractSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ArrayDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ArrayList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ArrayPrefixHelpers.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Arrays.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ArraysParallelSortHelpers.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Collection.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Collections.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ComparableTimSort.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Comparator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Comparators.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Deque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/DoubleSummaryStatistics.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/DualPivotQuicksort.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/EnumMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/EnumSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/HashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/HashSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Hashtable.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/IdentityHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/IntSummaryStatistics.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Iterator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/JumboEnumSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/LinkedHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/LinkedHashSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/LinkedList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/List.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ListIterator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/LongSummaryStatistics.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Map.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/NavigableMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/NavigableSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Objects.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Optional.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/OptionalDouble.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/OptionalInt.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/OptionalLong.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/PrimitiveIterator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/PriorityQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Properties.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Queue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Random.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/RegularEnumSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/ServiceLoader.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Set.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/SortedMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/SortedSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Spliterator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Spliterators.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/SplittableRandom.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Stack.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/TimSort.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/TreeMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/TreeSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Tripwire.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/Vector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/WeakHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ArrayBlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/BlockingDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/BlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentHashMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentLinkedDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentLinkedQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentNavigableMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentSkipListMap.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ConcurrentSkipListSet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/CopyOnWriteArrayList.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/CopyOnWriteArraySet.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/CountDownLatch.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/CyclicBarrier.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/Delayed.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/DelayQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/Exchanger.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/Future.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/FutureTask.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/LinkedBlockingDeque.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/LinkedBlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/LinkedTransferQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/PriorityBlockingQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/RunnableFuture.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/Semaphore.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/SynchronousQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/ThreadLocalRandom.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/TimeUnit.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/TransferQueue.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicInteger.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicIntegerArray.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicIntegerFieldUpdater.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicLong.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicLongArray.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicLongFieldUpdater.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicReference.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicReferenceArray.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/AtomicReferenceFieldUpdater.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/atomic/Striped64.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/atomic"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/AbstractOwnableSynchronizer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/AbstractQueuedLongSynchronizer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/AbstractQueuedSynchronizer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/Condition.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/Lock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/LockSupport.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/ReadWriteLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/ReentrantLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/ReentrantReadWriteLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/concurrent/locks/StampedLock.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/concurrent/locks"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/BiConsumer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/BiFunction.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/BinaryOperator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/BiPredicate.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/Consumer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/DoubleConsumer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/DoublePredicate.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/DoubleUnaryOperator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/Function.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/IntConsumer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/IntPredicate.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/IntUnaryOperator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/LongConsumer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/LongPredicate.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/LongUnaryOperator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/Predicate.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/function/UnaryOperator.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/function"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/AbstractPipeline.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/AbstractShortCircuitTask.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/AbstractSpinedBuffer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/AbstractTask.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/BaseStream.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Collector.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Collectors.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/DistinctOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/DoublePipeline.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/DoubleStream.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/FindOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/ForEachOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/IntPipeline.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/IntStream.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/LongPipeline.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/LongStream.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/MatchOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Node.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Nodes.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/PipelineHelper.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/ReduceOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/ReferencePipeline.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Sink.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/SliceOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/SortedOps.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/SpinedBuffer.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Stream.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/StreamOpFlag.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Streams.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/StreamShape.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/StreamSpliterators.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/StreamSupport.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/TerminalOp.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/TerminalSink.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/java/util/stream/Tripwire.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/java/util/stream"/>
+                                <copy file="${jdk8.sourceDirectory}/jdk/internal/util/xml/BasicXmlPropertiesProvider.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/jdk/internal/util/xml"/>
+                                <copy file="${jdk8.sourceDirectory}/jdk/internal/util/xml/PropertiesDefaultHandler.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/jdk/internal/util/xml"/>
+                                <copy file="${jdk8.sourceDirectory}/sun/util/spi/XmlPropertiesProvider.java"
+                                      todir="${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase/sun/util/spi"/>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-patch-plugin</artifactId>
+                <configuration>
+                    <patches>
+                        <patch>jdk.patch</patch>
+                    </patches>
+                    <targetDirectory>
+                        ${project.build.directory}/generated-sources/jdk/org/jvnet/zephyr/integration/javase
+                    </targetDirectory>
+                    <strip>4</strip>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>apply</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.build.directory}/generated-sources/jdk</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.jvnet.zephyr.easyflow</groupId>
+                <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <excludes>
+                        <exclude>org/jvnet/zephyr/integration/javase/impl/misc/ReflectionUtils.class</exclude>
+                        <exclude>org/jvnet/zephyr/integration/javase/impl/misc/ReflectionUtils$*.class</exclude>
+                        <exclude>org/jvnet/zephyr/integration/javase/impl/misc/SharedSecrets.class</exclude>
+                        <exclude>org/jvnet/zephyr/integration/javase/impl/misc/UnsafeHolder.class</exclude>
+                        <exclude>org/jvnet/zephyr/integration/javase/impl/nio/ch/DefaultSelectorProvider.class</exclude>
+                    </excludes>
+                    <excludedMethods>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ResultHandler.checkInterrupted()V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ResultHandler.completed(Ljava/lang/Object;Ljava/lang/Object;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ResultHandler.failed(Ljava/lang/Throwable;Ljava/lang/Object;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ServerSocketChannelImpl.bind(Ljava/net/SocketAddress;I)Lorg/jvnet/zephyr/integration/javase/java/nio/channels/ServerSocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ServerSocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ServerSocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/integration/javase/java/nio/channels/ServerSocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ServerSocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ServerSocketChannelImpl.supportedOptions()Ljava/util/Set;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/ServerSocketChannelImpl.implCloseSelectableChannel()V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.bind(Ljava/net/SocketAddress;)Lorg/jvnet/zephyr/integration/javase/java/nio/channels/SocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Lorg/jvnet/zephyr/integration/javase/java/nio/channels/SocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.supportedOptions()Ljava/util/Set;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.shutdownInput()Lorg/jvnet/zephyr/integration/javase/java/nio/channels/SocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.shutdownOutput()Lorg/jvnet/zephyr/integration/javase/java/nio/channels/SocketChannel;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.getRemoteAddress()Ljava/net/SocketAddress;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/impl/nio/ch/SocketChannelImpl.implCloseSelectableChannel()V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/lang/Thread.currentThread()Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/lang/Thread$ThreadAccessImpl.currentThread()Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/lang/Thread$ThreadAccessImpl.setCurrentThread(Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/lang/Thread$ThreadAccessImpl.getImpl(Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;)Lorg/jvnet/zephyr/thread/ThreadImpl;
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/lang/Thread$ThreadAccessImpl.blockedOn(Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;Lorg/jvnet/zephyr/integration/javase/impl/nio/ch/Interruptible;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/LockSupport.setBlocker(Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;Ljava/lang/Object;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/LockSupport.unpark(Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;)V
+                        </excludedMethod>
+                        <excludedMethod>
+                            org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/LockSupport.getBlocker(Lorg/jvnet/zephyr/integration/javase/java/lang/Thread;)Ljava/lang/Object;
+                        </excludedMethod>
+                    </excludedMethods>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <classifier>easyflow</classifier>
+                            <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.jvnet.zephyr.thread</groupId>
+            <artifactId>thread-api</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.util</groupId>
+            <artifactId>util-logging</artifactId>
+            <version>1.0</version>
+            <scope>system</scope>
+            <systemPath>${java.home}/lib/rt.jar</systemPath>
+        </dependency>
+    </dependencies>
+</project>

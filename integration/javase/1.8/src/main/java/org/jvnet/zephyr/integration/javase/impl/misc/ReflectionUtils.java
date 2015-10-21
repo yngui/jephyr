@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jvnet.zephyr.jcl.impl.misc;
+package org.jvnet.zephyr.integration.javase.impl.misc;
 
 public final class ReflectionUtils {
 

@@ -44,23 +44,24 @@
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>java/util/AbstractQueue</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/AbstractQueue</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/AbstractQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/Iterator</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/Iterator</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/Iterator</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/RunnableFuture</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/RunnableFuture</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/TimeUnit</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/TimeUnit</newName>
+                            <newName>org/jvnet/zephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/AbstractQueuedSynchronizer</oldName>
-                            <newName>org/jvnet/zephyr/jcl/java/util/concurrent/locks/AbstractQueuedSynchronizer
+                            <newName>
+                                org/jvnet/zephyr/integration/javase/java/util/concurrent/locks/AbstractQueuedSynchronizer
                             </newName>
                         </mappingEntry>
                     </mappingEntries>
