@@ -152,22 +152,12 @@
             </dependency>
             <dependency>
                 <groupId>org.jephyr.common</groupId>
-                <artifactId>common-instrument</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jephyr.common</groupId>
                 <artifactId>common-maven-plugin</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.jephyr.common</groupId>
                 <artifactId>common-agent</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.jephyr.common</groupId>
-                <artifactId>common-util</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

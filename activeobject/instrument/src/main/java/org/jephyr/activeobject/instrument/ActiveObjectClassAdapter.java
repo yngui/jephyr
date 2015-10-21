@@ -171,7 +171,7 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
         if (activeObject) {
             FieldVisitor fv =
                     visitField(ACC_PRIVATE | ACC_STATIC | ACC_FINAL | ACC_SYNTHETIC, "activeObject$mailboxSupplier",
-                            "Lorg/jephyr/common/util/function/Supplier;", null, null);
+                            "Ljava/util/function/Supplier;", null, null);
             fv.visitEnd();
 
             FieldVisitor fv1 = visitField(ACC_PRIVATE | ACC_FINAL | ACC_SYNTHETIC, "activeObject$thread",
@@ -216,9 +216,8 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
         mv.visitTypeInsn(ANEWARRAY, "java/lang/Object");
         mv.visitMethodInsn(INVOKEVIRTUAL, "java/lang/reflect/Constructor", "newInstance",
                 "([Ljava/lang/Object;)Ljava/lang/Object;", false);
-        mv.visitTypeInsn(CHECKCAST, "org/jephyr/common/util/function/Supplier");
-        mv.visitFieldInsn(PUTSTATIC, name, "activeObject$mailboxSupplier",
-                "Lorg/jephyr/common/util/function/Supplier;");
+        mv.visitTypeInsn(CHECKCAST, "java/util/function/Supplier");
+        mv.visitFieldInsn(PUTSTATIC, name, "activeObject$mailboxSupplier", "Ljava/util/function/Supplier;");
     }
 
     private static void visitPush(MethodVisitor mv, int operand) {
@@ -488,9 +487,9 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
                 visitTypeInsn(NEW, "org/jephyr/activeobject/support/ActiveObjectThread");
                 visitInsn(DUP);
                 visitFieldInsn(GETSTATIC, ActiveObjectClassAdapter.this.name, "activeObject$mailboxSupplier",
-                        "Lorg/jephyr/common/util/function/Supplier;");
-                super.visitMethodInsn(INVOKEINTERFACE, "org/jephyr/common/util/function/Supplier", "get",
-                        "()Ljava/lang/Object;", true);
+                        "Ljava/util/function/Supplier;");
+                super.visitMethodInsn(INVOKEINTERFACE, "java/util/function/Supplier", "get", "()Ljava/lang/Object;",
+                        true);
                 visitTypeInsn(CHECKCAST, "org/jephyr/activeobject/mailbox/Mailbox");
                 super.visitMethodInsn(INVOKESPECIAL, "org/jephyr/activeobject/support/ActiveObjectThread", "<init>",
                         "(Lorg/jephyr/activeobject/mailbox/Mailbox;)V", false);
@@ -891,7 +890,7 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
             ClassWriter writer = new ClassWriter(0);
 
             writer.visit(version, ACC_FINAL | ACC_SUPER | ACC_SYNTHETIC, taskClassName, null,
-                    "org/jephyr/common/util/concurrent/RunnableFutureTask", null);
+                    "org/jephyr/activeobject/support/RunnableFutureTask", null);
 
             String desc1 = 'L' + ActiveObjectClassAdapter.this.name + ';';
 
@@ -920,7 +919,7 @@ public final class ActiveObjectClassAdapter extends ClassVisitor {
             mv1.visitCode();
 
             mv1.visitVarInsn(ALOAD, 0);
-            mv1.visitMethodInsn(INVOKESPECIAL, "org/jephyr/common/util/concurrent/RunnableFutureTask", "<init>", "()V",
+            mv1.visitMethodInsn(INVOKESPECIAL, "org/jephyr/activeobject/support/RunnableFutureTask", "<init>", "()V",
                     false);
 
             mv1.visitVarInsn(ALOAD, 0);

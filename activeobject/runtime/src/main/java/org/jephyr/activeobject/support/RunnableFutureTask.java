@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.common.util.concurrent;
+package org.jephyr.activeobject.support;
 
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ExecutionException;

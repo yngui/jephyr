@@ -24,10 +24,9 @@
 
 package org.jephyr.activeobject.mailbox;
 
-import org.jephyr.common.util.function.Supplier;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import java.util.function.Supplier;
 
 import static java.util.Objects.requireNonNull;
 

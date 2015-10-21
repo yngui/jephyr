@@ -24,7 +24,6 @@
 
 package org.jephyr.easyflow.instrument;
 
-import org.jephyr.common.util.function.Predicate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
@@ -35,6 +34,7 @@ import org.objectweb.asm.tree.MethodNode;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.ClassReader.SKIP_DEBUG;
@@ -48,12 +48,7 @@ import static org.objectweb.asm.Opcodes.INVOKESTATIC;
 
 public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
-    private static final Predicate<AbstractInsnNode> IS_METHOD_INSN_NODE = new Predicate<AbstractInsnNode>() {
-        @Override
-        public boolean test(AbstractInsnNode t) {
-            return t instanceof MethodInsnNode;
-        }
-    };
+    private static final Predicate<AbstractInsnNode> IS_METHOD_INSN_NODE = t -> t instanceof MethodInsnNode;
 
     private final Map<MethodRef, Boolean> suspendables = new HashMap<>();
 
@@ -113,26 +108,23 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
 
         @Override
         public void visitEnd() {
-            Predicate<AbstractInsnNode> isForeign = new Predicate<AbstractInsnNode>() {
-                @Override
-                public boolean test(AbstractInsnNode t) {
-                    if (t instanceof MethodInsnNode) {
-                        MethodInsnNode insn = (MethodInsnNode) t;
-                        if (!insn.owner.equals(name)) {
-                            if (insn.owner.charAt(0) != '[' && (!insn.owner.startsWith("java/") ||
-                                    insn.getOpcode() != INVOKESPECIAL && insn.getOpcode() != INVOKESTATIC)) {
-                                return true;
-                            }
-                        } else if (insn.getOpcode() != INVOKESPECIAL) {
-                            MethodNode node = nodes.get(new MethodRef(insn.name, insn.desc));
-                            if (node == null || (access & ACC_FINAL) == 0 &&
-                                    (node.access & (ACC_PRIVATE | ACC_STATIC | ACC_FINAL)) == 0) {
-                                return true;
-                            }
+            Predicate<AbstractInsnNode> isForeign = t -> {
+                if (t instanceof MethodInsnNode) {
+                    MethodInsnNode insn = (MethodInsnNode) t;
+                    if (!insn.owner.equals(name)) {
+                        if (insn.owner.charAt(0) != '[' && (!insn.owner.startsWith("java/") ||
+                                insn.getOpcode() != INVOKESPECIAL && insn.getOpcode() != INVOKESTATIC)) {
+                            return true;
+                        }
+                    } else if (insn.getOpcode() != INVOKESPECIAL) {
+                        MethodNode node = nodes.get(new MethodRef(insn.name, insn.desc));
+                        if (node == null || (access & ACC_FINAL) == 0 &&
+                                (node.access & (ACC_PRIVATE | ACC_STATIC | ACC_FINAL)) == 0) {
+                            return true;
                         }
                     }
-                    return false;
                 }
+                return false;
             };
 
             for (Map.Entry<MethodRef, MethodNode> entry : nodes.entrySet()) {
@@ -145,18 +137,15 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 }
             }
 
-            Predicate<AbstractInsnNode> isSuspendable = new Predicate<AbstractInsnNode>() {
-                @Override
-                public boolean test(AbstractInsnNode t) {
-                    if (t instanceof MethodInsnNode) {
-                        MethodInsnNode insn = (MethodInsnNode) t;
-                        Boolean suspendable = suspendables.get(new MethodRef(insn.name, insn.desc));
-                        if (suspendable != null && suspendable) {
-                            return true;
-                        }
+            Predicate<AbstractInsnNode> isSuspendable = t -> {
+                if (t instanceof MethodInsnNode) {
+                    MethodInsnNode insn = (MethodInsnNode) t;
+                    Boolean suspendable = suspendables.get(new MethodRef(insn.name, insn.desc));
+                    if (suspendable != null && suspendable) {
+                        return true;
                     }
-                    return false;
                 }
+                return false;
             };
 
             boolean found;
@@ -172,11 +161,8 @@ public final class AnalyzingMethodRefPredicate implements Predicate<MethodRef> {
                 }
             } while (found);
 
-            for (MethodRef ref : nodes.keySet()) {
-                if (!suspendables.containsKey(ref)) {
-                    suspendables.put(ref, false);
-                }
-            }
+            nodes.keySet().stream().filter(ref -> !suspendables.containsKey(ref))
+                    .forEach(ref -> suspendables.put(ref, false));
         }
     }
 }

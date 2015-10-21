@@ -26,7 +26,6 @@ package org.jephyr.easyflow.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
-import org.jephyr.common.util.function.Predicate;
 import org.jephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
 import org.jephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jephyr.easyflow.instrument.MethodRef;
@@ -36,12 +35,12 @@ import org.objectweb.asm.ClassWriter;
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
+import java.util.function.Predicate;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
 import static org.apache.commons.io.FilenameUtils.removeExtension;
 import static org.apache.commons.io.FilenameUtils.separatorsToUnix;
-import static org.jephyr.common.util.function.Predicates.alwaysTrue;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.AbstractEnhanceMojo {
@@ -60,16 +59,12 @@ public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.Abstra
 
         Predicate<MethodRef> methodRefPredicate;
         if (excludedMethods == null) {
-            methodRefPredicate = alwaysTrue();
+            methodRefPredicate = t -> true;
         } else {
             String className = separatorsToUnix(
                     removeExtension(getClassesDirectory().toPath().relativize(srcFile.toPath()).toString()));
-            methodRefPredicate = new AnalyzingMethodRefPredicate(original, new Predicate<MethodRef>() {
-                @Override
-                public boolean test(MethodRef t) {
-                    return !excludedMethods.contains(className + '.' + t.getName() + t.getDesc());
-                }
-            });
+            methodRefPredicate = new AnalyzingMethodRefPredicate(original,
+                    t -> !excludedMethods.contains(className + '.' + t.getName() + t.getDesc()));
         }
 
         ClassWriter writer = new ClassWriter(0);

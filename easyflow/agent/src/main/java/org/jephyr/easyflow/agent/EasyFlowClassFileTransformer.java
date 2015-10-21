@@ -25,7 +25,6 @@
 package org.jephyr.easyflow.agent;
 
 import org.jephyr.common.agent.ClassNameAwareClassAdapter;
-import org.jephyr.common.util.function.Predicate;
 import org.jephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
 import org.jephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jephyr.easyflow.instrument.MethodRef;
@@ -34,9 +33,9 @@ import org.objectweb.asm.ClassWriter;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import static org.jephyr.common.util.function.Predicates.alwaysTrue;
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 final class EasyFlowClassFileTransformer implements ClassFileTransformer {
@@ -55,7 +54,7 @@ final class EasyFlowClassFileTransformer implements ClassFileTransformer {
         try {
             Predicate<MethodRef> methodRefPredicate;
             if (methodRefPattern == null || className == null) {
-                methodRefPredicate = alwaysTrue();
+                methodRefPredicate = t -> true;
             } else {
                 methodRefPredicate = new AnalyzingMethodRefPredicate(classfileBuffer,
                         new MethodRefPredicate(methodRefPattern, className));

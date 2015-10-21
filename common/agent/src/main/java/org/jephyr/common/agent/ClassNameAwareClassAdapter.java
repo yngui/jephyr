@@ -24,9 +24,10 @@
 
 package org.jephyr.common.agent;
 
-import org.jephyr.common.util.function.Predicate;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.ClassWriter;
+
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.Opcodes.ASM5;

@@ -24,11 +24,10 @@
 
 package org.jephyr.easyflow.agent;
 
-import org.jephyr.common.util.function.Predicate;
-
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.Properties;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static org.jephyr.common.agent.AgentUtils.parseArgs;
@@ -39,13 +38,8 @@ public final class Main {
         Properties props = parseArgs(agentArgs);
         Pattern includes = getPattern(props.getProperty("includes"));
         Pattern excludes = getPattern(props.getProperty("excludes"));
-        Predicate<String> classNamePredicate = new Predicate<String>() {
-            @Override
-            public boolean test(String t) {
-                return (includes == null || includes.matcher(t).find()) &&
-                        (excludes == null || !excludes.matcher(t).find());
-            }
-        };
+        Predicate<String> classNamePredicate = t -> (includes == null || includes.matcher(t).find()) &&
+                (excludes == null || !excludes.matcher(t).find());
         inst.addTransformer(
                 new EasyFlowClassFileTransformer(classNamePredicate, getPattern(props.getProperty("excludeMethods"))));
     }

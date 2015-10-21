@@ -25,25 +25,20 @@
 package org.jephyr.easyflow.instrument;
 
 import org.apache.commons.io.IOUtils;
-import org.jephyr.common.util.function.Predicate;
 import org.objectweb.asm.Type;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
+import java.util.function.Predicate;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;
 
 public final class AnalyzingMethodRefPredicateTest {
 
-    private static final Predicate<MethodRef> TRUE_PREDICATE = new Predicate<MethodRef>() {
-        @Override
-        public boolean test(MethodRef t) {
-            return true;
-        }
-    };
+    private static final Predicate<MethodRef> TRUE_PREDICATE = t -> true;
 
     @Test
     public void testApplyParentPredicate() throws Exception {
@@ -56,12 +51,8 @@ public final class AnalyzingMethodRefPredicateTest {
             void m2() {
             }
         }
-        Predicate<MethodRef> predicate = new AnalyzingMethodRefPredicate(getBytes(C.class), new Predicate<MethodRef>() {
-            @Override
-            public boolean test(MethodRef t) {
-                return !t.getName().equals("m");
-            }
-        });
+        Predicate<MethodRef> predicate =
+                new AnalyzingMethodRefPredicate(getBytes(C.class), t -> !t.getName().equals("m"));
         assertFalse(predicate.test(getMethodRef(C.class.getDeclaredMethod("m"))));
     }
 

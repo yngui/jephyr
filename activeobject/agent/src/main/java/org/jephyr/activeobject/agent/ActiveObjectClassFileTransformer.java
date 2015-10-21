@@ -27,7 +27,6 @@ package org.jephyr.activeobject.agent;
 import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter;
 import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter.ClassEntry;
 import org.jephyr.common.agent.ClassNameAwareClassAdapter;
-import org.jephyr.common.util.function.Predicate;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
 
@@ -38,6 +37,7 @@ import java.lang.instrument.Instrumentation;
 import java.nio.file.Files;
 import java.security.ProtectionDomain;
 import java.util.Collection;
+import java.util.function.Predicate;
 import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;

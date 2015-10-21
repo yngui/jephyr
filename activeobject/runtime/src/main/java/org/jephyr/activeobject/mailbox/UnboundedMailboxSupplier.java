@@ -24,9 +24,8 @@
 
 package org.jephyr.activeobject.mailbox;
 
-import org.jephyr.common.util.function.Supplier;
-
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.function.Supplier;
 
 public final class UnboundedMailboxSupplier implements Supplier<Mailbox> {
 

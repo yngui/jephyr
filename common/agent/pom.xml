@@ -37,10 +37,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jephyr.common</groupId>
-            <artifactId>common-instrument</artifactId>
-        </dependency>
-        <dependency>
             <groupId>org.ow2.asm</groupId>
             <artifactId>asm-debug-all</artifactId>
             <scope>provided</scope>

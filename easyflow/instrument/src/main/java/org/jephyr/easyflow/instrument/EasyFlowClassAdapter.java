@@ -24,10 +24,11 @@
 
 package org.jephyr.easyflow.instrument;
 
-import org.jephyr.common.util.function.Predicate;
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
+
+import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;

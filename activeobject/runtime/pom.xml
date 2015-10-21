@@ -51,6 +51,14 @@
                             <newName>org/jephyr/integration/javase/java/lang/Thread</newName>
                         </mappingEntry>
                         <mappingEntry>
+                            <oldName>java/util/AbstractQueue</oldName>
+                            <newName>org/jephyr/integration/javase/java/util/AbstractQueue</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/Iterator</oldName>
+                            <newName>org/jephyr/integration/javase/java/util/Iterator</newName>
+                        </mappingEntry>
+                        <mappingEntry>
                             <oldName>java/util/Queue</oldName>
                             <newName>org/jephyr/integration/javase/java/util/Queue</newName>
                         </mappingEntry>
@@ -75,6 +83,12 @@
                         <mappingEntry>
                             <oldName>java/util/concurrent/TimeUnit</oldName>
                             <newName>org/jephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/locks/AbstractQueuedSynchronizer</oldName>
+                            <newName>
+                                org/jephyr/integration/javase/java/util/concurrent/locks/AbstractQueuedSynchronizer
+                            </newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/LockSupport</oldName>
@@ -105,6 +119,8 @@
                         <exclude>org/jephyr/activeobject/mailbox/UnboundedMailboxSupplier.class</exclude>
                         <exclude>org/jephyr/activeobject/support/Disposer.class</exclude>
                         <exclude>org/jephyr/activeobject/support/Disposer$*.class</exclude>
+                        <exclude>org/jephyr/activeobject/support/SingleConsumerQueue.class</exclude>
+                        <exclude>org/jephyr/activeobject/support/SingleConsumerQueue$*.class</exclude>
                     </excludes>
                     <excludedMethods>
                         <excludedMethod>
@@ -139,12 +155,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <dependencies>
-        <dependency>
-            <groupId>org.jephyr.common</groupId>
-            <artifactId>common-util</artifactId>
-            <optional>true</optional>
-        </dependency>
-    </dependencies>
 </project>
