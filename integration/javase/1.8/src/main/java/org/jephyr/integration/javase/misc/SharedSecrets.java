@@ -22,30 +22,24 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.impl.misc;
+package org.jephyr.integration.javase.misc;
 
-import sun.misc.Unsafe;
+import jephyr.java.lang.Thread;
+import org.jephyr.integration.javase.nio.Interruptible;
+import org.jephyr.thread.ThreadAccess;
 
-import java.lang.reflect.Field;
+public final class SharedSecrets {
 
-public final class UnsafeHolder {
+    private static ThreadAccess<Thread, Interruptible> threadAccess;
 
-    private static final Unsafe unsafe;
-
-    static {
-        try {
-            Field field = Unsafe.class.getDeclaredField("theUnsafe");
-            field.setAccessible(true);
-            unsafe = (Unsafe) field.get(null);
-        } catch (Exception e) {
-            throw new Error(e);
-        }
+    private SharedSecrets() {
     }
 
-    private UnsafeHolder() {
+    public static ThreadAccess<Thread, Interruptible> getThreadAccess() {
+        return threadAccess;
     }
 
-    public static Unsafe getUnsafe() {
-        return unsafe;
+    public static void setThreadAccess(ThreadAccess<Thread, Interruptible> threadAccess) {
+        SharedSecrets.threadAccess = threadAccess;
     }
 }

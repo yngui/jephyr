@@ -41,6 +41,16 @@
             <plugins>
                 <plugin>
                     <artifactId>maven-plugin-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <configuration>
+                                <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
+                            </configuration>
+                            <goals>
+                                <goal>descriptor</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>

@@ -22,14 +22,14 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.impl.nio.ch;
+package org.jephyr.integration.javase.nio;
 
-import org.jephyr.integration.javase.java.nio.channels.DatagramChannel;
-import org.jephyr.integration.javase.java.nio.channels.Pipe;
-import org.jephyr.integration.javase.java.nio.channels.ServerSocketChannel;
-import org.jephyr.integration.javase.java.nio.channels.SocketChannel;
-import org.jephyr.integration.javase.java.nio.channels.spi.AbstractSelector;
-import org.jephyr.integration.javase.java.nio.channels.spi.SelectorProvider;
+import jephyr.java.nio.channels.DatagramChannel;
+import jephyr.java.nio.channels.Pipe;
+import jephyr.java.nio.channels.ServerSocketChannel;
+import jephyr.java.nio.channels.SocketChannel;
+import jephyr.java.nio.channels.spi.AbstractSelector;
+import jephyr.java.nio.channels.spi.SelectorProvider;
 
 import java.io.IOException;
 import java.net.ProtocolFamily;

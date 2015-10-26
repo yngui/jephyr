@@ -22,11 +22,27 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.impl.nio.ch;
+package org.jephyr.integration.javase.misc;
 
-import org.jephyr.integration.javase.java.lang.Thread;
+public final class ReflectionUtils {
 
-public interface Interruptible {
+    private static final InternalSecurityManager SECURITY_MANAGER = new InternalSecurityManager();
 
-    void interrupt(Thread thread);
+    private ReflectionUtils() {
+    }
+
+    public static Class<?>[] getClassContext() {
+        return SECURITY_MANAGER.getClassContext();
+    }
+
+    private static final class InternalSecurityManager extends SecurityManager {
+
+        InternalSecurityManager() {
+        }
+
+        @Override
+        protected Class[] getClassContext() {
+            return super.getClassContext();
+        }
+    }
 }

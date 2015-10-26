@@ -48,52 +48,47 @@
                     <mappingEntries>
                         <mappingEntry>
                             <oldName>java/lang/Thread</oldName>
-                            <newName>org/jephyr/integration/javase/java/lang/Thread</newName>
+                            <newName>jephyr/java/lang/Thread</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/AbstractQueue</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/AbstractQueue</newName>
+                            <newName>jephyr/java/util/AbstractQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/Iterator</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/Iterator</newName>
+                            <newName>jephyr/java/util/Iterator</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/Queue</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/Queue</newName>
+                            <newName>jephyr/java/util/Queue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/ArrayBlockingQueue</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/concurrent/ArrayBlockingQueue
-                            </newName>
+                            <newName>jephyr/java/util/concurrent/ArrayBlockingQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/BlockingQueue</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/concurrent/BlockingQueue</newName>
+                            <newName>jephyr/java/util/concurrent/BlockingQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/LinkedBlockingQueue</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/concurrent/LinkedBlockingQueue
-                            </newName>
+                            <newName>jephyr/java/util/concurrent/LinkedBlockingQueue</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/RunnableFuture</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/concurrent/RunnableFuture</newName>
+                            <newName>jephyr/java/util/concurrent/RunnableFuture</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/TimeUnit</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/concurrent/TimeUnit</newName>
+                            <newName>jephyr/java/util/concurrent/TimeUnit</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/AbstractQueuedSynchronizer</oldName>
-                            <newName>
-                                org/jephyr/integration/javase/java/util/concurrent/locks/AbstractQueuedSynchronizer
-                            </newName>
+                            <newName>jephyr/java/util/concurrent/locks/AbstractQueuedSynchronizer</newName>
                         </mappingEntry>
                         <mappingEntry>
                             <oldName>java/util/concurrent/locks/LockSupport</oldName>
-                            <newName>org/jephyr/integration/javase/java/util/concurrent/locks/LockSupport
-                            </newName>
+                            <newName>jephyr/java/util/concurrent/locks/LockSupport</newName>
                         </mappingEntry>
                     </mappingEntries>
                 </configuration>

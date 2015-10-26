@@ -22,10 +22,10 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.impl.nio.ch;
+package org.jephyr.integration.javase.nio;
 
-import org.jephyr.integration.javase.java.lang.Thread;
-import org.jephyr.integration.javase.java.util.concurrent.locks.LockSupport;
+import jephyr.java.lang.Thread;
+import jephyr.java.util.concurrent.locks.LockSupport;
 
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
