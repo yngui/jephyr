@@ -43,6 +43,10 @@ import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.AbstractEnhanceMojo {
 
     @Override
+    protected final void initialize() {
+    }
+
+    @Override
     protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
         byte[] original;
         try {

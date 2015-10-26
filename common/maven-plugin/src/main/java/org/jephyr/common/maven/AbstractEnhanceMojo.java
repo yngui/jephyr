@@ -48,6 +48,8 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
 
     @Override
     public final void execute() throws MojoExecutionException {
+        initialize();
+
         File classesDirectory = getClassesDirectory();
         if (!classesDirectory.isDirectory()) {
             return;
@@ -97,6 +99,8 @@ public abstract class AbstractEnhanceMojo extends AbstractMojo {
         }
         return include;
     }
+
+    protected abstract void initialize() throws MojoExecutionException;
 
     protected abstract File getClassesDirectory();
 

@@ -48,11 +48,12 @@ public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.Abstra
     private Function<String, String> mapper;
 
     @Override
-    protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
-        if (mapper == null) {
-            mapper = createMapper();
-        }
+    protected final void initialize() {
+        mapper = createMapper();
+    }
 
+    @Override
+    protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
         byte[] original;
         try {
             original = readFileToByteArray(srcFile);

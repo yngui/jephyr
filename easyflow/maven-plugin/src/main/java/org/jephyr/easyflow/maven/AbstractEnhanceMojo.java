@@ -49,6 +49,10 @@ public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.Abstra
     private Collection<String> excludedMethods;
 
     @Override
+    protected final void initialize() {
+    }
+
+    @Override
     protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
         byte[] original;
         try {
