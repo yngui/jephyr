@@ -64,6 +64,10 @@
 
     <dependencies>
         <dependency>
+            <groupId>org.jephyr.remapping</groupId>
+            <artifactId>remapping-instrument</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.jephyr.common</groupId>
             <artifactId>common-agent</artifactId>
         </dependency>
@@ -74,7 +78,7 @@
         </dependency>
         <dependency>
             <groupId>org.ow2.asm</groupId>
-            <artifactId>asm-commons</artifactId>
+            <artifactId>asm</artifactId>
             <scope>runtime</scope>
         </dependency>
     </dependencies>

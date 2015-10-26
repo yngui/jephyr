@@ -25,13 +25,13 @@
 package org.jephyr.remapping.agent;
 
 import org.jephyr.common.agent.ClassNameAwareClassAdapter;
+import org.jephyr.remapping.instrument.RemappingClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.commons.Remapper;
-import org.objectweb.asm.commons.RemappingClassAdapter;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
+import java.util.function.Function;
 import java.util.function.Predicate;
 
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
@@ -39,11 +39,11 @@ import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 final class RemappingClassFileTransformer implements ClassFileTransformer {
 
     private final Predicate<String> classNamePredicate;
-    private final Remapper remapper;
+    private final Function<String, String> mapper;
 
-    RemappingClassFileTransformer(Predicate<String> classNamePredicate, Remapper remapper) {
+    RemappingClassFileTransformer(Predicate<String> classNamePredicate, Function<String, String> mapper) {
         this.classNamePredicate = classNamePredicate;
-        this.remapper = remapper;
+        this.mapper = mapper;
     }
 
     @Override
@@ -52,9 +52,8 @@ final class RemappingClassFileTransformer implements ClassFileTransformer {
         try {
             ClassReader reader = new ClassReader(classfileBuffer);
             ClassWriter writer = new ClassWriter(0);
-            reader.accept(
-                    new ClassNameAwareClassAdapter(classNamePredicate, new RemappingClassAdapter(writer, remapper),
-                            writer), EXPAND_FRAMES);
+            reader.accept(new ClassNameAwareClassAdapter(classNamePredicate, new RemappingClassAdapter(mapper, writer),
+                    writer), EXPAND_FRAMES);
             return writer.toByteArray();
         } catch (Throwable e) {
             System.err.println("Failed to transform class " + className);

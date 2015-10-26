@@ -38,6 +38,7 @@
     <packaging>pom</packaging>
 
     <modules>
+        <module>instrument</module>
         <module>maven-plugin</module>
         <module>agent</module>
     </modules>

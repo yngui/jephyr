@@ -24,15 +24,12 @@
 
 package org.jephyr.remapping.agent;
 
-import org.objectweb.asm.commons.Remapper;
-import org.objectweb.asm.commons.SimpleRemapper;
-
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -49,17 +46,17 @@ public final class Main {
         Pattern excludes = getPattern(props.getProperty("excludes"));
         Predicate<String> classNamePredicate = t -> (includes == null || includes.matcher(t).find()) &&
                 (excludes == null || !excludes.matcher(t).find());
-        Remapper remapper = new SimpleRemapper(parseMapping(props.getProperty("mapping")));
-        inst.addTransformer(new RemappingClassFileTransformer(classNamePredicate, remapper));
+        Function<String, String> mapper = parseMapper(props.getProperty("mapping"));
+        inst.addTransformer(new RemappingClassFileTransformer(classNamePredicate, mapper));
     }
 
     private static Pattern getPattern(String regex) {
         return regex == null ? null : Pattern.compile(regex);
     }
 
-    private static Map<String, String> parseMapping(String mapping) {
+    private static Function<String, String> parseMapper(String mapping) {
         if (mapping == null) {
-            return Collections.emptyMap();
+            return t -> null;
         }
 
         Map<String, String> map = new HashMap<>();
@@ -73,7 +70,7 @@ public final class Main {
             int index2 = mapping.indexOf(ENTRY_DELIM, fromIndex);
             if (index2 < 0) {
                 map.put(key, mapping.substring(fromIndex));
-                return map;
+                return map::get;
             }
             map.put(key, mapping.substring(fromIndex, index2));
             fromIndex = index2 + length2;

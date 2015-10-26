@@ -26,18 +26,16 @@ package org.jephyr.remapping.maven;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.jephyr.remapping.instrument.RemappingClassAdapter;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-import org.objectweb.asm.commons.Remapper;
-import org.objectweb.asm.commons.RemappingClassAdapter;
-import org.objectweb.asm.commons.SimpleRemapper;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.function.Function;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;
@@ -47,12 +45,12 @@ public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.Abstra
 
     @Parameter
     private Collection<MappingEntry> mappingEntries;
-    private Remapper remapper;
+    private Function<String, String> mapper;
 
     @Override
     protected final void enhance(File srcFile, File destFile) throws MojoExecutionException {
-        if (remapper == null) {
-            remapper = new SimpleRemapper(createMapping());
+        if (mapper == null) {
+            mapper = createMapper();
         }
 
         byte[] original;
@@ -64,7 +62,7 @@ public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.Abstra
 
         ClassWriter writer = new ClassWriter(0);
         ClassReader reader = new ClassReader(original);
-        reader.accept(new RemappingClassAdapter(writer, remapper), EXPAND_FRAMES);
+        reader.accept(new RemappingClassAdapter(mapper, writer), EXPAND_FRAMES);
         byte[] enhanced = writer.toByteArray();
 
         try {
@@ -74,14 +72,14 @@ public abstract class AbstractEnhanceMojo extends org.jephyr.common.maven.Abstra
         }
     }
 
-    private Map<String, String> createMapping() {
+    private Function<String, String> createMapper() {
         if (mappingEntries == null) {
-            return Collections.emptyMap();
+            return t -> null;
         }
-        Map<String, String> mapping = new HashMap<>(mappingEntries.size());
+        Map<String, String> map = new HashMap<>(mappingEntries.size());
         for (MappingEntry mappingEntry : mappingEntries) {
-            mapping.put(mappingEntry.getOldName(), mappingEntry.getNewName());
+            map.put(mappingEntry.getOldName(), mappingEntry.getNewName());
         }
-        return mapping;
+        return map::get;
     }
 }
