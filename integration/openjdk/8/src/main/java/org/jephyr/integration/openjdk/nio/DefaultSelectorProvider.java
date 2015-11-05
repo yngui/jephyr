@@ -22,17 +22,16 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.nio;
-
-import jephyr.java.nio.channels.DatagramChannel;
-import jephyr.java.nio.channels.Pipe;
-import jephyr.java.nio.channels.ServerSocketChannel;
-import jephyr.java.nio.channels.SocketChannel;
-import jephyr.java.nio.channels.spi.AbstractSelector;
-import jephyr.java.nio.channels.spi.SelectorProvider;
+package org.jephyr.integration.openjdk.nio;
 
 import java.io.IOException;
 import java.net.ProtocolFamily;
+import java.nio.channels.DatagramChannel;
+import java.nio.channels.Pipe;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.spi.AbstractSelector;
+import java.nio.channels.spi.SelectorProvider;
 
 public final class DefaultSelectorProvider extends SelectorProvider {
 

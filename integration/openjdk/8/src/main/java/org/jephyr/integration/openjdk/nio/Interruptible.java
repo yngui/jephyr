@@ -22,24 +22,11 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.misc;
+package org.jephyr.integration.openjdk.nio;
 
 import jephyr.java.lang.Thread;
-import org.jephyr.integration.javase.nio.Interruptible;
-import org.jephyr.thread.ThreadAccess;
 
-public final class SharedSecrets {
+public interface Interruptible {
 
-    private static ThreadAccess<Thread, Interruptible> threadAccess;
-
-    private SharedSecrets() {
-    }
-
-    public static ThreadAccess<Thread, Interruptible> getThreadAccess() {
-        return threadAccess;
-    }
-
-    public static void setThreadAccess(ThreadAccess<Thread, Interruptible> threadAccess) {
-        SharedSecrets.threadAccess = threadAccess;
-    }
+    void interrupt(Thread thread);
 }

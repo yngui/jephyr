@@ -33,11 +33,11 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jephyr.integration.javase</groupId>
-    <artifactId>javase-parent</artifactId>
+    <groupId>org.jephyr.integration.openjdk</groupId>
+    <artifactId>openjdk-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>1.8</module>
+        <module>8</module>
     </modules>
 </project>

@@ -22,7 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.nio;
+package org.jephyr.integration.openjdk.nio;
 
 import jephyr.java.lang.Thread;
 import jephyr.java.util.concurrent.locks.LockSupport;

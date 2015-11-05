@@ -22,11 +22,7 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.nio;
-
-import jephyr.java.nio.channels.ServerSocketChannel;
-import jephyr.java.nio.channels.SocketChannel;
-import jephyr.java.nio.channels.spi.SelectorProvider;
+package org.jephyr.integration.openjdk.nio;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -34,6 +30,9 @@ import java.net.SocketAddress;
 import java.net.SocketOption;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
+import java.nio.channels.ServerSocketChannel;
+import java.nio.channels.SocketChannel;
+import java.nio.channels.spi.SelectorProvider;
 import java.util.Set;
 
 final class ServerSocketChannelImpl extends ServerSocketChannel {

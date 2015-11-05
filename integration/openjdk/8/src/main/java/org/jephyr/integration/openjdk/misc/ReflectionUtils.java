@@ -22,30 +22,27 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.javase.misc;
+package org.jephyr.integration.openjdk.misc;
 
-import sun.misc.Unsafe;
+public final class ReflectionUtils {
 
-import java.lang.reflect.Field;
+    private static final InternalSecurityManager SECURITY_MANAGER = new InternalSecurityManager();
 
-public final class UnsafeHolder {
+    private ReflectionUtils() {
+    }
 
-    private static final Unsafe unsafe;
+    public static Class<?>[] getClassContext() {
+        return SECURITY_MANAGER.getClassContext();
+    }
 
-    static {
-        try {
-            Field field = Unsafe.class.getDeclaredField("theUnsafe");
-            field.setAccessible(true);
-            unsafe = (Unsafe) field.get(null);
-        } catch (Exception e) {
-            throw new Error(e);
+    private static final class InternalSecurityManager extends SecurityManager {
+
+        InternalSecurityManager() {
         }
-    }
 
-    private UnsafeHolder() {
-    }
-
-    public static Unsafe getUnsafe() {
-        return unsafe;
+        @Override
+        protected Class<?>[] getClassContext() {
+            return super.getClassContext();
+        }
     }
 }

@@ -38,6 +38,6 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>javase</module>
+        <module>openjdk</module>
     </modules>
 </project>
