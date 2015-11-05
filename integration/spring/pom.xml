@@ -28,17 +28,16 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jephyr</groupId>
-        <artifactId>jephyr-parent</artifactId>
+        <groupId>org.jephyr.integration</groupId>
+        <artifactId>integration-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jephyr.integration</groupId>
-    <artifactId>integration-parent</artifactId>
+    <groupId>org.jephyr.integration.spring</groupId>
+    <artifactId>spring-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>openjdk</module>
-        <module>spring</module>
+        <module>4.1</module>
     </modules>
 </project>

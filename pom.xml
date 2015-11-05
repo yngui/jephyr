@@ -40,6 +40,7 @@
         <module>remapping</module>
         <module>activeobject</module>
         <module>common</module>
+        <module>parameters</module>
     </modules>
 
     <properties>
@@ -157,6 +158,11 @@
             <dependency>
                 <groupId>org.jephyr.common</groupId>
                 <artifactId>common-agent</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jephyr.parameters</groupId>
+                <artifactId>parameters-runtime</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

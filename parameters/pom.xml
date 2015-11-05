@@ -33,12 +33,12 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.jephyr.integration</groupId>
-    <artifactId>integration-parent</artifactId>
+    <groupId>org.jephyr.parameters</groupId>
+    <artifactId>parameters-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
-        <module>openjdk</module>
-        <module>spring</module>
+        <module>runtime</module>
+        <module>agent</module>
     </modules>
 </project>
