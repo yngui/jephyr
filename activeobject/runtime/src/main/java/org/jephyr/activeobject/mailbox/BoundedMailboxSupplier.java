@@ -33,7 +33,7 @@ public final class BoundedMailboxSupplier implements Supplier<Mailbox> {
 
     @Override
     public Mailbox get() {
-        return new BlockingQueueMailbox(new ArrayBlockingQueue<Runnable>(loadCapacity()));
+        return new BlockingQueueMailbox(new ArrayBlockingQueue<>(loadCapacity()));
     }
 
     private static int loadCapacity() {

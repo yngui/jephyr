@@ -32,20 +32,14 @@ import java.util.Properties;
 
 public final class AgentUtils {
 
-    private static final Properties DEFAULT_PROPERTIES;
     private static final String KEY_VALUE_DELIM = "=";
     private static final String OPTION_DELIM = ",";
-
-    static {
-        DEFAULT_PROPERTIES = new Properties();
-        DEFAULT_PROPERTIES.setProperty("excludes", "^(java/|javax/|sun/|com/sun/|jdk/|org/objectweb/asm/)");
-    }
 
     private AgentUtils() {
     }
 
     public static Properties parseArgs(String args) throws IOException {
-        Properties props = new Properties(DEFAULT_PROPERTIES);
+        Properties props = new Properties();
 
         if (args != null && !args.isEmpty()) {
             int length1 = KEY_VALUE_DELIM.length();

@@ -32,6 +32,6 @@ public final class SingleConsumerMailboxSupplier implements Supplier<Mailbox> {
 
     @Override
     public Mailbox get() {
-        return new QueueMailbox(new SingleConsumerQueue<Runnable>());
+        return new QueueMailbox(new SingleConsumerQueue<>());
     }
 }

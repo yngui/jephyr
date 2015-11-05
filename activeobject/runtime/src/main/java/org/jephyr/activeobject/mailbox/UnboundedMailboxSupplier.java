@@ -31,6 +31,6 @@ public final class UnboundedMailboxSupplier implements Supplier<Mailbox> {
 
     @Override
     public Mailbox get() {
-        return new BlockingQueueMailbox(new LinkedBlockingQueue<Runnable>());
+        return new BlockingQueueMailbox(new LinkedBlockingQueue<>());
     }
 }

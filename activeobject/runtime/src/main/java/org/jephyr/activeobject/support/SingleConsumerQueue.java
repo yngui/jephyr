@@ -34,7 +34,7 @@ import static java.util.Objects.requireNonNull;
 
 public final class SingleConsumerQueue<E> extends AbstractQueue<E> implements Serializable {
 
-    private static final long serialVersionUID = 6123082757231527184L;
+    private static final long serialVersionUID = 9046876391824071136L;
 
     private final AtomicReference<Node<E>> head = new AtomicReference<>();
     private Node<E> tail;
@@ -43,11 +43,6 @@ public final class SingleConsumerQueue<E> extends AbstractQueue<E> implements Se
         Node<E> node = new Node<>();
         head.set(node);
         tail = node;
-    }
-
-    @Override
-    public boolean add(E e) {
-        return offer(e);
     }
 
     @Override
@@ -101,7 +96,7 @@ public final class SingleConsumerQueue<E> extends AbstractQueue<E> implements Se
 
     private static final class Node<T> implements Serializable {
 
-        private static final long serialVersionUID = -3507902457722206465L;
+        private static final long serialVersionUID = 8766551459861505231L;
 
         T value;
         volatile Node<T> next;
@@ -144,11 +139,6 @@ public final class SingleConsumerQueue<E> extends AbstractQueue<E> implements Se
             this.value = null;
             next = next.next;
             return value;
-        }
-
-        @Override
-        public void remove() {
-            throw new UnsupportedOperationException();
         }
     }
 }

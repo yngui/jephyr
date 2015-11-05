@@ -51,42 +51,6 @@
                             <newName>jephyr/java/lang/Thread</newName>
                         </mappingEntry>
                         <mappingEntry>
-                            <oldName>java/util/AbstractQueue</oldName>
-                            <newName>jephyr/java/util/AbstractQueue</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/Iterator</oldName>
-                            <newName>jephyr/java/util/Iterator</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/Queue</oldName>
-                            <newName>jephyr/java/util/Queue</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/concurrent/ArrayBlockingQueue</oldName>
-                            <newName>jephyr/java/util/concurrent/ArrayBlockingQueue</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/concurrent/BlockingQueue</oldName>
-                            <newName>jephyr/java/util/concurrent/BlockingQueue</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/concurrent/LinkedBlockingQueue</oldName>
-                            <newName>jephyr/java/util/concurrent/LinkedBlockingQueue</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/concurrent/RunnableFuture</oldName>
-                            <newName>jephyr/java/util/concurrent/RunnableFuture</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/concurrent/TimeUnit</oldName>
-                            <newName>jephyr/java/util/concurrent/TimeUnit</newName>
-                        </mappingEntry>
-                        <mappingEntry>
-                            <oldName>java/util/concurrent/locks/AbstractQueuedSynchronizer</oldName>
-                            <newName>jephyr/java/util/concurrent/locks/AbstractQueuedSynchronizer</newName>
-                        </mappingEntry>
-                        <mappingEntry>
                             <oldName>java/util/concurrent/locks/LockSupport</oldName>
                             <newName>jephyr/java/util/concurrent/locks/LockSupport</newName>
                         </mappingEntry>
