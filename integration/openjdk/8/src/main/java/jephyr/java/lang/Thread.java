@@ -564,7 +564,7 @@ class Thread implements Runnable {
      *          thread group or cannot override the context class loader methods.
      */
     public Thread(ThreadGroup group, Runnable target, String name) {
-        impl = ThreadImpl.create(this, threadAccess);
+        impl = ThreadImpl.create(this, threadAccess, this::exit);
         init(group, target, name);
     }
 

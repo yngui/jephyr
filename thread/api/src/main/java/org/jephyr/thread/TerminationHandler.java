@@ -24,17 +24,7 @@
 
 package org.jephyr.thread;
 
-import static java.util.Objects.requireNonNull;
+public interface TerminationHandler {
 
-final class JavaThreadImplProvider extends ThreadImplProvider {
-
-    @Override
-    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess,
-            TerminationHandler terminationHandler) {
-        requireNonNull(thread);
-        requireNonNull(threadAccess);
-        Thread javaThread = new Thread(thread);
-        javaThread.setUncaughtExceptionHandler((t, e) -> threadAccess.dispatchUncaughtException(thread, e));
-        return new JavaThreadImpl(javaThread);
-    }
+    void terminated();
 }

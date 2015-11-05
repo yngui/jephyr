@@ -37,15 +37,16 @@ public abstract class ThreadImpl {
     protected ThreadImpl() {
     }
 
-    public static <T extends Runnable> ThreadImpl create(T thread, ThreadAccess<T, ?> threadAccess) {
-        return ThreadImplProvider.provider().createThreadImpl(thread, threadAccess);
+    public static <T extends Runnable> ThreadImpl create(T thread, ThreadAccess<T, ?> threadAccess,
+            TerminationHandler terminationHandler) {
+        return ThreadImplProvider.provider().createThreadImpl(thread, threadAccess, terminationHandler);
     }
 
     public abstract int getState();
 
     public abstract boolean isAlive();
 
-    public abstract void start();
+    public abstract void start(boolean daemon);
 
     public abstract void park();
 

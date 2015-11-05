@@ -26,6 +26,7 @@ package org.jephyr.thread.continuation;
 
 import org.jephyr.continuation.Continuation;
 import org.jephyr.continuation.UnsuspendableError;
+import org.jephyr.thread.TerminationHandler;
 import org.jephyr.thread.ThreadAccess;
 import org.jephyr.thread.ThreadImpl;
 
@@ -55,23 +56,28 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
     private final ThreadAccess<T, ?> threadAccess;
     private final ForkJoinPool pool;
     private final ScheduledExecutorService scheduler;
+    private final TerminationHandler terminationHandler;
     private final Continuation continuation;
     private volatile boolean interrupted;
     private volatile boolean unparked;
     private ScheduledFuture<?> cancelable;
     private int action;
     private volatile Thread javaThread;
+    private volatile boolean daemon;
+    private static int threadCount;
+    private static volatile Thread daemonAwaitThread;
 
     static {
         debug = Boolean.getBoolean(ContinuationThreadImpl.class.getName() + ".debug");
     }
 
     ContinuationThreadImpl(T thread, ThreadAccess<T, ?> threadAccess, ForkJoinPool pool,
-            ScheduledExecutorService scheduler) {
+            ScheduledExecutorService scheduler, TerminationHandler terminationHandler) {
         this.thread = thread;
         this.threadAccess = threadAccess;
         this.pool = pool;
         this.scheduler = scheduler;
+        this.terminationHandler = terminationHandler;
         continuation = Continuation.create(thread);
     }
 
@@ -87,9 +93,37 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
     }
 
     @Override
-    public void start() {
+    public void start(boolean daemon) {
         if (!state.compareAndSet(NEW, RUNNABLE)) {
             throw new IllegalStateException();
+        }
+        this.daemon = daemon;
+        if (!daemon) {
+            Thread thread = daemonAwaitThread;
+            if (thread == null) {
+                synchronized (ContinuationThreadImpl.class) {
+                    if (daemonAwaitThread == null) {
+                        thread = new Thread() {
+                            @Override
+                            public void run() {
+                                synchronized (this) {
+                                    while (threadCount > 0) {
+                                        try {
+                                            wait();
+                                        } catch (InterruptedException ignored) {
+                                        }
+                                    }
+                                }
+                            }
+                        };
+                        daemonAwaitThread = thread;
+                        thread.start();
+                    }
+                }
+            }
+            synchronized (thread) {
+                threadCount++;
+            }
         }
         pool.execute(executeTask);
     }
@@ -309,7 +343,11 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
         try {
             suspended = continuation.resume();
         } catch (Throwable e) {
-            threadAccess.dispatchUncaughtException(thread, e);
+            try {
+                threadAccess.dispatchUncaughtException(thread, e);
+            } catch (Throwable e1) {
+                e1.printStackTrace();
+            }
             suspended = false;
         }
 
@@ -336,6 +374,20 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
             }
         } else {
             state.set(TERMINATED);
+            if (!daemon) {
+                Thread thread = daemonAwaitThread;
+                synchronized (thread) {
+                    threadCount--;
+                    thread.notifyAll();
+                }
+            }
+
+            try {
+                terminationHandler.terminated();
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
+
             Node<T> node = joiner.getAndSet(null);
             while (node != null) {
                 T thread = node.thread.getAndSet(null);

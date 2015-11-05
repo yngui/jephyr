@@ -24,12 +24,12 @@
 
 package org.jephyr.thread.continuation;
 
+import org.jephyr.thread.TerminationHandler;
 import org.jephyr.thread.ThreadAccess;
 import org.jephyr.thread.ThreadImpl;
 import org.jephyr.thread.ThreadImplProvider;
 
 import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Objects.requireNonNull;
@@ -37,15 +37,12 @@ import static java.util.Objects.requireNonNull;
 public final class ContinuationThreadImplProvider extends ThreadImplProvider {
 
     private static final AtomicInteger providerNum = new AtomicInteger(1);
-    private final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1, new ThreadFactory() {
-        @Override
-        public Thread newThread(Runnable r) {
-            Thread thread = new Thread(r);
-            thread.setName(ContinuationThreadImplProvider.class.getSimpleName() + '-' + providerNum.getAndIncrement() +
-                    "-scheduler");
-            thread.setDaemon(true);
-            return thread;
-        }
+    private final ScheduledThreadPoolExecutor scheduler = new ScheduledThreadPoolExecutor(1, r -> {
+        Thread thread = new Thread(r);
+        thread.setName(ContinuationThreadImplProvider.class.getSimpleName() + '-' + providerNum.getAndIncrement() +
+                "-scheduler");
+        thread.setDaemon(true);
+        return thread;
     });
 
     public ContinuationThreadImplProvider() {
@@ -53,9 +50,11 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
     }
 
     @Override
-    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess) {
+    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess,
+            TerminationHandler terminationHandler) {
         requireNonNull(thread);
         requireNonNull(threadAccess);
-        return new ContinuationThreadImpl<>(thread, threadAccess, ForkJoinPoolProvider.provider().getPool(), scheduler);
+        return new ContinuationThreadImpl<>(thread, threadAccess, ForkJoinPoolProvider.provider().getPool(), scheduler,
+                terminationHandler);
     }
 }

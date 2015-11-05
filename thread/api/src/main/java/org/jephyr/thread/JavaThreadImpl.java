@@ -63,7 +63,8 @@ public final class JavaThreadImpl extends ThreadImpl {
     }
 
     @Override
-    public void start() {
+    public void start(boolean daemon) {
+        javaThread.setDaemon(daemon);
         javaThread.start();
     }
 
