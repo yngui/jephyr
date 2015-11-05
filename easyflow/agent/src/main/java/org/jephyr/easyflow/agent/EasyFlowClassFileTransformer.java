@@ -24,17 +24,17 @@
 
 package org.jephyr.easyflow.agent;
 
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
+import java.util.function.Predicate;
+import java.util.regex.Pattern;
+
 import org.jephyr.common.agent.ClassNameAwareClassAdapter;
 import org.jephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
 import org.jephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jephyr.easyflow.instrument.MethodRef;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-
-import java.lang.instrument.ClassFileTransformer;
-import java.security.ProtectionDomain;
-import java.util.function.Predicate;
-import java.util.regex.Pattern;
 
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 

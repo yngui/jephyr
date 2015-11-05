@@ -24,12 +24,12 @@
 
 package org.jephyr.remapping.maven;
 
+import java.io.File;
+
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
-
-import java.io.File;
 
 @Mojo(name = "testEnhance", defaultPhase = LifecyclePhase.PROCESS_TEST_CLASSES,
         requiresDependencyResolution = ResolutionScope.TEST, threadSafe = true)

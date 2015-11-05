@@ -24,6 +24,11 @@
 
 package org.jephyr.easyflow.maven;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.function.Predicate;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.jephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
@@ -31,11 +36,6 @@ import org.jephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jephyr.easyflow.instrument.MethodRef;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Collection;
-import java.util.function.Predicate;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;

@@ -24,17 +24,17 @@
 
 package org.jephyr.easyflow.instrument;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.function.Predicate;
+
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.function.Predicate;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.ClassReader.SKIP_DEBUG;

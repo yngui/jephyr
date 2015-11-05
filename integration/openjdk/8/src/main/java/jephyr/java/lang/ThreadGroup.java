@@ -25,10 +25,10 @@
 
 package jephyr.java.lang;
 
-import sun.misc.VM;
-
 import java.io.PrintStream;
 import java.util.Arrays;
+
+import sun.misc.VM;
 
 /**
  * A thread group represents a set of threads. In addition, a thread

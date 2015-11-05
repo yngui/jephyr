@@ -24,14 +24,14 @@
 
 package org.jephyr.common.maven;
 
-import org.apache.maven.plugin.AbstractMojo;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Parameter;
-
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Set;
+
+import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Parameter;
 
 import static org.apache.commons.io.FileUtils.copyFile;
 import static org.apache.commons.io.FileUtils.listFiles;

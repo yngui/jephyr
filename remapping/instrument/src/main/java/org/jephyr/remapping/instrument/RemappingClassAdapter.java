@@ -24,6 +24,8 @@
 
 package org.jephyr.remapping.instrument;
 
+import java.util.function.Function;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.FieldVisitor;
@@ -35,8 +37,6 @@ import org.objectweb.asm.TypePath;
 import org.objectweb.asm.signature.SignatureReader;
 import org.objectweb.asm.signature.SignatureVisitor;
 import org.objectweb.asm.signature.SignatureWriter;
-
-import java.util.function.Function;
 
 import static java.util.Objects.requireNonNull;
 import static org.objectweb.asm.Opcodes.ASM5;

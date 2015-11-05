@@ -24,6 +24,11 @@
 
 package org.jephyr.activeobject.instrument;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
 import org.objectweb.asm.AnnotationVisitor;
 import org.objectweb.asm.Attribute;
 import org.objectweb.asm.ClassVisitor;
@@ -38,11 +43,6 @@ import org.objectweb.asm.tree.AnnotationNode;
 import org.objectweb.asm.tree.MethodNode;
 import org.objectweb.asm.tree.ParameterNode;
 import org.objectweb.asm.tree.TypeAnnotationNode;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
 
 import static org.objectweb.asm.Opcodes.ACC_ABSTRACT;
 import static org.objectweb.asm.Opcodes.ACC_FINAL;

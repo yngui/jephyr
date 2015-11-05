@@ -35,11 +35,11 @@
 
 package jephyr.java.util.concurrent.locks;
 
+import java.util.concurrent.TimeUnit;
+
 import jephyr.java.lang.Thread;
 import org.jephyr.integration.openjdk.misc.SharedSecrets;
 import org.jephyr.integration.openjdk.misc.UnsafeHolder;
-
-import java.util.concurrent.TimeUnit;
 
 /**
  * Basic thread blocking primitives for creating locks and other

@@ -24,15 +24,15 @@
 
 package org.jephyr.remapping.agent;
 
-import org.jephyr.common.agent.ClassNameAwareClassAdapter;
-import org.jephyr.remapping.instrument.RemappingClassAdapter;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-
 import java.lang.instrument.ClassFileTransformer;
 import java.security.ProtectionDomain;
 import java.util.function.Function;
 import java.util.function.Predicate;
+
+import org.jephyr.common.agent.ClassNameAwareClassAdapter;
+import org.jephyr.remapping.instrument.RemappingClassAdapter;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 
 import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 

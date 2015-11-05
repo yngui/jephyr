@@ -24,12 +24,12 @@
 
 package org.jephyr.thread.continuation;
 
-import org.jephyr.continuation.Continuation;
-import org.jephyr.continuation.ContinuationHolder;
-
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ForkJoinWorkerThreadFactory;
 import java.util.concurrent.ForkJoinWorkerThread;
+
+import org.jephyr.continuation.Continuation;
+import org.jephyr.continuation.ContinuationHolder;
 
 public final class DefaultForkJoinPoolProvider extends ForkJoinPoolProvider {
 

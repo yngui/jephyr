@@ -24,9 +24,9 @@
 
 package org.jephyr.activeobject.mailbox;
 
-import org.jephyr.activeobject.support.SingleConsumerQueue;
-
 import java.util.function.Supplier;
+
+import org.jephyr.activeobject.support.SingleConsumerQueue;
 
 public final class SingleConsumerMailboxSupplier implements Supplier<Mailbox> {
 

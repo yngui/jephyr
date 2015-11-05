@@ -24,9 +24,9 @@
 
 package org.jephyr.integration.openjdk.misc;
 
-import sun.misc.Unsafe;
-
 import java.lang.reflect.Field;
+
+import sun.misc.Unsafe;
 
 public final class UnsafeHolder {
 

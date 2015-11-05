@@ -25,14 +25,6 @@
 
 package jephyr.java.lang;
 
-import jephyr.java.util.concurrent.locks.LockSupport;
-import org.jephyr.integration.openjdk.misc.SharedSecrets;
-import org.jephyr.integration.openjdk.nio.Interruptible;
-import org.jephyr.thread.JavaThreadImpl;
-import org.jephyr.thread.ThreadAccess;
-import org.jephyr.thread.ThreadImpl;
-import sun.security.util.SecurityConstants;
-
 import java.lang.ref.Reference;
 import java.lang.ref.ReferenceQueue;
 import java.lang.ref.WeakReference;
@@ -44,6 +36,14 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
+
+import jephyr.java.util.concurrent.locks.LockSupport;
+import org.jephyr.integration.openjdk.misc.SharedSecrets;
+import org.jephyr.integration.openjdk.nio.Interruptible;
+import org.jephyr.thread.JavaThreadImpl;
+import org.jephyr.thread.ThreadAccess;
+import org.jephyr.thread.ThreadImpl;
+import sun.security.util.SecurityConstants;
 
 
 /**

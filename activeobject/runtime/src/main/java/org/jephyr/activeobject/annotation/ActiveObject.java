@@ -24,9 +24,6 @@
 
 package org.jephyr.activeobject.annotation;
 
-import org.jephyr.activeobject.mailbox.Mailbox;
-import org.jephyr.activeobject.mailbox.SingleConsumerMailboxSupplier;
-
 import java.lang.annotation.Documented;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Inherited;
@@ -34,6 +31,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.util.function.Supplier;
+
+import org.jephyr.activeobject.mailbox.Mailbox;
+import org.jephyr.activeobject.mailbox.SingleConsumerMailboxSupplier;
 
 @Documented
 @Inherited

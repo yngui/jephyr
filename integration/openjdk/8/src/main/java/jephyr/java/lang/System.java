@@ -24,10 +24,6 @@
  */
 package jephyr.java.lang;
 
-import org.jephyr.integration.openjdk.misc.UnsafeHolder;
-import sun.misc.Unsafe;
-import sun.security.util.SecurityConstants;
-
 import java.io.Console;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,6 +33,10 @@ import java.nio.channels.Channel;
 import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.Properties;
+
+import org.jephyr.integration.openjdk.misc.UnsafeHolder;
+import sun.misc.Unsafe;
+import sun.security.util.SecurityConstants;
 
 /**
  * The <code>System</code> class contains several useful class fields

@@ -24,12 +24,6 @@
 
 package org.jephyr.thread.continuation;
 
-import org.jephyr.continuation.Continuation;
-import org.jephyr.continuation.UnsuspendableError;
-import org.jephyr.thread.TerminationHandler;
-import org.jephyr.thread.ThreadAccess;
-import org.jephyr.thread.ThreadImpl;
-
 import java.util.concurrent.ForkJoinPool;
 import java.util.concurrent.ForkJoinPool.ManagedBlocker;
 import java.util.concurrent.ForkJoinTask;
@@ -39,6 +33,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.LockSupport;
+
+import org.jephyr.continuation.Continuation;
+import org.jephyr.continuation.UnsuspendableError;
+import org.jephyr.thread.TerminationHandler;
+import org.jephyr.thread.ThreadAccess;
+import org.jephyr.thread.ThreadImpl;
 
 final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
 

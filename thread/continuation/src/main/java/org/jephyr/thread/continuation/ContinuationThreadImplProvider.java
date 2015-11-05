@@ -24,13 +24,13 @@
 
 package org.jephyr.thread.continuation;
 
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import org.jephyr.thread.TerminationHandler;
 import org.jephyr.thread.ThreadAccess;
 import org.jephyr.thread.ThreadImpl;
 import org.jephyr.thread.ThreadImplProvider;
-
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.atomic.AtomicInteger;
 
 import static java.util.Objects.requireNonNull;
 

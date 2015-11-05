@@ -25,11 +25,11 @@
 
 package jephyr.java.lang;
 
-import sun.security.util.SecurityConstants;
-
 import java.io.FileDescriptor;
 import java.net.InetAddress;
 import java.security.Permission;
+
+import sun.security.util.SecurityConstants;
 
 /**
  * The security manager is a class that allows

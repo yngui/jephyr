@@ -24,14 +24,14 @@
 
 package org.jephyr.easyflow.instrument;
 
-import org.apache.commons.io.IOUtils;
-import org.objectweb.asm.Type;
-import org.testng.annotations.Test;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.util.function.Predicate;
+
+import org.apache.commons.io.IOUtils;
+import org.objectweb.asm.Type;
+import org.testng.annotations.Test;
 
 import static org.testng.Assert.assertFalse;
 import static org.testng.Assert.assertTrue;

@@ -24,6 +24,10 @@
 
 package org.jephyr.easyflow.instrument;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
 import org.objectweb.asm.commons.AnalyzerAdapter;
@@ -39,10 +43,6 @@ import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 import static org.objectweb.asm.Opcodes.AALOAD;
 import static org.objectweb.asm.Opcodes.AASTORE;

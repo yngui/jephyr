@@ -24,18 +24,18 @@
 
 package org.jephyr.remapping.maven;
 
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugins.annotations.Parameter;
-import org.jephyr.remapping.instrument.RemappingClassAdapter;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
+
+import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.jephyr.remapping.instrument.RemappingClassAdapter;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;

@@ -24,15 +24,15 @@
 
 package org.jephyr.parameters.agent;
 
+import java.lang.instrument.ClassFileTransformer;
+import java.security.ProtectionDomain;
+
 import org.jephyr.parameters.ParameterNamesCache;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassVisitor;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.MethodVisitor;
 import org.objectweb.asm.Type;
-
-import java.lang.instrument.ClassFileTransformer;
-import java.security.ProtectionDomain;
 
 import static org.objectweb.asm.Opcodes.ACC_STATIC;
 import static org.objectweb.asm.Opcodes.ASM5;

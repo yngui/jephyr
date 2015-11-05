@@ -24,12 +24,12 @@
 
 package org.jephyr.integration.openjdk.nio;
 
-import jephyr.java.lang.Thread;
-import jephyr.java.util.concurrent.locks.LockSupport;
-
 import java.io.IOException;
 import java.nio.channels.ClosedByInterruptException;
 import java.nio.channels.CompletionHandler;
+
+import jephyr.java.lang.Thread;
+import jephyr.java.util.concurrent.locks.LockSupport;
 
 final class ResultHandler<V> implements CompletionHandler<V, Object> {
 

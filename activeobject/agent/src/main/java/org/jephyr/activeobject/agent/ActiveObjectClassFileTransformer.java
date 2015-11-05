@@ -24,12 +24,6 @@
 
 package org.jephyr.activeobject.agent;
 
-import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter;
-import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter.ClassEntry;
-import org.jephyr.common.agent.ClassNameAwareClassAdapter;
-import org.objectweb.asm.ClassReader;
-import org.objectweb.asm.ClassWriter;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.lang.instrument.ClassFileTransformer;
@@ -43,6 +37,12 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
 import java.util.jar.Manifest;
+
+import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter;
+import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter.ClassEntry;
+import org.jephyr.common.agent.ClassNameAwareClassAdapter;
+import org.objectweb.asm.ClassReader;
+import org.objectweb.asm.ClassWriter;
 
 final class ActiveObjectClassFileTransformer implements ClassFileTransformer {
 

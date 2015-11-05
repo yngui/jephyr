@@ -24,6 +24,10 @@
 
 package org.jephyr.easyflow.instrument;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.objectweb.asm.Handle;
 import org.objectweb.asm.Label;
 import org.objectweb.asm.commons.AnalyzerAdapter;
@@ -45,10 +49,6 @@ import org.objectweb.asm.tree.MultiANewArrayInsnNode;
 import org.objectweb.asm.tree.TableSwitchInsnNode;
 import org.objectweb.asm.tree.TypeInsnNode;
 import org.objectweb.asm.tree.VarInsnNode;
-
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
 
 import static org.objectweb.asm.Opcodes.ASM5;
 import static org.objectweb.asm.Opcodes.NEW;

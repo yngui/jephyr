@@ -24,16 +24,16 @@
 
 package org.jephyr.activeobject.maven;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+import java.util.Collection;
+
 import org.apache.maven.plugin.MojoExecutionException;
 import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter;
 import org.jephyr.activeobject.instrument.ActiveObjectClassAdapter.ClassEntry;
 import org.objectweb.asm.ClassReader;
 import org.objectweb.asm.ClassWriter;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
-import java.util.Collection;
 
 import static org.apache.commons.io.FileUtils.readFileToByteArray;
 import static org.apache.commons.io.FileUtils.writeByteArrayToFile;

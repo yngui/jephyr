@@ -24,8 +24,6 @@
 
 package org.jephyr.continuation.easyflow;
 
-import org.jephyr.continuation.UnsuspendableError;
-
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -33,6 +31,8 @@ import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Proxy;
+
+import org.jephyr.continuation.UnsuspendableError;
 
 public final class ContinuationImpl implements Serializable {
 
