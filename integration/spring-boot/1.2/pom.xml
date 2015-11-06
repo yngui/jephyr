@@ -28,20 +28,43 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jephyr.integration.spring</groupId>
-        <artifactId>spring-parent</artifactId>
+        <groupId>org.jephyr.integration.spring-boot</groupId>
+        <artifactId>spring-boot-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>spring-4.1</artifactId>
+    <artifactId>spring-boot-1.2</artifactId>
 
     <properties>
-        <spring.version>4.1.8.RELEASE</spring.version>
-        <servlet.version>3.1.0</servlet.version>
+        <spring-boot.version>1.2.7.RELEASE</spring-boot.version>
     </properties>
 
     <build>
         <plugins>
+            <plugin>
+                <groupId>org.jephyr.remapping</groupId>
+                <artifactId>remapping-maven-plugin</artifactId>
+                <configuration>
+                    <mappingEntries>
+                        <mappingEntry>
+                            <oldName>java/lang/Thread</oldName>
+                            <newName>jephyr/java/lang/Thread</newName>
+                        </mappingEntry>
+                        <mappingEntry>
+                            <oldName>java/util/concurrent/locks/LockSupport</oldName>
+                            <newName>jephyr/java/util/concurrent/locks/LockSupport</newName>
+                        </mappingEntry>
+                    </mappingEntries>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
             <plugin>
                 <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
@@ -73,20 +96,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jephyr.parameters</groupId>
-            <artifactId>parameters-runtime</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.version}</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-autoconfigure</artifactId>
+            <version>${spring-boot.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

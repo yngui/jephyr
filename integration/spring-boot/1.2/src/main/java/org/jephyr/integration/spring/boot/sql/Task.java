@@ -22,27 +22,46 @@
  * THE SOFTWARE.
  */
 
-package org.jephyr.integration.openjdk.misc;
+package org.jephyr.integration.spring.boot.sql;
 
-public final class ReflectionUtils {
+import java.util.concurrent.Executor;
+import java.util.concurrent.locks.LockSupport;
 
-    private static final InternalSecurityManager SECURITY_MANAGER = new InternalSecurityManager();
+abstract class Task<R, E extends Throwable> implements Runnable {
 
-    private ReflectionUtils() {
-    }
+    private final Thread thread = Thread.currentThread();
+    private volatile boolean complete;
+    private R result;
+    private Throwable exception;
 
-    public static Class<?>[] getClassContext() {
-        return SECURITY_MANAGER.getClassContext();
-    }
-
-    private static final class InternalSecurityManager extends SecurityManager {
-
-        InternalSecurityManager() {
+    @SuppressWarnings("unchecked")
+    final R execute(Executor executor) throws E {
+        executor.execute(this);
+        while (!complete) {
+            LockSupport.park(this);
         }
-
-        @Override
-        protected Class<?>[] getClassContext() {
-            return super.getClassContext();
+        if (exception == null) {
+            return result;
         }
+        if (exception instanceof Error) {
+            throw (Error) exception;
+        }
+        if (exception instanceof RuntimeException) {
+            throw (RuntimeException) exception;
+        }
+        throw (E) exception;
     }
+
+    @Override
+    public final void run() {
+        try {
+            result = doExecute();
+        } catch (Throwable e) {
+            exception = e;
+        }
+        complete = true;
+        LockSupport.unpark(thread);
+    }
+
+    abstract R doExecute() throws E;
 }
