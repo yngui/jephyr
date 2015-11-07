@@ -34,8 +34,7 @@ public final class JavaThreadImpl extends ThreadImpl {
     private final Thread javaThread;
 
     public JavaThreadImpl(Thread javaThread) {
-        requireNonNull(javaThread);
-        this.javaThread = javaThread;
+        this.javaThread = requireNonNull(javaThread);
     }
 
     @Override

@@ -68,6 +68,10 @@
             <plugin>
                 <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
+                    <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>

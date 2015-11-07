@@ -43,8 +43,32 @@
     <build>
         <plugins>
             <plugin>
+                <groupId>org.jephyr.remapping</groupId>
+                <artifactId>remapping-maven-plugin</artifactId>
+                <configuration>
+                    <mappingEntries>
+                        <mappingEntry>
+                            <oldName>java/lang/Thread</oldName>
+                            <newName>jephyr/java/lang/Thread</newName>
+                        </mappingEntry>
+                    </mappingEntries>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>enhance</goal>
+                            <goal>testEnhance</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
                 <groupId>org.jephyr.easyflow</groupId>
                 <artifactId>easyflow-maven-plugin</artifactId>
+                <configuration>
+                    <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
+                    <testClassesDirectory>${project.build.directory}/enhanced-test-classes</testClassesDirectory>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
