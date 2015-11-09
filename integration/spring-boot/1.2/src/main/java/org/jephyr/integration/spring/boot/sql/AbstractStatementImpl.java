@@ -120,7 +120,7 @@ abstract class AbstractStatementImpl<T extends Statement> extends AbstractWrappe
 
     @Override
     public final ResultSet getResultSet() throws SQLException {
-        return wrap(invoke(delegate::getResultSet, executor, SQLException.class), connection);
+        return new ResultSetImpl(invoke(delegate::getResultSet, executor, SQLException.class), executor, this);
     }
 
     @Override

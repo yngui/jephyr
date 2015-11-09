@@ -24,8 +24,6 @@
 
 package org.jephyr.integration.spring.boot.sql;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Wrapper;
 import java.util.concurrent.Callable;
@@ -52,20 +50,6 @@ abstract class AbstractWrapperImpl<T extends Wrapper> implements Wrapper {
     @Override
     public final boolean isWrapperFor(Class<?> iface) throws SQLException {
         return delegate.isWrapperFor(iface);
-    }
-
-    final ResultSet wrap(ResultSet resultSet, Connection connection) throws SQLException {
-        try {
-            return new ResultSetImpl(resultSet, executor,
-                    new StatementImpl(resultSet.getStatement(), executor, connection));
-        } catch (Throwable e) {
-            try {
-                resultSet.close();
-            } catch (Throwable suppressed) {
-                e.addSuppressed(suppressed);
-            }
-            throw e;
-        }
     }
 
     static <V, E extends Throwable> V invoke(Callable<V> callable, Executor executor, Class<E> exceptionClass)
