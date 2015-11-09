@@ -35,65 +35,50 @@ import java.util.logging.Logger;
 import javax.sql.DataSource;
 
 import static java.util.Objects.requireNonNull;
-import static org.jephyr.integration.spring.boot.sql.Utils.invoke;
 
-public final class DataSourceImpl implements DataSource {
+public final class DataSourceImpl extends AbstractWrapperImpl<DataSource> implements DataSource {
 
-    private final DataSource dataSource;
-    private final Executor executor;
-
-    public DataSourceImpl(DataSource dataSource) {
-        this(dataSource, Executors.newCachedThreadPool());
+    public DataSourceImpl(DataSource delegate) {
+        this(delegate, Executors.newFixedThreadPool(10));
     }
 
-    public DataSourceImpl(DataSource dataSource, Executor executor) {
-        this.dataSource = requireNonNull(dataSource);
-        this.executor = requireNonNull(executor);
+    public DataSourceImpl(DataSource delegate, Executor executor) {
+        super(requireNonNull(delegate), requireNonNull(executor));
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return invoke(() -> new ConnectionImpl(dataSource.getConnection(), executor), executor, SQLException.class);
+        return new ConnectionImpl(invoke(delegate::getConnection, executor, SQLException.class), executor);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        return invoke(() -> new ConnectionImpl(dataSource.getConnection(username, password), executor), executor,
-                SQLException.class);
+        return new ConnectionImpl(
+                invoke(() -> delegate.getConnection(username, password), executor, SQLException.class), executor);
     }
 
     @Override
     public PrintWriter getLogWriter() throws SQLException {
-        return dataSource.getLogWriter();
+        return delegate.getLogWriter();
     }
 
     @Override
     public void setLogWriter(PrintWriter out) throws SQLException {
-        dataSource.setLogWriter(out);
+        delegate.setLogWriter(out);
     }
 
     @Override
     public void setLoginTimeout(int seconds) throws SQLException {
-        dataSource.setLoginTimeout(seconds);
+        delegate.setLoginTimeout(seconds);
     }
 
     @Override
     public int getLoginTimeout() throws SQLException {
-        return dataSource.getLoginTimeout();
+        return delegate.getLoginTimeout();
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        return dataSource.getParentLogger();
-    }
-
-    @Override
-    public <T> T unwrap(Class<T> iface) throws SQLException {
-        return dataSource.unwrap(iface);
-    }
-
-    @Override
-    public boolean isWrapperFor(Class<?> iface) throws SQLException {
-        return dataSource.isWrapperFor(iface);
+        return delegate.getParentLogger();
     }
 }
