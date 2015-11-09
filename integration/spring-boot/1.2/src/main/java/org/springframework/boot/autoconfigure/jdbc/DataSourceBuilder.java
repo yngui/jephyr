@@ -21,6 +21,7 @@ import java.util.Map;
 
 import javax.sql.DataSource;
 
+import org.jephyr.integration.spring.boot.sql.DataSourceImpl;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.boot.bind.RelaxedDataBinder;
@@ -41,7 +42,6 @@ import org.springframework.util.ClassUtils;
 public class DataSourceBuilder {
 
 	private static final String[] DATA_SOURCE_TYPE_NAMES = new String[] {
-			"org.jephyr.integration.spring.boot.sql.DataSourceImpl",
 			"org.apache.tomcat.jdbc.pool.DataSource",
 			"com.zaxxer.hikari.HikariDataSource",
 			"org.apache.commons.dbcp.BasicDataSource",
@@ -70,7 +70,7 @@ public class DataSourceBuilder {
 		DataSource result = BeanUtils.instantiate(type);
 		maybeGetDriverClassName();
 		bind(result);
-		return result;
+		return new DataSourceImpl(result);
 	}
 
 	private void maybeGetDriverClassName() {

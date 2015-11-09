@@ -25,132 +25,75 @@
 package org.jephyr.integration.spring.boot.sql;
 
 import java.io.PrintWriter;
-import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
-import java.sql.Driver;
 import java.sql.SQLException;
 import java.sql.SQLFeatureNotSupportedException;
-import java.util.Properties;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.logging.Logger;
 
 import javax.sql.DataSource;
 
+import static java.util.Objects.requireNonNull;
+import static org.jephyr.integration.spring.boot.sql.Utils.invoke;
+
 public final class DataSourceImpl implements DataSource {
 
-    private final Executor executor = Executors.newCachedThreadPool();
-    private String driverClassName;
-    private String url;
-    private String username;
-    private String password;
-    private PrintWriter logWriter;
-    private int loginTimeout;
-    private Driver driver;
+    private final DataSource dataSource;
+    private final Executor executor;
 
-    public String getDriverClassName() {
-        return driverClassName;
+    public DataSourceImpl(DataSource dataSource) {
+        this(dataSource, Executors.newCachedThreadPool());
     }
 
-    public void setDriverClassName(String driverClassName) {
-        this.driverClassName = driverClassName;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+    public DataSourceImpl(DataSource dataSource, Executor executor) {
+        this.dataSource = requireNonNull(dataSource);
+        this.executor = requireNonNull(executor);
     }
 
     @Override
     public Connection getConnection() throws SQLException {
-        return getConnection(username, password);
+        return invoke(() -> new ConnectionImpl(dataSource.getConnection(), executor), executor, SQLException.class);
     }
 
     @Override
     public Connection getConnection(String username, String password) throws SQLException {
-        if (driver == null) {
-            try {
-                driver = (Driver) Class.forName(driverClassName).getConstructor().newInstance();
-            } catch (NoSuchMethodException | ClassNotFoundException | InstantiationException | IllegalAccessException
-                    e) {
-                throw new SQLException(e);
-            } catch (InvocationTargetException e) {
-                throw new SQLException(e.getCause());
-            }
-        }
-        Properties info = new Properties();
-        info.setProperty("username", username);
-        info.setProperty("password", password);
-        return new ConnectTask(url, info).execute(executor);
+        return invoke(() -> new ConnectionImpl(dataSource.getConnection(username, password), executor), executor,
+                SQLException.class);
     }
 
     @Override
-    public PrintWriter getLogWriter() {
-        return logWriter;
+    public PrintWriter getLogWriter() throws SQLException {
+        return dataSource.getLogWriter();
     }
 
     @Override
-    public void setLogWriter(PrintWriter out) {
-        logWriter = out;
+    public void setLogWriter(PrintWriter out) throws SQLException {
+        dataSource.setLogWriter(out);
     }
 
     @Override
-    public void setLoginTimeout(int seconds) {
-        loginTimeout = seconds;
+    public void setLoginTimeout(int seconds) throws SQLException {
+        dataSource.setLoginTimeout(seconds);
     }
 
     @Override
-    public int getLoginTimeout() {
-        return loginTimeout;
+    public int getLoginTimeout() throws SQLException {
+        return dataSource.getLoginTimeout();
     }
 
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new SQLFeatureNotSupportedException();
+        return dataSource.getParentLogger();
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) {
-        return iface.cast(this);
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return dataSource.unwrap(iface);
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) {
-        return iface.isAssignableFrom(getClass());
-    }
-
-    private final class ConnectTask extends Task<Connection, SQLException> {
-
-        private final String url;
-        private final Properties info;
-
-        ConnectTask(String url, Properties info) {
-            this.url = url;
-            this.info = info;
-        }
-
-        @Override
-        Connection doExecute() throws SQLException {
-            return new ConnectionImpl(driver.connect(url, info), executor);
-        }
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return dataSource.isWrapperFor(iface);
     }
 }

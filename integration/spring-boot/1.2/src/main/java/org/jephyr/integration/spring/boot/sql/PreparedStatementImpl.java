@@ -49,6 +49,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.concurrent.Executor;
 
+import static org.jephyr.integration.spring.boot.sql.Utils.invoke;
+
 final class PreparedStatementImpl implements PreparedStatement {
 
     private final PreparedStatement statement;
@@ -61,7 +63,8 @@ final class PreparedStatementImpl implements PreparedStatement {
 
     @Override
     public ResultSet executeQuery() throws SQLException {
-        return new ExecuteQueryTask().execute(executor);
+        return invoke(() -> new ResultSetImpl(statement.executeQuery(), statement, executor), executor,
+                SQLException.class);
     }
 
     @Override
@@ -601,23 +604,12 @@ final class PreparedStatementImpl implements PreparedStatement {
     }
 
     @Override
-    public <T> T unwrap(Class<T> iface) {
-        return iface.cast(this);
+    public <T> T unwrap(Class<T> iface) throws SQLException {
+        return statement.unwrap(iface);
     }
 
     @Override
-    public boolean isWrapperFor(Class<?> iface) {
-        return iface.isAssignableFrom(getClass());
-    }
-
-    private final class ExecuteQueryTask extends Task<ResultSet, SQLException> {
-
-        ExecuteQueryTask() {
-        }
-
-        @Override
-        ResultSet doExecute() throws SQLException {
-            return statement.executeQuery();
-        }
+    public boolean isWrapperFor(Class<?> iface) throws SQLException {
+        return statement.isWrapperFor(iface);
     }
 }
