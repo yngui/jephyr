@@ -42,7 +42,7 @@ import java.util.StringTokenizer;
  * An application cannot create its own instance of this class.
  *
  * @author  unascribed
- * @see     Runtime#getRuntime()
+ * @see     java.lang.Runtime#getRuntime()
  * @since   JDK1.0
  */
 
@@ -100,7 +100,7 @@ public class Runtime {
      *         exiting with the specified status
      *
      * @see java.lang.SecurityException
-     * @see SecurityManager#checkExit(int)
+     * @see java.lang.SecurityManager#checkExit(int)
      * @see #addShutdownHook
      * @see #removeShutdownHook
      * @see #runFinalizersOnExit
@@ -302,9 +302,9 @@ public class Runtime {
      *        if a security manager exists and its <code>checkExit</code>
      *        method doesn't allow the exit.
      *
-     * @see     Runtime#exit(int)
-     * @see     Runtime#gc()
-     * @see     SecurityManager#checkExit(int)
+     * @see     java.lang.Runtime#exit(int)
+     * @see     java.lang.Runtime#gc()
+     * @see     java.lang.SecurityManager#checkExit(int)
      * @since   JDK1.1
      */
     @Deprecated
@@ -787,9 +787,9 @@ public class Runtime {
      *             a native library image by the host system.
      * @exception  NullPointerException if <code>filename</code> is
      *             <code>null</code>
-     * @see        Runtime#getRuntime()
+     * @see        java.lang.Runtime#getRuntime()
      * @see        java.lang.SecurityException
-     * @see        SecurityManager#checkLink(java.lang.String)
+     * @see        java.lang.SecurityManager#checkLink(java.lang.String)
      */
     public void load(String filename) {
         java.lang.Runtime.getRuntime().load(filename);
@@ -837,7 +837,7 @@ public class Runtime {
      * @exception  NullPointerException if <code>libname</code> is
      *             <code>null</code>
      * @see        java.lang.SecurityException
-     * @see        SecurityManager#checkLink(java.lang.String)
+     * @see        java.lang.SecurityManager#checkLink(java.lang.String)
      */
     public void loadLibrary(String libname) {
         java.lang.Runtime.getRuntime().loadLibrary(libname);

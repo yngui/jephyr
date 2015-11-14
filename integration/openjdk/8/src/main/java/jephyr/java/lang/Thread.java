@@ -203,9 +203,9 @@ class Thread implements Runnable {
 
     /**
      * The argument supplied to the current call to
-     * jephyr.java.util.concurrent.locks.LockSupport.park.
-     * Set by (private) jephyr.java.util.concurrent.locks.LockSupport.setBlocker
-     * Accessed using jephyr.java.util.concurrent.locks.LockSupport.getBlocker
+     * java.util.concurrent.locks.LockSupport.park.
+     * Set by (private) java.util.concurrent.locks.LockSupport.setBlocker
+     * Accessed using java.util.concurrent.locks.LockSupport.getBlocker
      */
     volatile Object parkBlocker;
 
@@ -1119,7 +1119,7 @@ class Thread implements Runnable {
 
     /**
      * Returns an estimate of the number of active threads in the current
-     * thread's {@linkplain ThreadGroup thread group} and its
+     * thread's {@linkplain java.lang.ThreadGroup thread group} and its
      * subgroups. Recursively iterates over all subgroups in the current
      * thread's thread group.
      *
@@ -1140,7 +1140,7 @@ class Thread implements Runnable {
     /**
      * Copies into the specified array every active thread in the current
      * thread's thread group and its subgroups. This method simply
-     * invokes the {@link ThreadGroup#enumerate(Thread[])}
+     * invokes the {@link java.lang.ThreadGroup#enumerate(Thread[])}
      * method of the current thread's thread group.
      *
      * <p> An application might use the {@linkplain #activeCount activeCount}
@@ -1160,7 +1160,7 @@ class Thread implements Runnable {
      * @return  the number of threads put into the array
      *
      * @throws  SecurityException
-     *          if {@link ThreadGroup#checkAccess} determines that
+     *          if {@link java.lang.ThreadGroup#checkAccess} determines that
      *          the current thread cannot access its thread group
      */
     public static int enumerate(Thread tarray[]) {

@@ -28,16 +28,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jephyr.integration.spring</groupId>
-        <artifactId>spring-parent</artifactId>
+        <groupId>org.jephyr.integration.postgresql</groupId>
+        <artifactId>postgresql-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>spring-4.1</artifactId>
+    <artifactId>postgresql-9.4-jdbc42</artifactId>
 
     <properties>
-        <spring.version>4.1.8.RELEASE</spring.version>
-        <servlet.version>3.1.0</servlet.version>
+        <postgresql.version>9.4-1205-jdbc42</postgresql.version>
     </properties>
 
     <build>
@@ -73,20 +72,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.jephyr.parameters</groupId>
-            <artifactId>parameters-runtime</artifactId>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.springframework</groupId>
-            <artifactId>spring-webmvc</artifactId>
-            <version>${spring.version}</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>javax.servlet</groupId>
-            <artifactId>javax.servlet-api</artifactId>
-            <version>${servlet.version}</version>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>${postgresql.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>

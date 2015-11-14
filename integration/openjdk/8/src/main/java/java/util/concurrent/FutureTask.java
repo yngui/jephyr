@@ -34,7 +34,9 @@
  */
 
 package java.util.concurrent;
-import java.util.concurrent.locks.LockSupport;
+
+import jephyr.java.lang.Thread;
+import jephyr.java.util.concurrent.locks.LockSupport;
 
 /**
  * A cancellable asynchronous computation.  This class provides a base

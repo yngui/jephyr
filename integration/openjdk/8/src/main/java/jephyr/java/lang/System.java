@@ -615,7 +615,7 @@ public final class System {
      *              to the system properties.
      * @see        #setProperties
      * @see        java.lang.SecurityException
-     * @see        SecurityManager#checkPropertiesAccess()
+     * @see        java.lang.SecurityManager#checkPropertiesAccess()
      * @see        java.util.Properties
      */
     public static Properties getProperties() {
@@ -657,7 +657,7 @@ public final class System {
      * @see        #getProperties
      * @see        java.util.Properties
      * @see        java.lang.SecurityException
-     * @see        SecurityManager#checkPropertiesAccess()
+     * @see        java.lang.SecurityManager#checkPropertiesAccess()
      */
     public static void setProperties(Properties props) {
         java.lang.System.setProperties(props);
@@ -686,8 +686,8 @@ public final class System {
      * @exception  IllegalArgumentException if <code>key</code> is empty.
      * @see        #setProperty
      * @see        java.lang.SecurityException
-     * @see        SecurityManager#checkPropertyAccess(java.lang.String)
-     * @see        System#getProperties()
+     * @see        java.lang.SecurityManager#checkPropertyAccess(java.lang.String)
+     * @see        java.lang.System#getProperties()
      */
     public static String getProperty(String key) {
         return java.lang.System.getProperty(key);
@@ -716,8 +716,8 @@ public final class System {
      *             <code>null</code>.
      * @exception  IllegalArgumentException if <code>key</code> is empty.
      * @see        #setProperty
-     * @see        SecurityManager#checkPropertyAccess(java.lang.String)
-     * @see        System#getProperties()
+     * @see        java.lang.SecurityManager#checkPropertyAccess(java.lang.String)
+     * @see        java.lang.System#getProperties()
      */
     public static String getProperty(String key, String def) {
         return java.lang.System.getProperty(key, def);
@@ -746,8 +746,8 @@ public final class System {
      *             <code>value</code> is <code>null</code>.
      * @exception  IllegalArgumentException if <code>key</code> is empty.
      * @see        #getProperty
-     * @see        System#getProperty(java.lang.String)
-     * @see        System#getProperty(java.lang.String, java.lang.String)
+     * @see        java.lang.System#getProperty(java.lang.String)
+     * @see        java.lang.System#getProperty(java.lang.String, java.lang.String)
      * @see        java.util.PropertyPermission
      * @see        SecurityManager#checkPermission
      * @since      1.2
@@ -780,7 +780,7 @@ public final class System {
      * @see        #setProperty
      * @see        java.util.Properties
      * @see        java.lang.SecurityException
-     * @see        SecurityManager#checkPropertiesAccess()
+     * @see        java.lang.SecurityManager#checkPropertiesAccess()
      * @since 1.5
      */
     public static String clearProperty(String key) {
@@ -900,7 +900,7 @@ public final class System {
      * @throws  SecurityException
      *        if a security manager exists and its <code>checkExit</code>
      *        method doesn't allow exit with the specified status.
-     * @see        Runtime#exit(int)
+     * @see        java.lang.Runtime#exit(int)
      */
     public static void exit(int status) {
         java.lang.System.exit(status);
@@ -922,7 +922,7 @@ public final class System {
      * Runtime.getRuntime().gc()
      * </pre></blockquote>
      *
-     * @see     Runtime#gc()
+     * @see     java.lang.Runtime#gc()
      */
     public static void gc() {
         java.lang.System.gc();
@@ -944,7 +944,7 @@ public final class System {
      * Runtime.getRuntime().runFinalization()
      * </pre></blockquote>
      *
-     * @see     Runtime#runFinalization()
+     * @see     java.lang.Runtime#runFinalization()
      */
     public static void runFinalization() {
         java.lang.System.runFinalization();
@@ -970,9 +970,9 @@ public final class System {
      *        if a security manager exists and its <code>checkExit</code>
      *        method doesn't allow the exit.
      *
-     * @see     Runtime#exit(int)
-     * @see     Runtime#gc()
-     * @see     SecurityManager#checkExit(int)
+     * @see     java.lang.Runtime#exit(int)
+     * @see     java.lang.Runtime#gc()
+     * @see     java.lang.SecurityManager#checkExit(int)
      * @since   JDK1.1
      */
     @Deprecated
@@ -1013,8 +1013,8 @@ public final class System {
      *             a native library image by the host system.
      * @exception  NullPointerException if <code>filename</code> is
      *             <code>null</code>
-     * @see        Runtime#load(java.lang.String)
-     * @see        SecurityManager#checkLink(java.lang.String)
+     * @see        java.lang.Runtime#load(java.lang.String)
+     * @see        java.lang.SecurityManager#checkLink(java.lang.String)
      */
     public static void load(String filename) {
         java.lang.System.load(filename);
@@ -1048,8 +1048,8 @@ public final class System {
      *             native library image by the host system.
      * @exception  NullPointerException if <code>libname</code> is
      *             <code>null</code>
-     * @see        Runtime#loadLibrary(java.lang.String)
-     * @see        SecurityManager#checkLink(java.lang.String)
+     * @see        java.lang.Runtime#loadLibrary(java.lang.String)
+     * @see        java.lang.SecurityManager#checkLink(java.lang.String)
      */
     public static void loadLibrary(String libname) {
         java.lang.System.loadLibrary(libname);
@@ -1063,7 +1063,7 @@ public final class System {
      * @return     a platform-dependent native library name.
      * @exception  NullPointerException if <code>libname</code> is
      *             <code>null</code>
-     * @see        System#loadLibrary(java.lang.String)
+     * @see        java.lang.System#loadLibrary(java.lang.String)
      * @see        java.lang.ClassLoader#findLibrary(java.lang.String)
      * @since      1.2
      */

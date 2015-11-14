@@ -50,12 +50,15 @@ public final class ContinuationImpl implements Serializable {
 
     private final Runnable target;
     private int state;
-    private boolean unsuspendable;
-    private int depth;
-    private Object obj;
-    private Class<?> cls;
-    private String name;
-    private String desc;
+    private transient boolean unsuspendable;
+    private transient int depth;
+    private transient Object obj;
+    private transient Class<?> cls;
+    private transient String name;
+    private transient String desc;
+    private transient Class<?> unsuspendableClass;
+    private transient String unsuspendableName;
+    private transient String unsuspendableDesc;
     private transient int[] intStack = EMPTY_INTS;
     private transient int intTop;
     private transient float[] floatStack = EMPTY_FLOATS;
@@ -78,7 +81,8 @@ public final class ContinuationImpl implements Serializable {
 
     void suspend() {
         if (unsuspendable || !isStaticInvocationExpected(EasyFlowContinuation.class, "suspend", "()V")) {
-            throw new UnsuspendableError("not allowed");
+            throw new UnsuspendableError("Unsuspendable at " + unsuspendableClass.getName() + '.' + unsuspendableName +
+                    unsuspendableDesc);
         }
         state = state == SUSPENDED ? RESUMED : SUSPENDING;
     }
@@ -199,7 +203,14 @@ public final class ContinuationImpl implements Serializable {
             depth++;
         } else if (!isInvocationExpected(obj, name, desc)) {
             unsuspendable = true;
+            unsuspendableClass = obj.getClass();
+            unsuspendableName = name;
+            unsuspendableDesc = desc;
         }
+        this.obj = null;
+        cls = null;
+        this.name = null;
+        this.desc = null;
     }
 
     private boolean isInvocationExpected(Object obj, String name, String desc) {
@@ -211,7 +222,14 @@ public final class ContinuationImpl implements Serializable {
             depth++;
         } else if (!isStaticInvocationExpected(cls, name, desc)) {
             unsuspendable = true;
+            unsuspendableClass = cls;
+            unsuspendableName = name;
+            unsuspendableDesc = desc;
         }
+        obj = null;
+        this.cls = null;
+        this.name = null;
+        this.desc = null;
     }
 
     private boolean isStaticInvocationExpected(Class<?> cls, String name, String desc) {
@@ -223,6 +241,9 @@ public final class ContinuationImpl implements Serializable {
             depth--;
         } else {
             unsuspendable = false;
+            unsuspendableClass = null;
+            unsuspendableName = null;
+            unsuspendableDesc = null;
         }
     }
 
@@ -231,6 +252,9 @@ public final class ContinuationImpl implements Serializable {
             depth++;
         } else {
             unsuspendable = true;
+            unsuspendableClass = obj == null ? cls : obj.getClass();
+            unsuspendableName = name;
+            unsuspendableDesc = desc;
         }
     }
 
@@ -239,6 +263,9 @@ public final class ContinuationImpl implements Serializable {
             depth--;
         } else {
             unsuspendable = false;
+            unsuspendableClass = null;
+            unsuspendableName = null;
+            unsuspendableDesc = null;
         }
     }
 
