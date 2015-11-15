@@ -49,9 +49,6 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import jephyr.java.util.concurrent.locks.Lock;
-import jephyr.java.util.concurrent.locks.ReentrantLock;
-
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public final class JephyrSocketImpl extends SocketImpl {
@@ -283,80 +280,8 @@ public final class JephyrSocketImpl extends SocketImpl {
         }
     }
 
-    private static final class AsynchronousByteChannelOutputStream extends OutputStream {
-
-        private final Lock lock = new ReentrantLock();
-        private final AsynchronousByteChannel channel;
-        private ByteBuffer bb;
-        private byte[] bs;
-        private byte[] b1;
-
-        AsynchronousByteChannelOutputStream(AsynchronousByteChannel channel) {
-            this.channel = channel;
-        }
-
-        @Override
-        public void write(int b) throws IOException {
-            lock.lock();
-            try {
-                if (b1 == null) {
-                    b1 = new byte[1];
-                }
-                b1[0] = (byte) b;
-                write(b1);
-            } finally {
-                lock.unlock();
-            }
-        }
-
-        @Override
-        public void write(byte[] b, int off, int len) throws IOException {
-            lock.lock();
-            try {
-                if (off < 0 || off > b.length || len < 0 || off + len > b.length || off + len < 0) {
-                    throw new IndexOutOfBoundsException();
-                }
-
-                if (len == 0) {
-                    return;
-                }
-
-                ByteBuffer bb = bs == b ? this.bb : ByteBuffer.wrap(b);
-                bb.limit(Math.min(off + len, bb.capacity()));
-                bb.position(off);
-                this.bb = bb;
-                bs = b;
-
-                boolean interrupted = false;
-                try {
-                    while (bb.remaining() > 0) {
-                        try {
-                            channel.write(bb).get();
-                        } catch (InterruptedException ignored) {
-                            interrupted = true;
-                        } catch (ExecutionException e) {
-                            throw new IOException(e.getCause());
-                        }
-                    }
-                } finally {
-                    if (interrupted) {
-                        Thread.currentThread().interrupt();
-                    }
-                }
-            } finally {
-                lock.unlock();
-            }
-        }
-
-        @Override
-        public void close() throws IOException {
-            channel.close();
-        }
-    }
-
     private static final class AsynchronousByteChannelInputStream extends InputStream {
 
-        private final Lock lock = new ReentrantLock();
         private final AsynchronousByteChannel channel;
         private ByteBuffer bb;
         private byte[] bs;
@@ -368,57 +293,89 @@ public final class JephyrSocketImpl extends SocketImpl {
 
         @Override
         public int read() throws IOException {
-            lock.lock();
-            try {
-                if (b1 == null) {
-                    b1 = new byte[1];
-                }
-                int n = read(b1);
-                if (n == 1) {
-                    return b1[0] & 0xff;
-                }
-                return -1;
-            } finally {
-                lock.unlock();
+            if (b1 == null) {
+                b1 = new byte[1];
             }
+            int n = read(b1);
+            if (n == 1) {
+                return b1[0] & 0xff;
+            }
+            return -1;
         }
 
         @Override
         public int read(byte[] b, int off, int len) throws IOException {
-            lock.lock();
+            if (off < 0 || off > b.length || len < 0 || off + len > b.length || off + len < 0) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (len == 0) {
+                return 0;
+            }
+
+            ByteBuffer bb = bs == b ? this.bb : ByteBuffer.wrap(b);
+            bb.position(off);
+            bb.limit(Math.min(off + len, bb.capacity()));
+            this.bb = bb;
+            bs = b;
+
+            Future<Integer> future = channel.read(bb);
             try {
-                if (off < 0 || off > b.length || len < 0 || off + len > b.length || off + len < 0) {
-                    throw new IndexOutOfBoundsException();
-                }
+                return getUninterruptibly(future);
+            } catch (ExecutionException e) {
+                throw propagate(e.getCause(), IOException.class);
+            }
+        }
 
-                if (len == 0) {
-                    return 0;
-                }
+        @Override
+        public void close() throws IOException {
+            channel.close();
+        }
+    }
 
-                ByteBuffer bb = bs == b ? this.bb : ByteBuffer.wrap(b);
-                bb.position(off);
-                bb.limit(Math.min(off + len, bb.capacity()));
-                this.bb = bb;
-                bs = b;
+    private static final class AsynchronousByteChannelOutputStream extends OutputStream {
 
-                boolean interrupted = false;
+        private final AsynchronousByteChannel channel;
+        private ByteBuffer bb;
+        private byte[] bs;
+        private byte[] b1;
+
+        AsynchronousByteChannelOutputStream(AsynchronousByteChannel channel) {
+            this.channel = channel;
+        }
+
+        @Override
+        public void write(int b) throws IOException {
+            if (b1 == null) {
+                b1 = new byte[1];
+            }
+            b1[0] = (byte) b;
+            write(b1);
+        }
+
+        @Override
+        public void write(byte[] b, int off, int len) throws IOException {
+            if (off < 0 || off > b.length || len < 0 || off + len > b.length || off + len < 0) {
+                throw new IndexOutOfBoundsException();
+            }
+
+            if (len == 0) {
+                return;
+            }
+
+            ByteBuffer bb = bs == b ? this.bb : ByteBuffer.wrap(b);
+            bb.limit(Math.min(off + len, bb.capacity()));
+            bb.position(off);
+            this.bb = bb;
+            bs = b;
+
+            while (bb.hasRemaining()) {
+                Future<?> future = channel.write(bb);
                 try {
-                    while (true) {
-                        try {
-                            return channel.read(bb).get();
-                        } catch (InterruptedException ignored) {
-                            interrupted = true;
-                        } catch (ExecutionException e) {
-                            throw new IOException(e.getCause());
-                        }
-                    }
-                } finally {
-                    if (interrupted) {
-                        Thread.currentThread().interrupt();
-                    }
+                    getUninterruptibly(future);
+                } catch (ExecutionException e) {
+                    throw propagate(e.getCause(), IOException.class);
                 }
-            } finally {
-                lock.unlock();
             }
         }
 

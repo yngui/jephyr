@@ -25,21 +25,20 @@
 package org.jephyr.integration.openjdk.misc;
 
 import jephyr.java.lang.Thread;
-import org.jephyr.integration.openjdk.nio.Interruptible;
 import org.jephyr.thread.ThreadAccess;
 
 public final class SharedSecrets {
 
-    private static ThreadAccess<Thread, Interruptible> threadAccess;
+    private static ThreadAccess<Thread> threadAccess;
 
     private SharedSecrets() {
     }
 
-    public static ThreadAccess<Thread, Interruptible> getThreadAccess() {
+    public static ThreadAccess<Thread> getThreadAccess() {
         return threadAccess;
     }
 
-    public static void setThreadAccess(ThreadAccess<Thread, Interruptible> threadAccess) {
+    public static void setThreadAccess(ThreadAccess<Thread> threadAccess) {
         SharedSecrets.threadAccess = threadAccess;
     }
 }

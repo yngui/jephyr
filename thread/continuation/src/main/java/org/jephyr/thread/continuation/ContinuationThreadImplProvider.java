@@ -50,7 +50,7 @@ public final class ContinuationThreadImplProvider extends ThreadImplProvider {
     }
 
     @Override
-    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess,
+    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T> threadAccess,
             TerminationHandler terminationHandler) {
         requireNonNull(thread);
         requireNonNull(threadAccess);

@@ -29,7 +29,7 @@ import static java.util.Objects.requireNonNull;
 final class JavaThreadImplProvider extends ThreadImplProvider {
 
     @Override
-    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess,
+    public <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T> threadAccess,
             TerminationHandler terminationHandler) {
         requireNonNull(thread);
         requireNonNull(threadAccess);

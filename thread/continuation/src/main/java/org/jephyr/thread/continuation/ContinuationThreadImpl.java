@@ -53,7 +53,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
     private final ManagedBlocker blocker = new ParkBlocker();
     private final AtomicReference<Node<T>> joiner = new AtomicReference<>();
     private final T thread;
-    private final ThreadAccess<T, ?> threadAccess;
+    private final ThreadAccess<T> threadAccess;
     private final ForkJoinPool pool;
     private final ScheduledExecutorService scheduler;
     private final TerminationHandler terminationHandler;
@@ -71,7 +71,7 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
         debug = Boolean.getBoolean(ContinuationThreadImpl.class.getName() + ".debug");
     }
 
-    ContinuationThreadImpl(T thread, ThreadAccess<T, ?> threadAccess, ForkJoinPool pool,
+    ContinuationThreadImpl(T thread, ThreadAccess<T> threadAccess, ForkJoinPool pool,
             ScheduledExecutorService scheduler, TerminationHandler terminationHandler) {
         this.thread = thread;
         this.threadAccess = threadAccess;

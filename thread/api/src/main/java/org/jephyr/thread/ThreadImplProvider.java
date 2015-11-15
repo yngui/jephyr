@@ -38,7 +38,7 @@ public abstract class ThreadImplProvider {
         return Holder.provider;
     }
 
-    public abstract <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T, ?> threadAccess,
+    public abstract <T extends Runnable> ThreadImpl createThreadImpl(T thread, ThreadAccess<T> threadAccess,
             TerminationHandler terminationHandler);
 
     private static final class Holder {

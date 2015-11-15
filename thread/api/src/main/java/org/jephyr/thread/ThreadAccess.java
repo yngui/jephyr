@@ -24,7 +24,7 @@
 
 package org.jephyr.thread;
 
-public interface ThreadAccess<T extends Runnable, U> {
+public interface ThreadAccess<T extends Runnable> {
 
     T currentThread();
 
@@ -33,6 +33,4 @@ public interface ThreadAccess<T extends Runnable, U> {
     ThreadImpl getImpl(T thread);
 
     void dispatchUncaughtException(T thread, Throwable e);
-
-    void blockedOn(T thread, U interruptible);
 }

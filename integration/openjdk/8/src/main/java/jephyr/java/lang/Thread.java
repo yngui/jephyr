@@ -38,13 +38,12 @@ import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.TimeUnit;
 
 import jephyr.java.util.concurrent.locks.LockSupport;
+import jephyr.sun.nio.ch.Interruptible;
 import org.jephyr.integration.openjdk.misc.SharedSecrets;
-import org.jephyr.integration.openjdk.nio.Interruptible;
 import org.jephyr.thread.JavaThreadImpl;
 import org.jephyr.thread.ThreadAccess;
 import org.jephyr.thread.ThreadImpl;
 import sun.security.util.SecurityConstants;
-
 
 /**
  * A <i>thread</i> is a thread of execution in a program. The Java
@@ -150,7 +149,7 @@ class Thread implements Runnable {
             return new Thread(java.lang.Thread.currentThread());
         }
     };
-    private static final ThreadAccess<Thread, Interruptible> threadAccess = new ThreadAccessImpl();
+    private static final ThreadAccess<Thread> threadAccess = new ThreadAccessImpl();
 
     static {
         SharedSecrets.setThreadAccess(threadAccess);
@@ -2004,7 +2003,7 @@ class Thread implements Runnable {
     @sun.misc.Contended("tlr")
     int threadLocalRandomSecondarySeed;
 
-    private static final class ThreadAccessImpl implements ThreadAccess<Thread, Interruptible> {
+    private static final class ThreadAccessImpl implements ThreadAccess<Thread> {
 
         ThreadAccessImpl() {
         }
@@ -2027,11 +2026,6 @@ class Thread implements Runnable {
         @Override
         public void dispatchUncaughtException(Thread thread, Throwable e) {
             thread.dispatchUncaughtException(e);
-        }
-
-        @Override
-        public void blockedOn(Thread thread, Interruptible interruptible) {
-            thread.blockedOn(interruptible);
         }
     }
 }
