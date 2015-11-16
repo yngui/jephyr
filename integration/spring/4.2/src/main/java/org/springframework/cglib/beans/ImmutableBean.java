@@ -17,6 +17,7 @@ package org.springframework.cglib.beans;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.Type;
@@ -29,7 +30,6 @@ import org.springframework.cglib.core.MethodInfo;
 import org.springframework.cglib.core.ReflectUtils;
 import org.springframework.cglib.core.Signature;
 import org.springframework.cglib.core.TypeUtils;
-
 /**
  * @author Chris Nokleberg
  */
@@ -67,6 +67,10 @@ public class ImmutableBean
 
         protected ClassLoader getDefaultClassLoader() {
             return target.getClassLoader();
+        }
+
+        protected ProtectionDomain getProtectionDomain() {
+        	return ReflectUtils.getProtectionDomain(target);
         }
 
         public Object create() {

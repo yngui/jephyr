@@ -17,6 +17,7 @@ package org.springframework.cglib.reflect;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.Type;
@@ -79,6 +80,10 @@ abstract public class ConstructorDelegate {
 
         protected ClassLoader getDefaultClassLoader() {
             return targetClass.getClassLoader();
+        }
+
+        protected ProtectionDomain getProtectionDomain() {
+        	return ReflectUtils.getProtectionDomain(targetClass);
         }
 
         public void generateClass(ClassVisitor v) {

@@ -16,6 +16,7 @@
 package org.springframework.cglib.beans;
 
 import java.beans.PropertyDescriptor;
+import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -76,6 +77,10 @@ public class BeanGenerator extends AbstractClassGenerator
         } else {
             return null;
         }
+    }
+
+    protected ProtectionDomain getProtectionDomain() {
+        return ReflectUtils.getProtectionDomain(superclass);
     }
 
     public Object create() {

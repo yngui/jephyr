@@ -81,8 +81,9 @@ public final class ContinuationImpl implements Serializable {
 
     void suspend() {
         if (unsuspendable || !isStaticInvocationExpected(EasyFlowContinuation.class, "suspend", "()V")) {
-            throw new UnsuspendableError("Unsuspendable at " + unsuspendableClass.getName() + '.' + unsuspendableName +
-                    unsuspendableDesc);
+            throw new UnsuspendableError(
+                    "Unsuspendable method " + unsuspendableClass.getName() + '.' + unsuspendableName +
+                            unsuspendableDesc);
         }
         state = state == SUSPENDED ? RESUMED : SUSPENDING;
     }

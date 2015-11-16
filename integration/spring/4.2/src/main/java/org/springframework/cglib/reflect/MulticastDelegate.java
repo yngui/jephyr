@@ -15,6 +15,7 @@
  */
 package org.springframework.cglib.reflect;
 
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,7 +55,7 @@ abstract public class MulticastDelegate implements Cloneable {
     }
 
     public MulticastDelegate remove(Object target) {
-        for (int i = targets.length - 1; i >= 0; i--) { 
+        for (int i = targets.length - 1; i >= 0; i--) {
             if (targets[i].equals(target)) {
                 MulticastDelegate copy = newInstance();
                 copy.targets = new Object[targets.length - 1];
@@ -95,6 +96,10 @@ abstract public class MulticastDelegate implements Cloneable {
             return iface.getClassLoader();
         }
 
+        protected ProtectionDomain getProtectionDomain() {
+        	return ReflectUtils.getProtectionDomain(iface);
+        }
+
         public void setInterface(Class iface) {
             this.iface = iface;
         }
@@ -106,7 +111,7 @@ abstract public class MulticastDelegate implements Cloneable {
 
         public void generateClass(ClassVisitor cv) {
             final MethodInfo method = ReflectUtils.getMethodInfo(ReflectUtils.findInterfaceMethod(iface));
-            
+
             ClassEmitter ce = new ClassEmitter(cv);
             ce.begin_class(Constants.V1_6,
                            Constants.ACC_PUBLIC | Constants.ACC_SUPER,
@@ -140,7 +145,11 @@ abstract public class MulticastDelegate implements Cloneable {
         }
 
         private void emitProxy(ClassEmitter ce, final MethodInfo method) {
-            final CodeEmitter e = EmitUtils.begin_method(ce, method, Constants.ACC_PUBLIC);
+            int modifiers = Constants.ACC_PUBLIC;
+            if ((method.getModifiers() & Constants.ACC_VARARGS) == Constants.ACC_VARARGS) {
+                modifiers |= Constants.ACC_VARARGS;
+            }
+            final CodeEmitter e = EmitUtils.begin_method(ce, method, modifiers);
             Type returnType = method.getSignature().getReturnType();
             final boolean returns = returnType != Type.VOID_TYPE;
             Local result = null;

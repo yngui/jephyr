@@ -17,6 +17,7 @@
 package org.springframework.cglib.core;
 
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 
 import org.springframework.asm.ClassVisitor;
 import org.springframework.asm.Label;
@@ -130,6 +131,10 @@ abstract public class KeyFactory {
 
         protected ClassLoader getDefaultClassLoader() {
             return keyInterface.getClassLoader();
+        }
+
+        protected ProtectionDomain getProtectionDomain() {
+        	return ReflectUtils.getProtectionDomain(keyInterface);
         }
 
         public void setCustomizer(Customizer customizer) {

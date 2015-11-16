@@ -17,6 +17,7 @@ package org.springframework.cglib.beans;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Modifier;
+import java.security.ProtectionDomain;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -98,6 +99,10 @@ abstract public class BeanCopier
             return source.getClassLoader();
         }
 
+        protected ProtectionDomain getProtectionDomain() {
+        	return ReflectUtils.getProtectionDomain(source);
+        }
+
         public BeanCopier create() {
             Object key = KEY_FACTORY.newInstance(source.getName(), target.getName(), useConverter);
             return (BeanCopier)super.create(key);
@@ -117,7 +122,7 @@ abstract public class BeanCopier
             EmitUtils.null_constructor(ce);
             CodeEmitter e = ce.begin_method(Constants.ACC_PUBLIC, COPY, null);
             PropertyDescriptor[] getters = ReflectUtils.getBeanGetters(source);
-            PropertyDescriptor[] setters = ReflectUtils.getBeanGetters(target);
+            PropertyDescriptor[] setters = ReflectUtils.getBeanSetters(target);
 
             Map names = new HashMap();
             for (int i = 0; i < getters.length; i++) {

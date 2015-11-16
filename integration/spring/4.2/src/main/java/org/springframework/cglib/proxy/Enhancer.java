@@ -17,6 +17,7 @@ package org.springframework.cglib.proxy;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.security.ProtectionDomain;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -419,6 +420,16 @@ public class Enhancer extends AbstractClassGenerator
         }
     }
 
+    protected ProtectionDomain getProtectionDomain() {
+        if (superclass != null) {
+        	return ReflectUtils.getProtectionDomain(superclass);
+        } else if (interfaces != null) {
+        	return ReflectUtils.getProtectionDomain(interfaces[0]);
+        } else {
+            return null;
+        }
+    }
+
     private Signature rename(Signature sig, int index) {
         return new Signature("CGLIB$" + sig.getName() + "$" + index,
                              sig.getDescriptor());
@@ -469,7 +480,7 @@ public class Enhancer extends AbstractClassGenerator
         Class sc = (superclass == null) ? Object.class : superclass;
 
         if (TypeUtils.isFinal(sc.getModifiers()))
-            throw new IllegalArgumentException("Cannot subclass final class " + sc);
+            throw new IllegalArgumentException("Cannot subclass final class " + sc.getName());
         List constructors = new ArrayList(Arrays.asList(sc.getDeclaredConstructors()));
         filterConstructors(sc, constructors);
 
