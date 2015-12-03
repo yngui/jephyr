@@ -397,14 +397,20 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                 objVarIndex = -1;
                 argsVarIndex = -1;
 
-                instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, implVarIndex));
-                instructions.insertBefore(labelNode,
-                        new MethodInsnNode(INVOKEVIRTUAL, "org/jephyr/continuation/easyflow/ContinuationImpl",
-                                "popObject", "()Ljava/lang/Object;", false));
-                instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, implVarIndex + 1));
-                instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, implVarIndex + 1));
-                instructions
-                        .insertBefore(labelNode, new TypeInsnNode(CHECKCAST, (String) stack[stack.length - argSize]));
+                Object value = stack[stack.length - argSize];
+                if (value == NULL) {
+                    instructions.insertBefore(labelNode, new InsnNode(ACONST_NULL));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, implVarIndex + 1));
+                    instructions.insertBefore(labelNode, new InsnNode(ACONST_NULL));
+                } else {
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, implVarIndex));
+                    instructions.insertBefore(labelNode,
+                            new MethodInsnNode(INVOKEVIRTUAL, "org/jephyr/continuation/easyflow/ContinuationImpl",
+                                    "popObject", "()Ljava/lang/Object;", false));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ASTORE, implVarIndex + 1));
+                    instructions.insertBefore(labelNode, new VarInsnNode(ALOAD, implVarIndex + 1));
+                    instructions.insertBefore(labelNode, new TypeInsnNode(CHECKCAST, (String) value));
+                }
                 stackSize += 1;
 
                 for (Type type : Type.getArgumentTypes(node.desc)) {
@@ -684,7 +690,7 @@ final class ContinuationMethodAdapter extends AnalyzingMethodNode {
                                         "pushObject", "(Ljava/lang/Object;)V", false));
                         updateMaxStack(stackSize1 + 2);
                     }
-                } else {
+                } else if (stack[stack.length - argSize] != NULL) {
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, implVarIndex));
                     instructions.insertBefore(labelNode4, new VarInsnNode(ALOAD, targetVarIndex));
                     instructions.insertBefore(labelNode4,

@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.net.NetworkInterface;
 import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.SocketImpl;
@@ -38,7 +39,6 @@ import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousByteChannel;
 import java.nio.channels.AsynchronousServerSocketChannel;
 import java.nio.channels.AsynchronousSocketChannel;
-import java.nio.channels.Channel;
 import java.nio.channels.Channels;
 import java.nio.channels.DatagramChannel;
 import java.nio.channels.NetworkChannel;
@@ -53,87 +53,158 @@ import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
 public final class JephyrSocketImpl extends SocketImpl {
 
-    private Channel channel;
-    private InetSocketAddress local;
+    private boolean stream;
+    private InetAddress localAddress;
+    private NetworkChannel channel;
     private InputStream inputStream;
     private OutputStream outputStream;
+    private int timeout;
 
     @Override
-    protected void create(boolean stream) throws IOException {
-        if (stream) {
-            channel = AsynchronousSocketChannel.open();
-        } else {
-            channel = DatagramChannel.open();
-        }
+    protected void create(boolean stream) {
+        this.stream = stream;
     }
 
     @Override
     protected void connect(String host, int port) throws IOException {
-        connect(new InetSocketAddress(host, port));
+        connect(new InetSocketAddress(host, port), 0);
     }
 
     @Override
     protected void connect(InetAddress address, int port) throws IOException {
-        connect(new InetSocketAddress(address, port));
-    }
-
-    private void connect(SocketAddress remote) throws IOException {
-        if (channel instanceof AsynchronousSocketChannel) {
-            Future<Void> future = ((AsynchronousSocketChannel) channel).connect(remote);
-            try {
-                getUninterruptibly(future);
-            } catch (ExecutionException e) {
-                throw propagate(e.getCause(), IOException.class);
-            }
-        } else {
-            ((DatagramChannel) channel).connect(remote);
-        }
+        connect(new InetSocketAddress(address, port), 0);
     }
 
     @Override
     protected void connect(SocketAddress address, int timeout) throws IOException {
-        if (channel instanceof AsynchronousSocketChannel) {
-            Future<Void> future = ((AsynchronousSocketChannel) channel).connect(address);
-            if (timeout == 0) {
-                try {
-                    getUninterruptibly(future);
-                } catch (ExecutionException e) {
-                    throw propagate(e.getCause(), IOException.class);
-                }
-            } else {
-                try {
-                    getUninterruptibly(future, timeout, TimeUnit.MILLISECONDS);
-                } catch (ExecutionException e) {
-                    throw propagate(e.getCause(), IOException.class);
-                } catch (TimeoutException e) {
-                    throw new IOException(e);
-                }
-            }
+        connect((InetSocketAddress) address, timeout);
+    }
+
+    private void connect(InetSocketAddress remoteAddress, int timeout) throws IOException {
+        address = remoteAddress.getAddress();
+        port = remoteAddress.getPort();
+        if (stream) {
+            connectStream(remoteAddress, timeout);
         } else {
-            ((DatagramChannel) channel).connect(address);
+            connectDatagram(remoteAddress);
         }
+    }
+
+    private void connectStream(InetSocketAddress remoteAddress, int timeout) throws IOException {
+        AsynchronousSocketChannel channel = AsynchronousSocketChannel.open();
+        try {
+            if (localAddress != null) {
+                channel.bind(new InetSocketAddress(localAddress, localport));
+                localport = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+            }
+            Future<Void> future = channel.connect(remoteAddress);
+            try {
+                if (timeout == 0) {
+                    getUninterruptibly(future);
+                } else {
+                    try {
+                        getUninterruptibly(future, timeout, TimeUnit.MILLISECONDS);
+                    } catch (TimeoutException e) {
+                        throw new IOException(e);
+                    }
+                }
+            } catch (ExecutionException e) {
+                throw propagate(e.getCause(), IOException.class);
+            }
+        } catch (IOException e) {
+            try {
+                channel.close();
+            } catch (IOException suppressed) {
+                e.addSuppressed(suppressed);
+            }
+            throw e;
+        }
+        this.channel = channel;
+    }
+
+    private void connectDatagram(InetSocketAddress remoteAddress) throws IOException {
+        DatagramChannel channel = DatagramChannel.open();
+        try {
+            if (localAddress != null) {
+                channel.bind(new InetSocketAddress(localAddress, localport));
+                localport = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+            }
+            channel.connect(remoteAddress);
+        } catch (IOException e) {
+            try {
+                channel.close();
+            } catch (IOException suppressed) {
+                e.addSuppressed(suppressed);
+            }
+            throw e;
+        }
+        this.channel = channel;
     }
 
     @Override
     protected void bind(InetAddress host, int port) {
-        local = new InetSocketAddress(host, port);
+        localAddress = host;
+        localport = port;
     }
 
     @Override
     protected void listen(int backlog) throws IOException {
-        ((AsynchronousServerSocketChannel) channel).bind(local, backlog);
+        AsynchronousServerSocketChannel channel = AsynchronousServerSocketChannel.open();
+        try {
+            if (localAddress != null) {
+                channel.bind(new InetSocketAddress(localAddress, localport), backlog);
+                localport = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+            }
+        } catch (IOException e) {
+            try {
+                channel.close();
+            } catch (IOException suppressed) {
+                e.addSuppressed(suppressed);
+            }
+            throw e;
+        }
+        this.channel = channel;
     }
 
     @Override
-    protected void accept(SocketImpl s) {
-        ((AsynchronousServerSocketChannel) channel).accept();
+    protected void accept(SocketImpl s) throws IOException {
+        JephyrSocketImpl impl = (JephyrSocketImpl) s;
+        AsynchronousSocketChannel channel;
+        Future<AsynchronousSocketChannel> future = ((AsynchronousServerSocketChannel) this.channel).accept();
+        try {
+            if (timeout == 0) {
+                channel = getUninterruptibly(future);
+            } else {
+                try {
+                    channel = getUninterruptibly(future, timeout, TimeUnit.MILLISECONDS);
+                } catch (TimeoutException e) {
+                    throw new IOException(e);
+                }
+            }
+        } catch (ExecutionException e) {
+            throw propagate(e.getCause(), IOException.class);
+        }
+        try {
+            InetSocketAddress remoteAddress = (InetSocketAddress) channel.getRemoteAddress();
+            impl.address = remoteAddress.getAddress();
+            impl.port = remoteAddress.getPort();
+            impl.localport = ((InetSocketAddress) channel.getLocalAddress()).getPort();
+        } catch (IOException e) {
+            try {
+                channel.close();
+            } catch (IOException suppressed) {
+                e.addSuppressed(suppressed);
+            }
+            throw e;
+        }
+        impl.channel = channel;
     }
 
     @Override
     protected InputStream getInputStream() {
         if (inputStream == null) {
             if (channel instanceof AsynchronousByteChannel) {
-                inputStream = new AsynchronousByteChannelInputStream((AsynchronousByteChannel) channel);
+                inputStream = new AsynchronousByteChannelInputStream((AsynchronousByteChannel) channel, timeout);
             } else {
                 inputStream = Channels.newInputStream((ReadableByteChannel) channel);
             }
@@ -178,24 +249,59 @@ public final class JephyrSocketImpl extends SocketImpl {
 
     @Override
     public void setOption(int optID, Object value) throws SocketException {
-        setOption(findOption(optID), value);
-    }
-
-    private <T> void setOption(SocketOption<T> option, Object value) throws SocketException {
         try {
-            ((NetworkChannel) channel).setOption(option, option.type().cast(value));
-        } catch (SocketException e) {
-            throw e;
+            switch (optID) {
+                case TCP_NODELAY:
+                    channel.setOption(StandardSocketOptions.TCP_NODELAY, (Boolean) value);
+                    return;
+                case SO_REUSEADDR:
+                    channel.setOption(StandardSocketOptions.SO_REUSEADDR, (Boolean) value);
+                    return;
+                case SO_BROADCAST:
+                    channel.setOption(StandardSocketOptions.SO_BROADCAST, (Boolean) value);
+                    return;
+                case IP_MULTICAST_IF:
+                    channel.setOption(StandardSocketOptions.IP_MULTICAST_IF, (NetworkInterface) value);
+                    return;
+                case IP_MULTICAST_LOOP:
+                    channel.setOption(StandardSocketOptions.IP_MULTICAST_LOOP, (Boolean) value);
+                    return;
+                case IP_TOS:
+                    channel.setOption(StandardSocketOptions.IP_TOS, (Integer) value);
+                    return;
+                case SO_LINGER:
+                    if (channel.supportedOptions().contains(StandardSocketOptions.SO_LINGER)) {
+                        if (value instanceof Boolean) {
+                            channel.setOption(StandardSocketOptions.SO_LINGER, (Boolean) value ? 0 : -1);
+                        } else {
+                            channel.setOption(StandardSocketOptions.SO_LINGER, (Integer) value);
+                        }
+                    }
+                    return;
+                case SO_TIMEOUT:
+                    timeout = (Integer) value;
+                    return;
+                case SO_SNDBUF:
+                    channel.setOption(StandardSocketOptions.SO_SNDBUF, (Integer) value);
+                    return;
+                case SO_RCVBUF:
+                    channel.setOption(StandardSocketOptions.SO_RCVBUF, (Integer) value);
+                    return;
+                case SO_KEEPALIVE:
+                    channel.setOption(StandardSocketOptions.SO_KEEPALIVE, (Boolean) value);
+                    return;
+            }
         } catch (IOException e) {
             throw new SocketException(e.getMessage());
         }
+        throw new SocketException("unrecognized TCP option: " + optID);
     }
 
     @Override
     public Object getOption(int optID) throws SocketException {
         SocketOption<?> option = findOption(optID);
         try {
-            return ((NetworkChannel) channel).getOption(option);
+            return channel.getOption(option);
         } catch (SocketException e) {
             throw e;
         } catch (IOException e) {
@@ -283,12 +389,14 @@ public final class JephyrSocketImpl extends SocketImpl {
     private static final class AsynchronousByteChannelInputStream extends InputStream {
 
         private final AsynchronousByteChannel channel;
+        private final int timeout;
         private ByteBuffer bb;
         private byte[] bs;
         private byte[] b1;
 
-        AsynchronousByteChannelInputStream(AsynchronousByteChannel channel) {
+        AsynchronousByteChannelInputStream(AsynchronousByteChannel channel, int timeout) {
             this.channel = channel;
+            this.timeout = timeout;
         }
 
         @Override
@@ -321,7 +429,15 @@ public final class JephyrSocketImpl extends SocketImpl {
 
             Future<Integer> future = channel.read(bb);
             try {
-                return getUninterruptibly(future);
+                if (timeout == 0) {
+                    return getUninterruptibly(future);
+                } else {
+                    try {
+                        return getUninterruptibly(future, timeout, TimeUnit.MILLISECONDS);
+                    } catch (TimeoutException e) {
+                        throw new IOException(e);
+                    }
+                }
             } catch (ExecutionException e) {
                 throw propagate(e.getCause(), IOException.class);
             }

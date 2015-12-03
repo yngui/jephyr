@@ -35,8 +35,6 @@
 
 package jephyr.java.util.concurrent;
 
-import java.util.concurrent.BlockingQueue;
-
 import jephyr.java.lang.Thread;
 
 /**

@@ -30,7 +30,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
-import java.lang.reflect.Proxy;
 
 import org.jephyr.continuation.UnsuspendableError;
 
@@ -116,17 +115,10 @@ public final class ContinuationImpl implements Serializable {
     }
 
     public void invocationStarting(Object obj, String name, String desc) {
-        if (Proxy.isProxyClass(obj.getClass())) {
-            this.obj = Proxy.getInvocationHandler(obj);
-            cls = null;
-            this.name = "invoke";
-            this.desc = "(Ljava/lang/Object;Ljava/lang/reflect/Method;[Ljava/lang/Object;)Ljava/lang/Object;";
-        } else {
-            this.obj = obj;
-            cls = null;
-            this.name = name;
-            this.desc = desc;
-        }
+        this.obj = obj;
+        cls = null;
+        this.name = name;
+        this.desc = desc;
     }
 
     public void staticInvocationStarting(Class<?> cls, String name, String desc) {
@@ -208,10 +200,6 @@ public final class ContinuationImpl implements Serializable {
             unsuspendableName = name;
             unsuspendableDesc = desc;
         }
-        this.obj = null;
-        cls = null;
-        this.name = null;
-        this.desc = null;
     }
 
     private boolean isInvocationExpected(Object obj, String name, String desc) {
@@ -227,10 +215,6 @@ public final class ContinuationImpl implements Serializable {
             unsuspendableName = name;
             unsuspendableDesc = desc;
         }
-        obj = null;
-        this.cls = null;
-        this.name = null;
-        this.desc = null;
     }
 
     private boolean isStaticInvocationExpected(Class<?> cls, String name, String desc) {

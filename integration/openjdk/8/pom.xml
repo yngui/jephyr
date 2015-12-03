@@ -69,66 +69,11 @@
                 <artifactId>easyflow-maven-plugin</artifactId>
                 <configuration>
                     <excludes>
-                        <exclude>org/jephyr/integration/openjdk/misc/ReflectionUtils.class</exclude>
-                        <exclude>org/jephyr/integration/openjdk/misc/ReflectionUtils$*.class</exclude>
                         <exclude>org/jephyr/integration/openjdk/misc/SharedSecrets.class</exclude>
                         <exclude>org/jephyr/integration/openjdk/misc/UnsafeHolder.class</exclude>
-                        <exclude>org/jephyr/integration/openjdk/nio/ch/DefaultSelectorProvider.class</exclude>
+                        <exclude>sun/misc/ProxyGenerator.class</exclude>
                     </excludes>
                     <excludedMethods>
-                        <excludedMethod>org/jephyr/integration/openjdk/nio/ch/ResultHandler.checkInterrupted()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ResultHandler.completed(Ljava/lang/Object;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ResultHandler.failed(Ljava/lang/Throwable;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ServerSocketChannelImpl.bind(Ljava/net/SocketAddress;I)Ljephyr/java/nio/channels/ServerSocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ServerSocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ServerSocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljephyr/java/nio/channels/ServerSocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ServerSocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ServerSocketChannelImpl.supportedOptions()Ljava/util/Set;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/ServerSocketChannelImpl.implCloseSelectableChannel()V
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.bind(Ljava/net/SocketAddress;)Ljephyr/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.getLocalAddress()Ljava/net/SocketAddress;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.setOption(Ljava/net/SocketOption;Ljava/lang/Object;)Ljephyr/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.getOption(Ljava/net/SocketOption;)Ljava/lang/Object;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.supportedOptions()Ljava/util/Set;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.shutdownInput()Ljephyr/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.shutdownOutput()Ljephyr/java/nio/channels/SocketChannel;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.getRemoteAddress()Ljava/net/SocketAddress;
-                        </excludedMethod>
-                        <excludedMethod>
-                            org/jephyr/integration/openjdk/nio/ch/SocketChannelImpl.implCloseSelectableChannel()V
-                        </excludedMethod>
                         <excludedMethod>jephyr/java/lang/Thread.currentThread()Ljephyr/java/lang/Thread;
                         </excludedMethod>
                         <excludedMethod>
@@ -139,9 +84,6 @@
                         </excludedMethod>
                         <excludedMethod>
                             jephyr/java/lang/Thread$ThreadAccessImpl.getImpl(Ljephyr/java/lang/Thread;)Lorg/jephyr/thread/ThreadImpl;
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/lang/Thread$ThreadAccessImpl.blockedOn(Ljephyr/java/lang/Thread;Lorg/jephyr/integration/openjdk/nio/ch/Interruptible;)V
                         </excludedMethod>
                         <excludedMethod>
                             jephyr/java/util/concurrent/locks/LockSupport.setBlocker(Ljephyr/java/lang/Thread;Ljava/lang/Object;)V

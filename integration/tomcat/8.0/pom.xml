@@ -28,15 +28,15 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>org.jephyr.integration.postgresql</groupId>
-        <artifactId>postgresql-parent</artifactId>
+        <groupId>org.jephyr.integration.tomcat</groupId>
+        <artifactId>tomcat-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>postgresql-9.4-jdbc42</artifactId>
+    <artifactId>tomcat-8.0</artifactId>
 
     <properties>
-        <postgresql.version>9.4-1205-jdbc42</postgresql.version>
+        <tomcat.version>8.0.28</tomcat.version>
     </properties>
 
     <build>
@@ -72,9 +72,15 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.postgresql</groupId>
-            <artifactId>postgresql</artifactId>
-            <version>${postgresql.version}</version>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-core</artifactId>
+            <version>${tomcat.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.tomcat.embed</groupId>
+            <artifactId>tomcat-embed-logging-juli</artifactId>
+            <version>${tomcat.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
