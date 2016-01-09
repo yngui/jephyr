@@ -29,11 +29,12 @@ import java.io.IOException;
 import java.nio.channels.AsynchronousChannel;
 import java.nio.channels.CompletionHandler;
 import java.util.concurrent.CancellationException;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
+import jephyr.java.util.concurrent.CountDownLatch;
 
 /**
  * A Future for a pending I/O operation. A PendingFuture allows for the
@@ -200,7 +201,7 @@ final class PendingFuture<V,A> implements Future<V> {
         if (!haveResult) {
             boolean needToWait = prepareForWait();
             if (needToWait)
-                if (!latch.await(timeout, unit)) throw new TimeoutException();
+                if (!latch.await(timeout, jephyr.java.util.concurrent.TimeUnit.values()[unit.ordinal()])) throw new TimeoutException();
         }
         if (exc != null) {
             if (exc == CANCELLED)

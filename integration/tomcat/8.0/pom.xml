@@ -39,37 +39,6 @@
         <tomcat.version>8.0.28</tomcat.version>
     </properties>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.jephyr.easyflow</groupId>
-                <artifactId>easyflow-maven-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>enhance</goal>
-                            <goal>testEnhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>easyflow</classifier>
-                            <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
     <dependencies>
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>

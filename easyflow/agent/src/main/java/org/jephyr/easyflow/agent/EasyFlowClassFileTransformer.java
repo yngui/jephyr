@@ -29,8 +29,6 @@ import java.security.ProtectionDomain;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
-import org.jephyr.common.agent.ClassNameAwareClassAdapter;
-import org.jephyr.easyflow.instrument.AnalyzingMethodRefPredicate;
 import org.jephyr.easyflow.instrument.EasyFlowClassAdapter;
 import org.jephyr.easyflow.instrument.MethodRef;
 import org.objectweb.asm.ClassReader;
@@ -40,11 +38,9 @@ import static org.objectweb.asm.ClassReader.EXPAND_FRAMES;
 
 final class EasyFlowClassFileTransformer implements ClassFileTransformer {
 
-    private final Predicate<String> classNamePredicate;
     private final Pattern methodRefPattern;
 
-    EasyFlowClassFileTransformer(Predicate<String> classNamePredicate, Pattern methodRefPattern) {
-        this.classNamePredicate = classNamePredicate;
+    EasyFlowClassFileTransformer(Pattern methodRefPattern) {
         this.methodRefPattern = methodRefPattern;
     }
 
@@ -54,15 +50,13 @@ final class EasyFlowClassFileTransformer implements ClassFileTransformer {
         try {
             Predicate<MethodRef> methodRefPredicate;
             if (methodRefPattern == null || className == null) {
-                methodRefPredicate = t -> true;
+                methodRefPredicate = t -> false;
             } else {
-                methodRefPredicate = new AnalyzingMethodRefPredicate(classfileBuffer,
-                        new MethodRefPredicate(methodRefPattern, className));
+                methodRefPredicate = new MethodRefPredicate(methodRefPattern, className);
             }
             ClassReader reader = new ClassReader(classfileBuffer);
             ClassWriter writer = new ClassWriter(0);
-            reader.accept(new ClassNameAwareClassAdapter(classNamePredicate,
-                    new EasyFlowClassAdapter(methodRefPredicate, writer), writer), EXPAND_FRAMES);
+            reader.accept(new EasyFlowClassAdapter(methodRefPredicate, writer), EXPAND_FRAMES);
             return writer.toByteArray();
         } catch (Throwable e) {
             System.err.println("Failed to transform class " + className);

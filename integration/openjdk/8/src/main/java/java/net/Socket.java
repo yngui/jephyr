@@ -33,7 +33,7 @@ import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.security.PrivilegedExceptionAction;
 
-import org.jephyr.integration.openjdk.net.JephyrSocketImpl;
+import org.jephyr.integration.openjdk.net.NioSocketImpl;
 
 /**
  * This class implements client sockets (also called just
@@ -502,7 +502,7 @@ class Socket implements java.io.Closeable {
         } else {
             // No need to do a checkOldImpl() here, we know it's an up to date
             // SocketImpl!
-            impl = new JephyrSocketImpl();
+            impl = new NioSocketImpl();
         }
         if (impl != null)
             impl.setSocket(this);

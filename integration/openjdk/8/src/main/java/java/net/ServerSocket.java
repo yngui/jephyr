@@ -31,7 +31,7 @@ import java.nio.channels.ServerSocketChannel;
 import java.security.AccessController;
 import java.security.PrivilegedExceptionAction;
 
-import org.jephyr.integration.openjdk.net.JephyrSocketImpl;
+import org.jephyr.integration.openjdk.net.NioSocketImpl;
 
 /**
  * This class implements server sockets. A server socket waits for
@@ -287,7 +287,7 @@ class ServerSocket implements java.io.Closeable {
         } else {
             // No need to do a checkOldImpl() here, we know it's an up to date
             // SocketImpl!
-            impl = new JephyrSocketImpl();
+            impl = new NioSocketImpl();
         }
         if (impl != null)
             impl.setServerSocket(this);

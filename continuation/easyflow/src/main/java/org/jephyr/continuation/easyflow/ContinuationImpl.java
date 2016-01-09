@@ -68,6 +68,7 @@ public final class ContinuationImpl implements Serializable {
     private transient int doubleTop;
     private transient Object[] objectStack = EMPTY_OBJECTS;
     private transient int objectTop;
+    private static volatile UnsuspendableErrorListener unsuspendableErrorListener;
 
     ContinuationImpl(Runnable target) {
         this.target = target;
@@ -80,9 +81,14 @@ public final class ContinuationImpl implements Serializable {
 
     void suspend() {
         if (unsuspendable || !isStaticInvocationExpected(EasyFlowContinuation.class, "suspend", "()V")) {
-            throw new UnsuspendableError(
+            UnsuspendableError unsuspendableError = new UnsuspendableError(unsuspendableClass == null ? null :
                     "Unsuspendable method " + unsuspendableClass.getName() + '.' + unsuspendableName +
                             unsuspendableDesc);
+            UnsuspendableErrorListener unsuspendableErrorListener = ContinuationImpl.unsuspendableErrorListener;
+            if (unsuspendableErrorListener != null) {
+                unsuspendableErrorListener.onUnsuspendableError(unsuspendableError);
+            }
+            throw unsuspendableError;
         }
         state = state == SUSPENDED ? RESUMED : SUSPENDING;
     }
@@ -379,6 +385,14 @@ public final class ContinuationImpl implements Serializable {
             }
         }
         return args;
+    }
+
+    public static UnsuspendableErrorListener getUnsuspendableErrorListener() {
+        return unsuspendableErrorListener;
+    }
+
+    public static void setUnsuspendableErrorListener(UnsuspendableErrorListener unsuspendableErrorListener) {
+        ContinuationImpl.unsuspendableErrorListener = unsuspendableErrorListener;
     }
 
     private void writeObject(ObjectOutputStream out) throws IOException {

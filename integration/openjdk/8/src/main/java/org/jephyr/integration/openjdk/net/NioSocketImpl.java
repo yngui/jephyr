@@ -51,7 +51,7 @@ import java.util.concurrent.TimeoutException;
 
 import static java.util.concurrent.TimeUnit.NANOSECONDS;
 
-public final class JephyrSocketImpl extends SocketImpl {
+public final class NioSocketImpl extends SocketImpl {
 
     private boolean stream;
     private InetAddress localAddress;
@@ -168,7 +168,7 @@ public final class JephyrSocketImpl extends SocketImpl {
 
     @Override
     protected void accept(SocketImpl s) throws IOException {
-        JephyrSocketImpl impl = (JephyrSocketImpl) s;
+        NioSocketImpl impl = (NioSocketImpl) s;
         AsynchronousSocketChannel channel;
         Future<AsynchronousSocketChannel> future = ((AsynchronousServerSocketChannel) this.channel).accept();
         try {
@@ -336,7 +336,7 @@ public final class JephyrSocketImpl extends SocketImpl {
         }
     }
 
-    private static <V> V getUninterruptibly(Future<V> future) throws ExecutionException {
+    static <V> V getUninterruptibly(Future<V> future) throws ExecutionException {
         boolean interrupted = false;
         try {
             while (true) {

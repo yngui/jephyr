@@ -33,7 +33,7 @@
  * http://creativecommons.org/publicdomain/zero/1.0/
  */
 
-package java.util.concurrent;
+package jephyr.java.util.concurrent;
 
 import jephyr.java.lang.Thread;
 import jephyr.java.util.concurrent.locks.AbstractQueuedSynchronizer;

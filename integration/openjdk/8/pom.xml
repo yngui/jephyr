@@ -64,61 +64,6 @@
                     <executable>${openjdk-8.compilerExecutable}</executable>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.jephyr.easyflow</groupId>
-                <artifactId>easyflow-maven-plugin</artifactId>
-                <configuration>
-                    <excludes>
-                        <exclude>org/jephyr/integration/openjdk/misc/SharedSecrets.class</exclude>
-                        <exclude>org/jephyr/integration/openjdk/misc/UnsafeHolder.class</exclude>
-                        <exclude>sun/misc/ProxyGenerator.class</exclude>
-                    </excludes>
-                    <excludedMethods>
-                        <excludedMethod>jephyr/java/lang/Thread.currentThread()Ljephyr/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/lang/Thread$ThreadAccessImpl.currentThread()Ljephyr/java/lang/Thread;
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/lang/Thread$ThreadAccessImpl.setCurrentThread(Ljephyr/java/lang/Thread;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/lang/Thread$ThreadAccessImpl.getImpl(Ljephyr/java/lang/Thread;)Lorg/jephyr/thread/ThreadImpl;
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/util/concurrent/locks/LockSupport.setBlocker(Ljephyr/java/lang/Thread;Ljava/lang/Object;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/util/concurrent/locks/LockSupport.unpark(Ljephyr/java/lang/Thread;)V
-                        </excludedMethod>
-                        <excludedMethod>
-                            jephyr/java/util/concurrent/locks/LockSupport.getBlocker(Ljephyr/java/lang/Thread;)Ljava/lang/Object;
-                        </excludedMethod>
-                    </excludedMethods>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>enhance</goal>
-                            <goal>testEnhance</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jar</goal>
-                        </goals>
-                        <configuration>
-                            <classifier>easyflow</classifier>
-                            <classesDirectory>${project.build.directory}/enhanced-classes</classesDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
 

@@ -32,7 +32,10 @@ import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.LockSupport;
+import java.util.concurrent.locks.ReentrantLock;
 
 import org.jephyr.continuation.Continuation;
 import org.jephyr.continuation.UnsuspendableError;
@@ -65,7 +68,9 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
     private volatile Thread javaThread;
     private volatile boolean daemon;
     private static int threadCount;
-    private static volatile Thread daemonAwaitThread;
+    private static final Lock awaitLock = new ReentrantLock();
+    private static final Condition awaitCondition = awaitLock.newCondition();
+    private static Thread awaitThread;
 
     static {
         debug = Boolean.getBoolean(ContinuationThreadImpl.class.getName() + ".debug");
@@ -99,30 +104,31 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
         }
         this.daemon = daemon;
         if (!daemon) {
-            Thread thread = daemonAwaitThread;
-            if (thread == null) {
-                synchronized (ContinuationThreadImpl.class) {
-                    if (daemonAwaitThread == null) {
-                        thread = new Thread() {
-                            @Override
-                            public void run() {
-                                synchronized (this) {
-                                    while (threadCount > 0) {
-                                        try {
-                                            wait();
-                                        } catch (InterruptedException ignored) {
-                                        }
+            awaitLock.lock();
+            try {
+                threadCount++;
+                if (awaitThread == null) {
+                    awaitThread = new Thread() {
+                        @Override
+                        public void run() {
+                            awaitLock.lock();
+                            try {
+                                while (threadCount > 0) {
+                                    try {
+                                        awaitCondition.await();
+                                    } catch (InterruptedException ignored) {
                                     }
                                 }
+                                awaitThread = null;
+                            } finally {
+                                awaitLock.unlock();
                             }
-                        };
-                        daemonAwaitThread = thread;
-                        thread.start();
-                    }
+                        }
+                    };
+                    awaitThread.start();
                 }
-            }
-            synchronized (thread) {
-                threadCount++;
+            } finally {
+                awaitLock.unlock();
             }
         }
         pool.execute(executeTask);
@@ -375,10 +381,12 @@ final class ContinuationThreadImpl<T extends Runnable> extends ThreadImpl {
         } else {
             state.set(TERMINATED);
             if (!daemon) {
-                Thread thread = daemonAwaitThread;
-                synchronized (thread) {
+                awaitLock.lock();
+                try {
                     threadCount--;
-                    thread.notifyAll();
+                    awaitCondition.signalAll();
+                } finally {
+                    awaitLock.unlock();
                 }
             }
 

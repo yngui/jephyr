@@ -53,15 +53,15 @@ public final class EasyFlowClassAdapter extends ClassVisitor {
         this.name = name;
         instrument = (version & 0xFF) >= V1_6;
         super.visit(version, access, name, signature, superName, interfaces);
-        super.visitAnnotation("Lorg/jephyr/easyflow/instrument/Instrumented;", false);
+//        super.visitAnnotation("Lorg/jephyr/easyflow/instrument/Instrumented;", false);
     }
 
     @Override
     public AnnotationVisitor visitAnnotation(String desc, boolean visible) {
-        if (desc.equals("Lorg/jephyr/easyflow/instrument/Instrumented;")) {
-            instrument = false;
-            return null;
-        }
+//        if (desc.equals("Lorg/jephyr/easyflow/instrument/Instrumented;")) {
+//            instrument = false;
+//            return null;
+//        }
         return super.visitAnnotation(desc, visible);
     }
 

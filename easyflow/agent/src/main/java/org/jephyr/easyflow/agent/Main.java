@@ -27,7 +27,6 @@ package org.jephyr.easyflow.agent;
 import java.io.IOException;
 import java.lang.instrument.Instrumentation;
 import java.util.Properties;
-import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
 import static org.jephyr.common.agent.AgentUtils.parseArgs;
@@ -36,12 +35,7 @@ public final class Main {
 
     public static void premain(String agentArgs, Instrumentation inst) throws IOException {
         Properties props = parseArgs(agentArgs);
-        Pattern includes = getPattern(props.getProperty("includes"));
-        Pattern excludes = getPattern(props.getProperty("excludes"));
-        Predicate<String> classNamePredicate = t -> (includes == null || includes.matcher(t).find()) &&
-                (excludes == null || !excludes.matcher(t).find());
-        inst.addTransformer(
-                new EasyFlowClassFileTransformer(classNamePredicate, getPattern(props.getProperty("excludeMethods"))));
+        inst.addTransformer(new EasyFlowClassFileTransformer(getPattern(props.getProperty("methods"))));
     }
 
     private static Pattern getPattern(String regex) {
