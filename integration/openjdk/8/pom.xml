@@ -71,7 +71,6 @@
         <dependency>
             <groupId>org.jephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>runtime</groupId>

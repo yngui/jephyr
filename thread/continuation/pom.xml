@@ -81,12 +81,10 @@
         <dependency>
             <groupId>org.jephyr.thread</groupId>
             <artifactId>thread-api</artifactId>
-            <optional>true</optional>
         </dependency>
         <dependency>
             <groupId>org.jephyr.continuation</groupId>
             <artifactId>continuation-api</artifactId>
-            <optional>true</optional>
         </dependency>
     </dependencies>
 </project>
