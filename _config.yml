@@ -2,7 +2,7 @@ title: Jephyr
 description: Continuations and lightweight threads for the JVM
 google_analytics: 
 show_downloads: true
-theme: jekyll-theme-merlot
+theme: jekyll-theme-minimal
 
 gems:
   - jekyll-mentions
